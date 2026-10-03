@@ -1,0 +1,9 @@
+doc,emissor,cnpj,isin,ticker,classe_acao,tipo_evento,data_aprovacao,data_com,data_ex,data_pagamento,valor_bruto,aliquota_irrf,valor_liquido,proporcao,custo_atribuido,moeda,revisao_humana,motivo_revisao
+01_energetica_vale_tiete_dividendo,Energética Vale do Tietê S.A.,12.345.678/0001-90,BRTIETACNOR3,TIET3,ON,DIVIDEND,2026-05-28,2026-06-12,2026-06-15,2026-07-03,0.4275000000,n/a,n/a,n/a,n/a,BRL,não,
+02_banco_meridional_jcp,Banco Meridional do Brasil S.A.,60.111.222/0001-55,BRBMRDACNPR7,BMRD4,PN,JCP,2026-06-02,2026-06-16,2026-06-17,2026-08-14,0.1738420000,0.175,0.1434196500,n/a,n/a,BRL,não,
+03_siderurgica_paranaense_proventos,Companhia Siderúrgica Paranaense S.A.,76.543.210/0001-12,BRCSPRACNOR1,CSPR3,ON,JCP,2026-06-05,2026-06-19,2026-06-22,2026-09-11,0.0921500000,0.175,0.0760237500,n/a,n/a,BRL,não,
+04_rede_varejo_jcp_sem_data,Rede Varejo Brasil S.A.,08.777.666/0001-33,BRRVBRACNOR9,RVBR3,ON,JCP,2026-06-09,2026-06-23,2026-06-24,,0.2050000000,0.175,0.1691250000,n/a,n/a,BRL,sim,Data de pagamento a definir pelo emissor (aviso complementar)
+05_aurora_saneamento_dividendo_datas,Aurora Saneamento S.A.,22.333.444/0001-77,BRAURSACNOR4,AURS3,ON,DIVIDEND,2026-06-01,2026-07-15,2026-07-16,2026-07-10,0.3100000000,n/a,n/a,n/a,n/a,BRL,sim,Data de pagamento anterior à data com e à data ex
+06_petroquimica_litoral_grupamento,Petroquímica Litoral S.A.,55.666.777/0001-08,BRPQLTACNOR8,PQLT3,ON,REVERSE_SPLIT,2026-05-30,2026-06-26,2026-06-29,n/a,n/a,n/a,n/a,10:1,n/a,n/a,não,
+07_telecom_norte_jcp_SCAN,Telecom Norte Participações S.A.,33.222.111/0001-44,BRTLNRACNPR2,TLNR4,PN,JCP,2026-06-06,2026-06-22,2026-06-23,2026-08-21,0.1124300000,0.175,0.0927547500,n/a,n/a,BRL,não,
+08_construtora_horizonte_bonificacao,Construtora Horizonte S.A.,09.888.999/0001-21,BRCNHZACNOR5,CNHZ3,ON,BONUS_ISSUE,2026-06-04,2026-06-18,2026-06-19,2026-06-26,n/a,n/a,n/a,20:21,7.820000,BRL,sim,Emissor não consta no golden record
