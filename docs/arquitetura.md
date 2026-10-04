@@ -147,61 +147,20 @@ Abaixo disso (uns 5 arquivos), cada arquivo passaria de 500 linhas e ficaria dif
 
 **O que o Pydantic valida:** o formato do contrato (tipos, obrigatórios, enums, aninhamento, faixas como `ocr` de 0 a 1) e a resposta do modelo (JSON fora do schema → retry → `FALHA_MODELO`). As regras de negócio ficam em `regras.py` de propósito: um erro de validação do Pydantic é uma exceção do tipo tudo ou nada, e uma regra precisa virar ocorrência com ID, mensagem e roteamento.
 
-## 7. Assinaturas das funções principais
+## 7. Assinaturas
 
-```python
-# leitura.py
-def ler_documento(caminho: Path) -> Leitura
-
-# llm.py
-def chamar_modelo(mensagens: list[dict], schema: type[BaseModel] | None = None,
-                  ferramentas: list[dict] | None = None, usar_cache: bool = True) -> RespostaModelo
-def extrair(leitura: Leitura, problemas: list[str] | None = None, usar_cache: bool = True) -> Extracao
-def validar(valores: dict[str, object], tipo_evento: TipoEvento, usar_cache: bool = True) -> list[Resultado]
-ESQUEMAS_FERRAMENTAS: list[dict]
-
-# evidencias.py
-def verificar_evidencias(extracao: Extracao, leitura: Leitura) -> tuple[list[Ocorrencia], dict[str, Span]]
-def rotulo_confere(campo: str, trecho: str, span_valor: Span) -> bool
-def normalizar_extracao(extracao: Extracao) -> tuple[dict[str, object], list[Ocorrencia]]   # R-GRD-03
-
-# regras.py — cada função é um grupo de regras e devolve Resultado
-def validar_identificacao(valores: dict) -> Resultado          # R-ID + R-IDF (usa a base de referência)
-def validar_datas(valores: dict) -> Resultado                  # R-DAT (usa o calendário B3)
-def validar_valores_e_proporcao(valores: dict) -> Resultado    # R-VAL ou R-PRO, conforme a classe
-def validar_campos_da_classe(extracao: Extracao) -> Resultado  # R-REQ
-def verificar_classificacao(classificacao: Classificacao) -> Resultado  # R-CLS
-def eh_pregao(dia: date) -> bool
-def proximo_pregao(dia: date) -> date
-FERRAMENTAS: dict[str, Callable[[dict], Resultado]]            # nome da ferramenta → função
-
-# montagem.py
-def calcular_confianca(campo: str, extraido: CampoExtraido, span: Span | None, leitura: Leitura,
-                       confirmacoes: list[str]) -> tuple[Confianca | None, list[Ocorrencia]]   # R-CNF-01
-def montar_registro(leitura: Leitura, extracao: Extracao, valores: dict[str, object],
-                    resultados: list[Resultado], spans: dict[str, Span], trace_id: str) -> Registro
-def registro_de_erro(documento: str, trace_id: str, tipo_pdf: TipoPdf | None, codigo: CodigoErro, detalhe: str) -> Registro
-
-# saida.py
-def gravar_registro(registro: Registro, pasta: Path) -> Path
-def gerar_relatorio(registros: list[Registro], pasta: Path) -> Path
-@contextmanager
-def etapa(trace: Trace, nome: str, **dados) -> Iterator[dict]   # registra início, duração, dados e erro de cada etapa
-
-# pipeline.py
-def processar_documento(caminho: Path, leitura: Leitura | None = None, usar_cache: bool = True) -> Registro
-def processar_lote(pasta: Path, saida: Path, workers: int = config.WORKERS) -> list[Registro]
-```
+As assinaturas reais estão na seção 11, junto com o papel de cada função.
 
 ## 8. Rastreamento (D-30)
 
-Um arquivo JSONL por documento em `saida/traces/<documento>.jsonl`, uma linha por etapa, gravada pelo gerenciador de contexto `etapa`: `trace_id`, etapa, início, duração, tentativa, cache local (acerto ou falha), `cached_tokens`, ferramenta chamada (pelo modelo ou imposta pelo código), resumo da entrada e da saída, erro. O mesmo `trace_id` vai no JSON do operador, ligando o registro ao rastro técnico. O JSON do operador mostra só o resultado (D-13).
+Um arquivo JSONL por execução em `saida/traces/<trace_id>.jsonl` (o `trace_id` tem o documento e a data e hora, então execuções paralelas do mesmo documento não se misturam), uma linha por etapa ou evento, gravada pelo gerenciador de contexto `etapa` e pela função `registrar`: `trace_id`, etapa, início, duração, tentativa, cache local (acerto ou falha), `cached_tokens`, ferramenta chamada (pelo modelo ou imposta pelo código), resumo da entrada e da saída, erro. O mesmo `trace_id` vai no JSON do operador, ligando o registro ao rastro técnico. O JSON do operador mostra só o resultado (D-13).
 
 ## 9. Eval e teste de estocasticidade (D-29)
 
 - **`evals/avaliar.py`:** compara `saida/` com o gabarito e imprime as métricas do `contrato.md` (seção 9). Usa o cache local: roda sem chave de API.
-- **`tests/test_estocasticidade.py`** (`pytest -m estocastico`, fora da suíte padrão): um teste por documento, parametrizado. Cada documento é lido uma vez (a leitura é determinística) e processado N vezes (padrão 100) **sem o cache local**; a primeira execução vai em série, para gravar o prefixo no cache do provider, e as demais vão em paralelo com 20 workers. O teste do documento passa só se **nenhuma** execução falhar em alguma métrica com meta: erro não roteado, valor inventado, classificação, roteamento, motivo ou acurácia por campo.
-- **Estimativa:** 800 execuções de cerca de 3 chamadas (12 a 15 s cada) ÷ 20 workers ≈ 8 a 12 minutos; custo de US$ 3 a 5.
+- **`tests/test_estocasticidade.py`** (`pytest -m estocastico`, fora da suíte padrão): um teste por documento, parametrizado. Cada documento é lido uma vez (a leitura é determinística) e processado N vezes (padrão 50) **sem o cache local**; a primeira execução vai em série, para gravar o prefixo no cache do provider, e as demais vão em paralelo com 20 workers. O teste do documento passa só se **nenhuma** execução falhar em alguma métrica com meta: erro não roteado, valor inventado, classificação, roteamento, motivo ou acurácia por campo.
+- **Limite do provider:** o OpenRouter limita contas novas a 20 requisições por minuto neste modelo (erro 429 "new-account-rpm", descoberto na primeira rodada do lote). O cliente tem um limitador de ritmo (`LIMITE_RPM` no `config.py`), e o agente encerra assim que as 3 ferramentas foram chamadas, então cada execução faz 2 chamadas.
+- **Estimativa:** N = 50 (decisão do usuário, para reduzir tempo e custo): 8 documentos × 50 × 2 chamadas = 800 chamadas a 20 por minuto ≈ 32 a 40 minutos. Com o limite da conta liberado, os 20 workers derrubam isso para poucos minutos.
 
 ## 10. Revisão de projeto: SOLID e simplicidade
 
@@ -221,3 +180,81 @@ Um arquivo JSONL por documento em `saida/traces/<documento>.jsonl`, uma linha po
 - 3 das 6 ferramentas;
 - 8 dos 19 arquivos;
 - interfaces abstratas, injeção de dependência e framework de agente.
+
+## 11. Camadas e funções: por que cada uma existe
+
+### Camadas
+
+| Camada | Por que existe | O que quebraria sem ela |
+|---|---|---|
+| **Dados e configuração** (`modelos`, `config`, `mensagens`) | Um lugar para o contrato (classes Pydantic), para os parâmetros que mudam (alíquota, limites, feriados, chaves por classe) e para os textos ao operador | O contrato ficaria espalhado; mudar a alíquota ou uma mensagem exigiria mexer em regra |
+| **Leitura** (`leitura`) | Transforma PDF em texto com a posição e a confiança de cada palavra, igual para nativo e escaneado | O resto do sistema teria que saber se o PDF é escaneado; a confiança do OCR por campo (D-08) não teria de onde vir |
+| **Modelo** (`llm`) | Único lugar que fala com o provider: cache, retry, limitador de ritmo, extração e agente | Trocar de provider ou depurar uma chamada exigiria procurar em vários arquivos; testar regras exigiria API |
+| **Domínio** (`evidencias`, `regras`, `montagem`) | As decisões determinísticas: o valor está no documento? É coerente? Que confiança tem? Vai para revisão? | "O LLM extrai, o código decide" deixaria de valer; as regras não seriam testáveis sem API |
+| **Saída** (`saida`) | Escreve o que o operador e o avaliador leem: JSON, relatório de exceções e trace | A montagem misturaria lógica com escrita em disco; o trace não teria dono |
+| **Orquestração** (`pipeline`, `__main__`) | Encadeia as etapas, faz o retry de alucinação e o paralelismo do lote | Cada etapa teria que chamar a seguinte, e o fluxo não seria legível num lugar só |
+
+A regra entre elas: **o domínio nunca importa a camada do modelo.** Por isso as 52 regras e os testes de evidência rodam em 0,05 s, sem chave de API.
+
+### Funções
+
+**`config.py`**: só constantes. `CHAVES_POR_CLASSE` define as chaves de cada classe (uma classe nova é uma linha); `ROTULOS` são os sinônimos da checagem de rótulo; `IRRF_JCP` tem vigência; `LIMITE_RPM` e `WORKERS` controlam o ritmo.
+
+**`mensagens.py`**: catálogo copiado de `regras.md` (D-15).
+- `descricao(regra)`: texto curto de `regras_aprovadas`.
+- `mensagem(regra, **valores)`: mensagem do motivo ou alerta, com os valores do registro.
+- `mensagem_erro(codigo, **valores)`: mensagem do `erro` (D-18).
+
+**`modelos.py`**: classes de dados.
+- Internas: `Palavra`, `Leitura`, `CampoExtraido`, `Classificacao`, `Indeterminacao`, `Extracao` (também é o schema da saída estruturada do modelo), `Ocorrencia`, `Resultado`, `RespostaModelo`.
+- Saída: `Campo`, `CampoTipoEvento`, `Emissor`, `Ativo`, `Campos`, `Registro`. `revisao_humana` e `status` são calculados, então nunca contradizem os motivos.
+- `ErroProcessamento`: exceção que vira `status: ERRO`.
+
+**`leitura.py`**
+- `ler_documento(caminho) -> Leitura`: abre o PDF, usa a camada de texto ou, sem ela, o OCR. Falha → `PDF_ILEGIVEL` ou `FALHA_OCR`.
+- `_linhas_nativas`, `_linhas_ocr`: palavras na ordem de leitura, com a linha a que pertencem (o OCR traz a confiança).
+- `_montar_texto`: junta as palavras num texto e guarda a posição de cada uma, para depois achar as palavras de um valor.
+
+**`llm.py`**
+- `chamar_modelo(mensagens, schema=None, ferramentas=None, usar_cache=True) -> RespostaModelo`: a única porta para o provider. Cache local por hash da requisição, até 2 retries com backoff (D-13), limitador de ritmo.
+- `extrair(leitura, problemas=None, usar_cache=True) -> Extracao`: extração e classificação numa chamada estruturada; `problemas` é o retorno do grounding no retry de alucinação.
+- `validar(valores, tipo_evento, usar_cache=True) -> list[Resultado]`: o agente. O modelo escolhe as ferramentas, o código injeta os valores, chama as que faltarem e encerra quando as 3 rodaram (D-27).
+- `_respeitar_limite`: no máximo `LIMITE_RPM` chamadas por minuto, somando todas as threads.
+- `_gravar_cache`: gravação atômica, porque várias threads escrevem ao mesmo tempo.
+
+**`evidencias.py`**
+- `verificar_evidencias(extracao, leitura) -> (ocorrências, posições)`: R-GRD-01 (o trecho existe) e R-GRD-02 (o valor está no trecho), e devolve onde cada valor está no texto.
+- `normalizar_texto(s) -> (texto, mapa)`: minúsculas, sem acento, sem pontilhado do OCR, aspas padronizadas; o mapa volta para a posição original.
+- `rotulo_confere(campo, trecho, span) -> bool`: o rótulo mais próximo do valor é o do campo (D-20).
+- `span_no_trecho`: posição do valor dentro da citação, para a checagem de rótulo.
+- `normalizar_extracao(extracao) -> (valores, ocorrências)`: literal → formato do contrato (D-24); literal desconhecido → R-GRD-03.
+- `para_data`, `para_decimal`, `para_fracao`: os normalizadores (data numérica ou por extenso; decimal com todas as casas; percentual → fração).
+
+**`regras.py`**
+- Ferramentas do agente: `validar_identificacao` (R-ID + R-IDF), `validar_datas` (R-DAT), `validar_valores_e_proporcao` (R-VAL ou R-PRO). `FERRAMENTAS` liga o nome da ferramenta à função.
+- No código: `validar_campos_da_classe(extracao, descartados)` (R-REQ; um campo descartado pelo grounding não repete a R-REQ-01) e `verificar_classificacao(classificacao)` (R-CLS).
+- Apoio: `eh_pregao`, `proximo_pregao` (calendário B3); `carregar_base`, `buscar` (base de referência, ISIN e depois CNPJ); `aliquota_vigente`; `isin_valido`, `cnpj_valido` (dígitos verificadores, desligados por configuração); `classe_do_titulo` (para a R-CLS-01); `campos_extraidos_da_classe`, `nome_na_saida` (a data de pagamento extraída vira `data_credito` na bonificação).
+
+**`montagem.py`**
+- `calcular_confianca(campo, extraido, span, leitura, confirmacoes) -> (Confianca, ocorrências)`: OCR abaixo de 0,70 → BAIXA e R-CNF-01; com confirmação → ALTA; senão MEDIA (D-20).
+- `montar_registro(...) -> Registro`: monta só as chaves da classe, com motivos e alertas em cada campo e a base de referência derivada das ocorrências de R-ID.
+- `registro_de_erro(...)`: o registro de uma falha de processamento.
+
+**`saida.py`**
+- `para_dict(registro)`: o JSON como o operador vê (só as chaves preenchidas, em ordem legível).
+- `gravar_registro(registro, pasta)`, `gerar_relatorio(registros, pasta)`: JSON por documento e relatório de exceções.
+- `iniciar_trace(trace_id)`, `registrar(evento, **dados)`, `etapa(nome, **dados)`: o trace da execução, por thread.
+
+**`pipeline.py`**
+- `processar_documento(caminho, leitura=None, usar_cache=True) -> Registro`: as etapas em série, com o retry de alucinação; qualquer falha vira registro de erro, nunca derruba o lote.
+- `processar_lote(pasta, saida, workers) -> list[Registro]`: 1º documento em série, demais em paralelo; grava os JSON e o relatório.
+
+**`evals/avaliar.py`**
+- `carregar_gabarito()`, `achatar(registro)` (JSON → colunas do gabarito, contrato.md, seção 10) e `falhas(registro, esperado)` (métricas com meta não cumpridas; lista vazia = execução aprovada). O teste de estocasticidade usa a mesma função.
+
+### Diferenças em relação ao desenho aprovado
+
+- `validar_campos_da_classe` ganhou o parâmetro opcional `descartados`, para cumprir a nota da R-GRD em `regras.md` (o campo descartado pelo grounding não repete a R-REQ-01).
+- O trace é guardado por thread (`contextvars`), então `etapa` não recebe o trace como parâmetro, e o arquivo é por execução (`<trace_id>.jsonl`), não por documento.
+- Entraram o limitador de ritmo e o encerramento antecipado do agente, por causa do limite de 20 requisições por minuto.
+- `para_data`, `para_decimal`, `para_fracao` e `span_no_trecho` ficaram públicas porque os testes as usam.
