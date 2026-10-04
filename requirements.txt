@@ -1,6 +1,6 @@
-openai
-pydantic>=2
-pymupdf
-pytesseract
-pillow
-pytest
+openai==3.24.0
+pillow==12.3.0
+pydantic==2.13.5
+pymupdf==1.28.2
+pytesseract==0.3.13
+pytest==9.1.1

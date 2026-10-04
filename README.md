@@ -137,6 +137,7 @@ Os três foram corrigidos no prompt ou no schema, e a variação entre execuçõ
 - O grounding prova que o valor está no documento, não que pertence ao campo certo; o rótulo na citação e as regras cruzadas reduzem esse risco sem eliminá-lo.
 - Uma leitura errada do OCR com confiança acima de 0,70 só é pega pelas regras cruzadas (R-DAT-03, R-VAL-02).
 - A conta do OpenRouter usada tem limite de 20 requisições por minuto neste modelo; o cliente respeita esse ritmo (`LIMITE_RPM`), o que alonga o teste de estocasticidade.
+- O cache local é indexado pelo texto lido do PDF. Com outra versão do Tesseract (a entrega usou a 5.5.3) ou do PyMuPDF, o texto do doc 07 pode mudar e exigir uma chamada nova ao modelo, com chave de API. As versões das bibliotecas Python estão fixadas em `requirements.txt`.
 
 ## Documentação
 
