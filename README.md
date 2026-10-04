@@ -21,12 +21,12 @@ pip install -r requirements.txt
 ```bash
 python -m asset_servicing             # lê documents/ e escreve em saida/
 python -m evals.avaliar               # compara saida/ com evals/gabarito.csv
-pytest                                # 52 testes: regras, evidências, montagem, saída (sem API)
+pytest                                # 52 testes unitários (tests/unit/): regras, evidências, montagem, saída; sem API
 ```
 
 **Não precisa de chave de API para reproduzir a entrega:** as respostas do modelo estão no cache local versionado (`cache/`), e o lote roda inteiro a partir dele. Para chamar o modelo de novo (outro documento, prompt alterado), crie um `.env` com `OPENROUTER_API_KEY=...`.
 
-**Teste de estocasticidade** (chama a API, ignora o cache local; ~35 min com o limite da conta):
+**Teste de estocasticidade** (`evals/test_estocasticidade.py`; chama a API e ignora o cache local; ~35 min com o limite da conta):
 
 ```bash
 pytest -m estocastico                 # 50 execuções por documento
@@ -35,11 +35,12 @@ EXECUCOES=5 pytest -m estocastico     # versão rápida
 
 ## O que sai
 
-| Arquivo | Conteúdo |
-|---|---|
-| `saida/<documento>.json` | O registro do documento ([contrato](docs/contrato.md); exemplos em [docs/exemplos/](docs/exemplos/)) |
-| `saida/relatorio_excecoes.md` | Totais e os documentos com motivo de revisão, alerta ou erro |
-| `saida/traces/<trace_id>.jsonl` | O caminho técnico de cada execução: etapas, durações, chamadas ao modelo, cache, retries, ferramentas |
+| Arquivo | Para quem | Para quê |
+|---|---|---|
+| `saida/<documento>.json` | Operador e processos seguintes (cálculo de provento, custódia, conciliação) | O registro do documento, exigido pelo enunciado: cada valor com origem, confiança, validação e motivo de revisão, auditável sem reabrir o PDF ([contrato](docs/contrato.md); exemplos em [docs/exemplos/](docs/exemplos/)) |
+| `saida/relatorio_excecoes.md` | Operador, no começo do dia | A fila de trabalho: totais e só os documentos com motivo de revisão, alerta ou erro, com a mensagem de cada um |
+| `saida/traces/<trace_id>.jsonl` | Engenharia e auditoria | O caminho técnico de cada execução: etapas e durações, cada chamada ao modelo (do cache ou não, `cached_tokens`), cada retry e o motivo, cada ferramenta e quem a chamou (o modelo ou o código), erros. Serve para depurar ("por que o doc 03 foi para revisão?"), para reconstruir uma decisão numa auditoria e para medir desempenho. Fica fora do JSON do operador, que mostra só o resultado (D-13, D-30); o `trace_id` liga os dois |
+| `cache/<hash>.json` | Quem roda o projeto | As respostas do modelo usadas nesta entrega, uma por arquivo, indexadas pelo hash da requisição (modelo, mensagens, schema, ferramentas). Garante a reprodutibilidade (o modelo de raciocínio não aceita temperatura 0), permite rodar o clone limpo sem chave de API e evita pagar de novo por chamadas iguais durante o desenvolvimento. Qualquer mudança no prompt, no schema, no modelo ou no texto do documento muda o hash e gera uma chamada nova. Não confundir com o cache de prompt do provider (D-25), que fica do lado da OpenAI. O teste de estocasticidade não usa este cache |
 
 Cada JSON responde, sem reabrir o PDF:
 - **o que foi extraído e de onde:** valor normalizado e citação literal (página e trecho);
@@ -130,6 +131,21 @@ Revisões humanas no lote, todas esperadas pelo gabarito:
 - não reconheceu "data-base" como data com no grupamento do doc 06.
 
 Os três foram corrigidos no prompt ou no schema, e a variação entre execuções é o que o teste de estocasticidade mede.
+
+## Por que o risco de campo errado é reduzido, não eliminado
+
+O grounding prova que o valor está no documento, mas não que ele pertence ao campo certo. O erro típico: o modelo usa a data ex (15/06) como data de pagamento; a data existe no texto, então o grounding passa. Duas defesas reduzem esse risco:
+
+**O rótulo na citação (D-20).** O código confere que o rótulo mais próximo do valor, dentro da citação, é o do campo. Ele não elimina o risco porque:
+- **a falha só rebaixa a confiança para MÉDIA, que não vai para revisão.** Tem de ser assim: a lista de sinônimos é incompleta (um aviso pode escrever "Crédito em" em vez de "Data de pagamento"), e um rótulo não reconhecido mandaria valores corretos para a fila;
+- **a citação é escolhida pelo próprio modelo.** Se a extração de texto juntar a linha de um campo com o valor do vizinho (por exemplo, num layout em duas colunas), a citação traz o rótulo certo com o valor errado, e a checagem passa;
+- **em texto corrido, o rótulo pode estar longe do valor, ou depois dele,** e a checagem fica sem conclusão.
+
+**As regras cruzadas (R-DAT-01 a R-DAT-03, R-VAL-02).** Uma data trocada ou um valor trocado costuma quebrar uma conta ou uma ordem. Elas não eliminam o risco porque:
+- **só cobrem alguns campos:** data com e data ex se conferem uma à outra (R-DAT-03), e bruto, alíquota e líquido do JCP fecham uma conta (R-VAL-02). Data de aprovação, valor bruto do dividendo, proporção e custo atribuído não têm conferência cruzada;
+- **um valor errado que continua coerente passa:** se a troca resultar em datas ainda na ordem certa, a R-DAT-01 e a R-DAT-02 não percebem.
+
+O risco que sobra é medido, não suposto: o eval conta os erros não roteados (meta zero), e o teste de estocasticidade repete cada documento 50 vezes.
 
 ## Limitações conhecidas
 
