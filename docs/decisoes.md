@@ -152,24 +152,33 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
   ¹ A conjunta pune o tamanho, não a dúvida: cada token tem 99% de certeza, mas o produto de 10 deles fica abaixo do limite, enquanto um valor de 1 token, igualmente certo, passa.
   ² A média dilui um dígito duvidoso, que é justamente o erro que importa.
   ³ O mínimo responde à pergunta certa (existe algum pedaço do valor de que o modelo não tem certeza?), sem depender do tamanho do valor.
-- **Decisão:** C, para os tokens do modelo e para as palavras do OCR.
+- **Decisão:** C, para as palavras do OCR; vale também para os tokens do modelo, se o logprob for ligado (hoje desligado, D-20).
 - **Por quê / custo:** basta um dígito incerto para o valor estar errado. Custo: o mínimo é severo, porque um único token ou palavra abaixo do limite manda o campo para revisão; em escaneados, isso pode aumentar a fila (calibrar na Fase 4).
 
 ### D-20 — Modelo de confiança: limites, três níveis e confirmações
-- **Contexto:** o enunciado pede níveis de confiança justificados e roteamento dos campos de baixa confiança. Há dois sinais medidos por campo: a legibilidade do texto (confiança do OCR, só em escaneados) e a certeza da extração (logprob do modelo, normalizado para 0–1), ambos agregados pelo mínimo (D-19).
+- **Contexto:** o enunciado pede níveis de confiança justificados e roteamento dos campos de baixa confiança. O sinal medido por campo é a legibilidade do texto (confiança do OCR, só em escaneados, agregada pelo mínimo, D-19). O logprob do modelo foi considerado como segundo sinal e ficou desligado (ver "Revisão" abaixo e D-26).
 - **Opções:** (A) três níveis calculados por sinais; (B) dois níveis (ALTA/BAIXA): um valor de fonte única viraria ALTA (exagera) ou BAIXA (os 8 documentos iriam para a fila); (C) nota numérica de 0 a 1 por soma ponderada: com 8 documentos, os pesos seriam arbitrários e a precisão, falsa; (D) autoavaliação declarada pelo modelo: mal calibrada e contrária ao princípio "confiança se calcula, não se pergunta".
 - **Decisão:** A, com os limites como porta de entrada:
-  - **BAIXA:** OCR abaixo de 0,70 (D-23) ou modelo abaixo de 0,95 (provisório) → revisão humana pela R-CNF-01 ou pela R-CNF-02.
+  - **BAIXA:** OCR abaixo de 0,70 (D-23) → revisão humana pela R-CNF-01.
   - **ALTA:** acima dos limites e pelo menos uma confirmação: rótulo do campo na citação (o rótulo mais próximo do valor é o do campo, conferido pelo código), base de referência, R-DAT-03 (data com e data ex) ou R-VAL-02 (bruto, alíquota e líquido do JCP); no tipo de evento, dois ou mais sinais de natureza.
   - **MÉDIA:** acima dos limites, sem confirmação. Segue automático: todo documento do lote tem ao menos um campo de fonte única, e mandar MÉDIA para revisão levaria os 8 para a fila. É onde o risco residual se concentra, e o eval acompanha.
   - Uma citação por campo (no tipo de evento, várias). A concordância entre tabela e corpo como confirmação foi considerada e deixada de fora: simplifica, e o rótulo cobre o erro típico (valor real no campo errado).
   - A confiança mede a leitura; a coerência é das regras. No doc 05, a data de pagamento sai ALTA e vai para revisão pela R-DAT-02: o operador sabe que a leitura está certa e que o erro está no aviso.
 - **Mitigações:** o prompt pede a menor citação (a linha da tabela com o rótulo; senão, a menor frase com rótulo e valor); o código confere o rótulo mais próximo; um sinônimo ausente da lista só rebaixa para MÉDIA, nunca manda para revisão.
-- **Por quê / custo:** cada nível tem causa verificável e justificativa legível, e o logprob é um sinal medido, não autoavaliação. Custo:
-  - limites sem calibração estatística com 8 documentos (decididos por critério, vigiados pela métrica de erros não roteados);
-  - o provider precisa devolver logprobs;
+- **Por quê / custo:** cada nível tem causa verificável e justificativa legível. Custo:
+  - limite sem calibração estatística com 8 documentos (decidido por critério, vigiado pela métrica de erros não roteados);
   - um aviso que se contradiz entre tabela e corpo passa sem ser notado nos campos sem outra checagem cruzada (proporção, custo atribuído, data de aprovação), e, em escaneados, um dígito mal lido numa das ocorrências só é pego pela R-CNF-01; data com e data ex, valores do JCP e identificadores seguem cobertos pela R-DAT-03, pela R-VAL-02/03 e pela base;
   - evolução não feita: citações múltiplas com uma regra "valor da tabela = valor do corpo".
+- **Revisão (logprob desligado):** a primeira versão tinha dois sinais medidos, o OCR e o logprob do modelo (probabilidade mínima dos tokens do valor, limite de 0,95, R-CNF-02). Na reflexão sobre o que cada mecanismo pega:
+
+  | Tipo de erro | Já coberto por | O logprob acrescenta? |
+  |---|---|---|
+  | Valor inventado ou dígito transcrito errado | grounding literal (D-14, D-24) | Não |
+  | OCR leu um dígito errado | confiança do OCR, regras cruzadas | Não: o modelo copia com certeza o que o OCR leu |
+  | Valor real no campo errado | rótulo na citação, regras cruzadas | Pouco |
+  | Escolha entre candidatos parecidos, classificação ambígua, valor derivado | R-CLS-01, sinais de natureza, R-PRO-02 | Sim: mede a hesitação do modelo |
+
+  O logprob só traz sinal único onde o modelo interpreta ou escolhe; na cópia literal, que é a maioria dos campos depois da D-24, os tokens ficam em 1,0. E mantê-lo exigiria um modelo sem raciocínio, justamente o tipo que erra mais onde o logprob seria útil. Decisão: logprob desligado, modelo de raciocínio (D-26); a R-CNF-02 fica documentada e desligada, e `confianca.modelo` sai `null`. Custo: perde-se a medida de hesitação na classificação, que fica a cargo da R-CLS-01, da exigência de dois sinais de natureza para ALTA e do `INDETERMINADO` com motivos fechados.
 
 ### D-21 — O documento é a unidade de roteamento
 - **Contexto:** os motivos de revisão ficam nos campos, mas os processos seguintes tratam o evento inteiro.
@@ -212,13 +221,19 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Contexto:** o contrato exige formatos fixos (D-09: datas ISO, decimais com ponto e todas as casas, alíquota como fração). No teste com o `gpt-4o-mini`, pedir o valor já normalizado fez o modelo devolver `0.4275` para "R$ 0,4275000000": cortou os zeros, e o último token saiu com probabilidade 0,562, por indecisão de formato, não de leitura. O `gpt-4o` acertou o mesmo formato com probabilidade 1,0, mas a questão de desenho continua.
 - **Opções:** (A) o modelo devolve o valor já normalizado, e o grounding converte o valor de volta para as formas do documento antes de procurá-lo no trecho; (B) o modelo copia o valor como está no documento ("0,4275000000", "12/06/2026"), e o código normaliza para o formato do contrato.
 - **Decisão:** B para valores literais (identificadores, datas, valores, alíquota). Valores derivados (proporção, classe, moeda, tipo de evento) continuam vindo do modelo já interpretados, conferidos pelas regras de derivação da R-GRD-02.
-- **Por quê / custo:** o logprob passa a medir a leitura, e não decisões de formato; o grounding vira uma comparação literal (mais simples e mais forte); as convenções da D-09 ficam garantidas por código testável, sem depender de o modelo obedecer ao prompt; um literal que o normalizador não entende é um erro claro, que vai para revisão. Na opção A, o grounding precisaria gerar todas as formas possíveis de cada valor (12/06/2026, 12 de junho de 2026…) e erros de formato do modelo virariam divergência com o gabarito. Custo: um normalizador por tipo de campo (data, inclusive por extenso; decimal; percentual), que já existiria de qualquer forma na opção A, só que no sentido inverso.
+- **Por quê / custo:** decisões de formato saem do modelo (com logprobs, elas também baixariam a probabilidade sem ter relação com a leitura); o grounding vira uma comparação literal (mais simples e mais forte); as convenções da D-09 ficam garantidas por código testável, sem depender de o modelo obedecer ao prompt; um literal que o normalizador não entende é um erro claro, que vai para revisão. Na opção A, o grounding precisaria gerar todas as formas possíveis de cada valor (12/06/2026, 12 de junho de 2026…) e erros de formato do modelo virariam divergência com o gabarito. Custo: um normalizador por tipo de campo (data, inclusive por extenso; decimal; percentual), que já existiria de qualquer forma na opção A, só que no sentido inverso.
 
 ### D-25 — Cache de prompt do provider e paralelismo entre documentos
 - **Contexto:** o lote e o eval fazem várias chamadas ao modelo com a mesma parte fixa (instruções, taxonomia, schema, rótulos) e textos de documento diferentes.
 - **Opções:** (A) chamadas em série, sem cuidado com o cache; (B) tudo em paralelo desde a primeira chamada; (C) prompt com a parte fixa primeiro e o documento por último; a primeira chamada em série, para gravar o prefixo no cache do provider, e as demais em paralelo (`concurrent.futures.ThreadPoolExecutor`).
 - **Decisão:** C, no lote e no eval. Na OpenAI, o cache de prompt é automático para prefixos idênticos de 1.024 tokens ou mais (não há `cache_control` explícito, que é do Claude e do Gemini); o log registra `cached_tokens` de cada chamada para provar o acerto. Dentro de um documento, as etapas continuam em série, porque cada uma depende da anterior. O cache local de respostas (reprodutibilidade e clone limpo sem chave) é outra coisa e continua.
 - **Por quê / custo:** na opção B, as chamadas simultâneas chegariam antes de o prefixo estar no cache e pagariam o prompt inteiro; com C, a primeira paga e as demais reaproveitam, com menor custo e latência. As chamadas são de rede e o Tesseract roda em outro processo, então threads bastam. Custo: número de workers configurável por causa do limite de requisições (o backoff da D-13 continua); gravação atômica no cache local (arquivo temporário + renomeação), porque várias threads escrevem ao mesmo tempo; saída ordenada pelo nome do documento, para o resultado não depender da ordem de término.
+
+### D-26 — Modelo: `openai/gpt-5.6-luna` pelo OpenRouter
+- **Contexto:** o modelo extrai, classifica e chama as ferramentas de validação. A chave disponível é do OpenRouter (API compatível com o SDK da OpenAI).
+- **Opções testadas:** (A) `openai/gpt-4o-mini`: devolve logprobs, mas cortou os zeros de "0,4275000000" quando pedimos o valor normalizado; (B) `openai/gpt-4o-2024-11-20`: devolve logprobs e manteve o formato; (C) `openai/gpt-5.6-luna`: modelo de raciocínio, mais capaz e mais barato (US$ 0,20 / 1,20 por milhão de tokens), sem logprobs ("logprobs are not supported with reasoning models"); (D) híbrido: `gpt-4o` na extração e `luna` na validação.
+- **Decisão:** C, em todas as etapas, com a versão no `config.py`.
+- **Por quê / custo:** o risco que sobra depois do grounding literal, do rótulo e das regras está nas decisões de interpretação (classificação, escolha entre candidatos, valores derivados), exatamente onde um modelo de raciocínio é mais forte. O híbrido seria mais um modelo para configurar e defender, com pouco ganho, porque o código já impõe as ferramentas que faltarem. Custo: sem logprobs (D-20, revisão); modelos de raciocínio não aceitam temperatura 0, então a reprodutibilidade fica a cargo do cache local de respostas (D-25); tokens de raciocínio aumentam latência e custo.
 
 ---
 
@@ -227,8 +242,6 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 Lembretes que nasceram numa fase e só são usados numa fase seguinte. Sai daqui quando for consumido.
 
 - **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01). Atendida pelo Tesseract (D-23).
-- **Fase 3 (arquitetura):** o provider precisa devolver logprobs (a API do Claude e os modelos de raciocínio da OpenAI não devolvem; confirmar); a extração sai como resposta estruturada, não como argumento de tool, porque é onde os logprobs vêm; o cache guarda os logprobs (D-19, D-20).
 - **Fase 3 (arquitetura):** arquivo de rótulos e sinônimos por campo, alimentado pela coluna "Como aparece nos dados" do glossário de `dominio.md`; o prompt pede a menor citação (D-20).
 - **Fase 4 (eval):** o eval traduz os nomes do JSON para as colunas do gabarito: `status` → `revisao_humana` (`REVISAO_HUMANA` e `ERRO` → sim, D-18); campos dentro de `emissor` e `ativo` → colunas de mesmo nome, com `emissor.razao_social` → `emissor` e `ativo.classe` → `classe_acao`; `data_credito` da bonificação → `data_pagamento` (D-09); moeda de `valor_bruto` ou `custo_atribuido` → `moeda`; regras dos `motivos` dos campos → `motivo_revisao`.
 - **Fase 4 (eval):** risco de sinônimo ausente na lista de rótulos: medir quantos campos caíram para MÉDIA por falta de rótulo e completar a lista (D-20).
-- **Fase 4 (calibração):** calibrar o limite de 0,95 da R-CNF-02 com os logprobs medidos no lote; o da R-CNF-01 já foi calibrado em 0,70 (D-23).
