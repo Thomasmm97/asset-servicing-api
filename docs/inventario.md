@@ -125,8 +125,8 @@ Os candidatos a regra levantados aqui foram consolidados em `regras.md`, incluin
 ### Contrato e incerteza (Fase 2)
 - Formato do JSON de saída: objeto único, formato por tipo ou híbrido (extração em objeto único; saída em dois formatos, dinheiro e ações).
 - Status por campo no schema (encontrado, não encontrado, não se aplica, adiado pelo emissor): exigido pelos docs 04 e 06 e por D-07.
-- Representação canônica da proporção: provisória `antes:depois` (D-09).
-- Papel das datas por classe: provisório (D-09); usado em `regras.md`, seção 3.
+- Representação canônica da proporção: `antes:depois`, confirmada em `regras.md` (R-PRO-01; D-09).
+- Papel das datas por classe: consolidado em `regras.md`, seção 4 (D-09).
 - Precisão numérica: valores com até 10 casas decimais → decimal exato, nunca float.
 - Sinal de confiança: concordância corpo × tabela (data com, data ex e alíquota aparecem nos dois lugares).
 - Sinal de confiança em escaneados: confiança do OCR nas palavras de cada valor; limite a definir (D-08).
