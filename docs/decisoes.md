@@ -159,7 +159,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Contexto:** o enunciado pede níveis de confiança justificados e roteamento dos campos de baixa confiança. Há dois sinais medidos por campo: a legibilidade do texto (confiança do OCR, só em escaneados) e a certeza da extração (logprob do modelo, normalizado para 0–1), ambos agregados pelo mínimo (D-19).
 - **Opções:** (A) três níveis calculados por sinais; (B) dois níveis (ALTA/BAIXA): um valor de fonte única viraria ALTA (exagera) ou BAIXA (os 8 documentos iriam para a fila); (C) nota numérica de 0 a 1 por soma ponderada: com 8 documentos, os pesos seriam arbitrários e a precisão, falsa; (D) autoavaliação declarada pelo modelo: mal calibrada e contrária ao princípio "confiança se calcula, não se pergunta".
 - **Decisão:** A, com os limites como porta de entrada:
-  - **BAIXA:** OCR ou modelo abaixo do limite (0,95, provisório) → revisão humana pela R-CNF-01 ou pela R-CNF-02.
+  - **BAIXA:** OCR abaixo de 0,70 (D-23) ou modelo abaixo de 0,95 (provisório) → revisão humana pela R-CNF-01 ou pela R-CNF-02.
   - **ALTA:** acima dos limites e pelo menos uma confirmação: rótulo do campo na citação (o rótulo mais próximo do valor é o do campo, conferido pelo código), base de referência, R-DAT-03 (data com e data ex) ou R-VAL-02 (bruto, alíquota e líquido do JCP); no tipo de evento, dois ou mais sinais de natureza.
   - **MÉDIA:** acima dos limites, sem confirmação. Segue automático: todo documento do lote tem ao menos um campo de fonte única, e mandar MÉDIA para revisão levaria os 8 para a fila. É onde o risco residual se concentra, e o eval acompanha.
   - Uma citação por campo (no tipo de evento, várias). A concordância entre tabela e corpo como confirmação foi considerada e deixada de fora: simplifica, e o rótulo cobre o erro típico (valor real no campo errado).
@@ -214,9 +214,9 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 
 Lembretes que nasceram numa fase e só são usados numa fase seguinte. Sai daqui quando for consumido.
 
-- **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01). Direção: Tesseract (instalar com `brew`, com o idioma português; o Python do sistema é o 3.9).
+- **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01). Atendida pelo Tesseract (D-23).
 - **Fase 3 (arquitetura):** o provider precisa devolver logprobs (a API do Claude e os modelos de raciocínio da OpenAI não devolvem; confirmar); a extração sai como resposta estruturada, não como argumento de tool, porque é onde os logprobs vêm; o cache guarda os logprobs (D-19, D-20).
 - **Fase 3 (arquitetura):** arquivo de rótulos e sinônimos por campo, alimentado pela coluna "Como aparece nos dados" do glossário de `dominio.md`; o prompt pede a menor citação (D-20).
 - **Fase 4 (eval):** o eval traduz os nomes do JSON para as colunas do gabarito: `status` → `revisao_humana` (`REVISAO_HUMANA` e `ERRO` → sim, D-18); campos dentro de `emissor` e `ativo` → colunas de mesmo nome, com `emissor.razao_social` → `emissor` e `ativo.classe` → `classe_acao`; `data_credito` da bonificação → `data_pagamento` (D-09); moeda de `valor_bruto` ou `custo_atribuido` → `moeda`; regras dos `motivos` dos campos → `motivo_revisao`.
 - **Fase 4 (eval):** risco de sinônimo ausente na lista de rótulos: medir quantos campos caíram para MÉDIA por falta de rótulo e completar a lista (D-20).
-- **Fase 4 (calibração):** calibrar os limites de 0,95 da R-CNF-01 e da R-CNF-02 com a distribuição medida no lote, em especial no doc 07 escaneado (D-19, D-20).
+- **Fase 4 (calibração):** calibrar o limite de 0,95 da R-CNF-02 com os logprobs medidos no lote; o da R-CNF-01 já foi calibrado em 0,70 (D-23).

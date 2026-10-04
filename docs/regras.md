@@ -35,7 +35,7 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 | Validar dígito verificador do ISIN | desligado | 11 dos 13 ISINs do lote (fictícios) falham no cálculo (D-11) |
 | Validar dígitos verificadores do CNPJ | desligado | 11 dos 13 CNPJs do lote (fictícios) falham no cálculo (D-11) |
 | Calendário de pregões | calendário da B3: dias úteis menos os feriados da bolsa | Datas de mercado só existem em dia de pregão (D-12). A fonte dos feriados é decidida na Fase 3. |
-| Limite de confiança do OCR (R-CNF-01) | 0,95, provisório; menor confiança entre as palavras do valor; calibrado na Fase 4 | D-08, D-19, D-20 |
+| Limite de confiança do OCR (R-CNF-01) | 0,70; menor confiança entre as palavras do valor; calibrado no doc 07 (leituras corretas entre 0,74 e 0,96) | D-08, D-19, D-23 |
 | Limite de confiança do modelo (R-CNF-02) | 0,95, provisório; menor probabilidade entre os tokens do valor; calibrado na Fase 4 | D-19, D-20 |
 
 ---

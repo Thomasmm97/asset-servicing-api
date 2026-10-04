@@ -63,7 +63,7 @@ Iguais às do gabarito (D-09): datas em ISO 8601; decimais como texto, com ponto
 
 | Nível | Quando | Efeito |
 |---|---|---|
-| `BAIXA` | `ocr` ou `modelo` abaixo do limite (0,95, provisório) | Revisão humana (R-CNF-01 ou R-CNF-02) |
+| `BAIXA` | `ocr` abaixo de 0,70 (D-23) ou `modelo` abaixo de 0,95 (provisório) | Revisão humana (R-CNF-01 ou R-CNF-02) |
 | `ALTA` | Acima dos limites e pelo menos uma confirmação: rótulo do campo na citação (o rótulo mais próximo do valor é o do campo), base de referência, R-DAT-03 ou R-VAL-02; no `tipo_evento`, dois ou mais sinais de natureza | Segue |
 | `MEDIA` | Acima dos limites, sem confirmação | Segue; é onde o risco residual se concentra |
 
