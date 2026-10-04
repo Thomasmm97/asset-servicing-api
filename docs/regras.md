@@ -20,7 +20,7 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 | Tipo | Quando dispara | Como funciona | Se persistir depois de 2 tentativas |
 |---|---|---|---|
 | **Alucinação** | R-GRD-01 ou R-GRD-02 (valor sem respaldo no documento) | Nova chamada que informa ao modelo o problema encontrado e pede que ele releia o documento e cite o trecho de cada valor. (Com temperatura 0, repetir a mesma chamada daria a mesma resposta.) | A regra violada aplica o seu comportamento. No caso de R-GRD, o valor sem respaldo é descartado (o campo fica como não encontrado) e aparece só na mensagem; o motivo da revisão é a R-GRD, sem repetir o mesmo campo na R-REQ-01. |
-| **Falha na chamada ao modelo** | Erro intermitente: tempo esgotado, limite de requisições, provedor indisponível | Repete a mesma chamada, com espera crescente entre as tentativas (backoff) | Revisão humana, com o motivo R-PRC-01. |
+| **Falha na chamada ao modelo** | Erro intermitente: tempo esgotado, limite de requisições, provedor indisponível | Repete a mesma chamada, com espera crescente entre as tentativas (backoff) | O documento sai com status `ERRO` e código `FALHA_MODELO` (seção "Erros de processamento", D-18). |
 
 - Cada tipo tem o seu limite de 2 tentativas; um não consome o do outro.
 - Cada tentativa (motivo, resposta do modelo, resultado) fica registrada no log técnico do documento; o JSON do operador mostra só o resultado final.
@@ -204,7 +204,17 @@ Catálogo único das mensagens ao operador (D-15). Para revisar ou acrescentar u
 | R-REQ-03 | "{campo} não se aplica a {tipo_evento}, mas veio preenchido ({valor})." |
 | R-CLS-01 | "Título do aviso (\"{titulo}\") diverge da natureza identificada ({tipo_evento})." |
 | R-CLS-02 | "Não foi possível classificar o evento ({motivo}): {justificativa}." |
-| R-PRC-01 | "Falha técnica ao processar o documento ({erro}) depois de 2 tentativas." |
+
+### Erros de processamento (D-18)
+
+Quando o documento não pode ser processado, o JSON sai com `status: ERRO` e o objeto `erro` (código + mensagem). Erros não são regras: não há registro para validar.
+
+| Código | Quando | Mensagem |
+|---|---|---|
+| `FALHA_MODELO` | A chamada ao modelo falhou depois de 2 tentativas (tempo esgotado, limite de requisições, provedor indisponível) | "Falha na chamada ao modelo depois de 2 tentativas ({detalhe})." |
+| `PDF_ILEGIVEL` | O arquivo está corrompido, protegido por senha ou não é um PDF | "Não foi possível abrir o PDF ({detalhe})." |
+| `FALHA_OCR` | O OCR não rodou ou não devolveu texto | "Falha no OCR do documento escaneado ({detalhe})." |
+| `ERRO_INTERNO` | Exceção inesperada no código | "Erro interno ao processar o documento; detalhes no log técnico." |
 
 ---
 
