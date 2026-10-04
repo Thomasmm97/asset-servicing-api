@@ -35,7 +35,8 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 | Validar dígito verificador do ISIN | desligado | 11 dos 13 ISINs do lote (fictícios) falham no cálculo (D-11) |
 | Validar dígitos verificadores do CNPJ | desligado | 11 dos 13 CNPJs do lote (fictícios) falham no cálculo (D-11) |
 | Calendário de pregões | calendário da B3: dias úteis menos os feriados da bolsa | Datas de mercado só existem em dia de pregão (D-12). A fonte dos feriados é decidida na Fase 3. |
-| Limite de confiança do OCR (R-CNF-01) | a definir no modelo de confiança; calibrado na Fase 4 | D-08 |
+| Limite de confiança do OCR (R-CNF-01) | 0,95, provisório; menor confiança entre as palavras do valor; calibrado na Fase 4 | D-08, D-19, D-20 |
+| Limite de confiança do modelo (R-CNF-02) | 0,95, provisório; menor probabilidade entre os tokens do valor; calibrado na Fase 4 | D-19, D-20 |
 
 ---
 
@@ -52,7 +53,7 @@ Aplica-se a todos os campos extraídos, em todas as classes. A verificação é 
 - **O grounding é a defesa direta contra valor inventado**, o erro que o enunciado chama de prejuízo. O modelo pode citar um trecho que não existe (R-GRD-01) ou citar o trecho certo e transcrever o valor errado (R-GRD-02). As duas verificações são feitas pelo código, não pelo modelo (D-14).
 - **Normalização (R-GRD-02):** datas em dd/mm/aaaa ou por extenso ("12 de junho de 2026"); decimais com vírgula e "R$"; percentuais ("17,5%" ↔ 0.175); identificadores comparados literalmente.
 - **Valores derivados (R-GRD-02):** a proporção `20:21` deriva de "1 ação nova para cada 20", e o trecho precisa conter os números de que ela sai; a classe da ação deriva de "ON"/"ordinária" ou "PN"/"preferencial", ou do sufixo do ticker e do código de classe do ISIN citados (os docs 06 e 08 não escrevem a classe por extenso); a moeda de cada valor monetário deriva do símbolo ou do nome na citação do próprio valor ("R$" → BRL, "US$" → USD); o tipo de evento deriva dos sinais de natureza (`dominio.md`), e o trecho citado precisa conter pelo menos um deles.
-- **Limite:** o grounding confirma que o valor está no documento, não que pertence ao campo certo (ex.: a data ex citada como data de pagamento). Esse erro é pego, em parte, pelas regras de ordem das datas e de campos por classe.
+- **Limite:** o grounding confirma que o valor está no documento, não que pertence ao campo certo (ex.: a data ex citada como data de pagamento). Esse erro é pego, em parte, pelas regras de ordem das datas e de campos por classe, e reduzido pelo sinal de confiança "rótulo do campo na citação": o rótulo mais próximo do valor na citação precisa ser o do campo para a confiança ser ALTA (D-20).
 
 ## 2. Identificação e base de referência
 
@@ -174,16 +175,18 @@ A moeda não é um campo próprio: é atributo de cada valor monetário (valor b
 
 ## 9. Confiança da leitura
 
-Aplica-se a todas as classes, só em documentos escaneados.
+Aplica-se a todas as classes. A R-CNF-01 vale só em documentos escaneados; a R-CNF-02, sempre que o provider devolve logprobs. Agregação pelo mínimo (D-19); níveis de confiança em D-20.
 
 | ID | Regra | Comportamento | Caso de teste (Dado → Então) | No lote |
 |---|---|---|---|---|
 | R-CNF-01 | A confiança que o OCR atribui às palavras de cada valor está acima do limite configurado. | REVISÃO HUMANA | Data com escaneada com palavras lidas abaixo do limite → revisão humana do campo | Doc 07 passa, se a confiança do OCR ficar acima do limite (D-08) |
+| R-CNF-02 | A probabilidade que o modelo atribui aos tokens de cada valor (logprob normalizado para 0–1) está acima do limite configurado. | REVISÃO HUMANA | Valor bruto extraído com um token de probabilidade 0,70 → revisão humana do campo | Todos passam, se a extração estiver segura (a medir na Fase 4) |
 
 **Notas:**
 - **Por campo, não por documento:** a regra olha só as palavras que formam cada valor. Um carimbo que borra a data de pagamento numa página nítida manda só esse campo para revisão; a média da página esconderia esse caso e penalizaria um documento com assinatura ou logotipo borrado e valores nítidos. Um documento inteiro ilegível dispara a R-CNF-01 (ou a R-REQ-01) em todos os campos, sem precisar de regra própria.
 - **Limites:** se o borrão fizer o OCR ler lixo, o modelo pode "corrigir" o valor pelo contexto; esse valor não está no texto do OCR, e o grounding falha (R-GRD, com retry). Um dígito lido errado com confiança alta passa pela R-CNF-01; só as checagens cruzadas pegam esse caso (R-DAT-03 nas datas, R-VAL-02 nos valores do JCP).
-- O limite e a forma de combinar a confiança das palavras de um valor são definidos no modelo de confiança.
+- **R-CNF-02, o que o logprob mede:** a certeza do modelo ao gerar o valor, não o acerto. É um sinal medido, não autoavaliação declarada pelo modelo. Não substitui o grounding: um valor copiado da linha errada pode vir com probabilidade alta. É mais informativo onde o modelo escolhe (tipo de evento, qual data é a data com, valores derivados) do que em cópia literal, onde os tokens ficam perto de 1.
+- **R-CNF-01 e R-CNF-02 são independentes:** a primeira mede a legibilidade do texto, a segunda a certeza da extração; qualquer uma abaixo do limite manda o campo para revisão.
 
 ---
 
@@ -222,6 +225,7 @@ Catálogo único dos textos ao operador (D-15). A descrição curta aparece em `
 | R-CLS-01 | Título coerente com a natureza do evento. | "Título do aviso (\"{titulo}\") diverge da natureza identificada ({tipo_evento})." |
 | R-CLS-02 | Evento classificado na taxonomia. | "Não foi possível classificar o evento ({motivo}): {justificativa}." |
 | R-CNF-01 | Confiança do OCR acima do limite. | "Leitura incerta de {campo} ({valor}): confiança do OCR ({confianca_ocr}) abaixo do limite ({limite})." |
+| R-CNF-02 | Confiança do modelo acima do limite. | "Extração incerta de {campo} ({valor}): probabilidade do modelo ({confianca_modelo}) abaixo do limite ({limite})." |
 
 ### Erros de processamento (D-18)
 
@@ -242,6 +246,7 @@ Quando o documento não pode ser processado, o JSON sai com `status: ERRO` e o o
 |---|---|---|---|---|---|
 | R-GRD, R-ID, R-IDF, R-DAT-01, R-DAT-03, R-DAT-04, R-REQ, R-CLS | ✓ | ✓ | ✓ | ✓ | ✓ |
 | R-CNF-01 (só em escaneados) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| R-CNF-02 (com logprobs) | ✓ | ✓ | ✓ | ✓ | ✓ |
 | R-DAT-02 | ✓ | ✓ | ✓ | — | — |
 | R-VAL-01 | ✓ | ✓ | — | — | — |
 | R-VAL-02, R-VAL-03 | — | ✓ | — | — | — |
