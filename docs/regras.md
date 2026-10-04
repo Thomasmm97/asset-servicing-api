@@ -85,6 +85,7 @@ Aplica-se a todas as classes.
 **Notas:**
 - **R-IDF-05 e R-IDF-06 importam sobretudo quando o emissor não está na base** (doc 08): aí a R-ID-02 não tem com o que comparar ticker e ISIN, e a coerência interna entre os dois é a única checagem disponível.
 - **R-IDF-06:** no padrão brasileiro, o ISIN carrega a raiz do ticker (BR + **TIET** + ACN + OR + dígito). A regra confere esse padrão: uma divergência indica ticker e ISIN de ativos diferentes (ex.: o modelo pegou o ticker de uma linha e o ISIN de outra) ou erro de leitura. Só alerta porque o ISIN é atribuído ao ativo e pode não mudar quando o ticker muda (renomeação), então há exceções legítimas ao padrão.
+- **R-IDF-06, por que basta a raiz:** o ISIN não contém o ticker inteiro, só a raiz e o código de classe (BR + **TIET** + ACN + **OR** + dígito); o sufixo do ticker (o "3" de TIET3) não aparece nele. O sufixo é conferido pela R-IDF-05 (3 ↔ OR, 4 ↔ PR): juntas, as duas regras cobrem o ticker inteiro. Quando o emissor está na base, a R-ID-02 ainda compara o ticker completo com ela. Limite: a R-IDF-05 só confere os sufixos 3 e 4; para os sufixos 5 a 8 e 11, só a raiz é conferida (sem caso no lote).
 
 ## 4. Datas
 
