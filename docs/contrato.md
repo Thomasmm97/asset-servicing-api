@@ -82,7 +82,7 @@ Alertas e o nível `MEDIA` não mudam o status.
 
 | Regra | Campos |
 |---|---|
-| R-GRD-01, R-GRD-02, R-CNF-01, R-CNF-02 | O campo avaliado |
+| R-GRD-01, R-GRD-02, R-GRD-03, R-CNF-01, R-CNF-02 | O campo avaliado |
 | R-ID-01 | Os 5 campos de `emissor` e `ativo` |
 | R-ID-02 | Cada campo divergente (`cnpj`, `isin`, `ticker`, `classe`) |
 | R-ID-03 | `razao_social` |

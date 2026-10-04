@@ -48,11 +48,13 @@ Aplica-se a todos os campos extraídos, em todas as classes. A verificação é 
 |---|---|---|---|---|
 | R-GRD-01 | Todo valor extraído vem com o trecho do documento de onde saiu, e o trecho existe literalmente no texto do documento (desconsiderando espaços e quebras de linha). | REVISÃO HUMANA, com retry | Trecho "Valor bruto por ação R$ 0,4725", que não está no documento → retry → revisão humana | Todos passam, se a extração estiver certa |
 | R-GRD-02 | O valor está no trecho citado. Valores literais (identificadores, datas, valores, alíquota): depois de normalizar o formato, o valor aparece no trecho. Valores derivados: o trecho contém os elementos de que o valor deriva. | REVISÃO HUMANA, com retry | Valor 2026-06-12 com trecho "Data-base (“data com”) 12/06/2026" → passa; valor 0.4257 com trecho "R$ 0,4275000000" → retry → revisão humana | Todos passam, se a extração estiver certa |
+| R-GRD-03 | O valor literal está num formato que o normalizador reconhece (datas numéricas ou por extenso, decimais com vírgula, percentuais), para virar o formato do contrato (D-24). | REVISÃO HUMANA, sem retry | Data citada como "meados de junho de 2026" → revisão humana | Todos passam |
 
 **Notas:**
 - **O grounding é a defesa direta contra valor inventado**, o erro que o enunciado chama de prejuízo. O modelo pode citar um trecho que não existe (R-GRD-01) ou citar o trecho certo e transcrever o valor errado (R-GRD-02). As duas verificações são feitas pelo código, não pelo modelo (D-14).
 - **Normalização (R-GRD-02):** datas em dd/mm/aaaa ou por extenso ("12 de junho de 2026"); decimais com vírgula e "R$"; percentuais ("17,5%" ↔ 0.175); identificadores comparados literalmente.
 - **Valores derivados (R-GRD-02):** a proporção `20:21` deriva de "1 ação nova para cada 20", e o trecho precisa conter os números de que ela sai; a classe da ação deriva de "ON"/"ordinária" ou "PN"/"preferencial", ou do sufixo do ticker e do código de classe do ISIN citados (os docs 06 e 08 não escrevem a classe por extenso); a moeda de cada valor monetário deriva do símbolo ou do nome na citação do próprio valor ("R$" → BRL, "US$" → USD); o tipo de evento deriva dos sinais de natureza (`dominio.md`), e o trecho citado precisa conter pelo menos um deles.
+- **R-GRD-03 sem retry:** o literal está no documento (passou na R-GRD-01 e na R-GRD-02); o que falta é um formato conhecido, e um novo processamento não muda o documento. Um humano lê o valor e decide.
 - **Limite:** o grounding confirma que o valor está no documento, não que pertence ao campo certo (ex.: a data ex citada como data de pagamento). Esse erro é pego, em parte, pelas regras de ordem das datas e de campos por classe, e reduzido pelo sinal de confiança "rótulo do campo na citação": o rótulo mais próximo do valor na citação precisa ser o do campo para a confiança ser ALTA (D-20).
 
 ## 2. Identificação e base de referência
@@ -198,6 +200,7 @@ Catálogo único dos textos ao operador (D-15). A descrição curta aparece em `
 |---|---|---|
 | R-GRD-01 | Trecho citado existe no documento. | "Valor de {campo} ({valor}) sem respaldo no documento: o trecho citado não foi encontrado no texto." |
 | R-GRD-02 | Valor está no trecho citado. | "Valor de {campo} ({valor}) não está no trecho citado: \"{trecho}\"." |
+| R-GRD-03 | Valor em formato reconhecido. | "Valor de {campo} (\"{valor}\") em formato não reconhecido; confira no documento." |
 | R-ID-01 | Emissor encontrado na base de referência. | "Emissor não encontrado na base de referência (ISIN {isin}, CNPJ {cnpj})." |
 | R-ID-02 | CNPJ, ISIN, ticker e classe conferem com a base. | "{campo} diverge da base de referência: aviso {valor_aviso}, base {valor_base}." |
 | R-ID-03 | Nome do emissor confere com a base. | "Nome do emissor diverge da base: aviso \"{nome_aviso}\", base \"{nome_base}\"." |
