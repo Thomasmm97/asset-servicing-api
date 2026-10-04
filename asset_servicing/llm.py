@@ -15,7 +15,7 @@ from .regras import FERRAMENTAS
 from .saida import registrar
 
 PROMPT_EXTRACAO = """Extraia os campos do aviso de evento corporativo conforme o schema.
-- valor: copie exatamente como está no texto, sem converter formato. Campo ausente: valor, trecho e pagina null.
+- valor: copie exatamente como está no texto, sem converter formato; só proporcao, classe e moeda vêm no formato descrito no schema. Campo ausente: valor, trecho e pagina null.
 - trecho: a linha da tabela com o rótulo do campo e o valor, copiada literalmente; sem tabela, a menor frase com rótulo e valor.
 - Valor adiado pelo emissor ("a definir"): valor null, adiado true, trecho com o adiamento.
 - Extraia os valores por ação que o aviso informar, mesmo que não combinem com o tipo de evento.
@@ -103,6 +103,8 @@ def validar(valores: dict[str, object], tipo_evento: str, usar_cache: bool = Tru
             registrar("ferramenta", nome=chamada.nome, chamada_por="modelo", ocorrencias=len(resultado.ocorrencias))
             mensagens.append({"role": "tool", "tool_call_id": chamada.id, "content": json.dumps(
                 {"aprovadas": resultado.aprovadas, "ocorrencias": [o.mensagem for o in resultado.ocorrencias]}, ensure_ascii=False)})
+        if resultados.keys() == FERRAMENTAS.keys():  # todas chamadas: outra rodada só traria "concluído"
+            break
     for nome, funcao in FERRAMENTAS.items():
         if nome not in resultados:
             resultados[nome] = funcao(valores)
