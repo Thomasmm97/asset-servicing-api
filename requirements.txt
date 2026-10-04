@@ -1,0 +1,6 @@
+openai
+pydantic>=2
+pymupdf
+pytesseract
+pillow
+pytest
