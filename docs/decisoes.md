@@ -247,6 +247,30 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Decisão:** C, em todas as etapas, com a versão no `config.py`.
 - **Por quê / custo:** o risco que sobra depois do grounding literal, do rótulo e das regras está nas decisões de interpretação (classificação, escolha entre candidatos, valores derivados), exatamente onde um modelo de raciocínio é mais forte. O híbrido seria mais um modelo para configurar e defender, com pouco ganho, porque o código já impõe as ferramentas que faltarem. Custo: sem logprobs (D-20, revisão); modelos de raciocínio não aceitam temperatura 0, então a reprodutibilidade fica a cargo do cache local de respostas (D-25); tokens de raciocínio aumentam latência e custo.
 
+### D-27 — Três ferramentas, sem argumentos de valor
+- **Contexto:** o requisito 3 do enunciado pede validação com tool calling, e o princípio é "o LLM extrai, o código decide". O primeiro desenho tinha 6 ferramentas, que recebiam os valores como argumentos.
+- **Opções:** (A) 6 ferramentas, uma por grupo de regras, recebendo os valores; (B) 3 ferramentas sem argumentos de valor (o código injeta os valores conferidos), com R-REQ no código.
+- **Decisão:** B: `validar_identificacao` (R-ID + R-IDF), `validar_datas` (R-DAT) e `validar_valores_e_proporcao` (R-VAL ou R-PRO, conforme a classe). R-GRD, R-REQ, R-CLS e R-CNF rodam no código. O código chama as ferramentas que o modelo não chamou e registra isso no trace.
+- **Por quê / custo:** um modelo repassando valores pode alterá-los no argumento, e essa alucinação escaparia do grounding; a R-REQ pediria ao modelo que repetisse quais campos ele mesmo extraiu, informação que o código já tem; fundir R-ID com R-IDF (mesmos campos) e R-VAL com R-PRO (a regra já sabe qual grupo vale para a classe) tira do modelo escolhas que ele poderia errar. Custo: a parte agêntica fica fina (o modelo orquestra, o código garante dados e cobertura), o que é intencional.
+
+### D-28 — Agente sem framework
+- **Contexto:** o agente é um laço de tool calling com 3 ferramentas, no máximo 3 rodadas, e cobertura imposta pelo código.
+- **Opções:** (A) LangChain ou LangGraph; (B) PydanticAI; (C) o SDK oficial da OpenAI (pacote `openai`, a biblioteca cliente que faz as chamadas HTTP à API, compatível com o OpenRouter), com o laço escrito no código.
+- **Decisão:** C.
+- **Por quê / custo:** o laço tem cerca de 40 linhas, e cada uma é explicável e depurável ao vivo. O LangGraph brilha em grafos com estado, desvios e checkpoints, que o pipeline linear não tem; o LangChain acrescenta camadas e dependências; o PydanticAI seria a alternativa mais leve, mas é mais uma API para defender. O enunciado pede um agente "code-first". Custo: retry, cache e rastreamento são escritos à mão (poucas linhas cada).
+
+### D-29 — Teste de estocasticidade: 100 execuções por documento, zero falhas
+- **Contexto:** o modelo de raciocínio não aceita temperatura 0 (D-26), então duas execuções podem dar resultados diferentes. O cache local esconderia essa variação.
+- **Opções:** (A) uma execução por documento, com cache; (B) N execuções por documento, sem o cache local, com critério de falha.
+- **Decisão:** B, com N = 100 (configurável). Cada documento é lido uma vez (a leitura é determinística) e processado N vezes sem o cache local; a primeira execução vai em série (para o cache do provider) e as demais em paralelo, com 20 workers (20 chamadas simultâneas testadas sem erro de limite). O teste de cada documento passa só se nenhuma execução falhar em alguma métrica com meta do `contrato.md`, seção 9: erro não roteado, valor inventado, classificação, roteamento, motivo ou acurácia por campo. Fica fora da suíte padrão (`pytest -m estocastico`).
+- **Por quê / custo:** zero falhas em 100 execuções limita a taxa real de falha a cerca de 3%, com 95% de confiança (regra de três: 3/n), um argumento que uma execução só não dá. Custo: cerca de 800 execuções, 8 a 12 minutos e US$ 3 a 5 por rodada completa; a acurácia de 100% em todas as execuções é exigente, e uma falha vira um ciclo de melhoria (prompt ou normalização).
+
+### D-30 — Rastreamento por documento
+- **Contexto:** é preciso reconstruir o caminho de um documento (o que foi lido, o que o modelo respondeu, cada retry, cada ferramenta, o que decidiu o roteamento) sem misturar isso no JSON do operador.
+- **Opções:** (A) log de texto; (B) trace JSONL por documento; (C) OpenTelemetry; (D) serviço externo (Langfuse, LangSmith, Logfire).
+- **Decisão:** B: `saida/traces/<documento>.jsonl`, uma linha por etapa (`trace_id`, etapa, início, duração, tentativa, cache, `cached_tokens`, ferramenta e quem a chamou, resumo de entrada e saída, erro), gravada por um gerenciador de contexto. O `trace_id` vai também no JSON do operador.
+- **Por quê / custo:** estruturado (dá para filtrar e somar tempos por etapa), sem dependência e sem dados saindo do ambiente. O OpenTelemetry seria o padrão de mercado, mas é configuração demais para 8 documentos; os serviços externos exigem conta e enviam os dados para fora. Custo: o formato é próprio; migrar para OpenTelemetry depois é trocar o gerenciador de contexto.
+
 ---
 
 ## Notas para as próximas fases

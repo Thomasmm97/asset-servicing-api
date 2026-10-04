@@ -12,8 +12,9 @@ A saída fica em `saida/`: um JSON por documento (`saida/<documento>.json`) e o 
 | Chave | Valores | Finalidade |
 |---|---|---|
 | `documento` | nome do arquivo | Liga o registro ao PDF de origem. |
+| `trace_id` | `<documento>-<data e hora da execução>` | Liga o registro ao rastro técnico em `saida/traces/` (D-30). |
 | `tipo_pdf` | `NATIVO`, `ESCANEADO` ou `null` | Diz ao operador se os valores vieram de OCR, caso em que um dígito mal lido é um risco. `null` quando o PDF não abre. Um PDF misto conta como `ESCANEADO`. |
-| `status` | `APROVADO`, `REVISAO_HUMANA`, `ERRO` | Responde, numa chave só, se o registro pode seguir para os processos seguintes (só `APROVADO` segue) e o que fazer: revisar ou reprocessar (D-18). Derivado pelo código (seção 6). |
+| `status` | `APROVADO`, `REVISAO_HUMANA`, `ERRO` | Responde, numa chave só, se o registro pode seguir para os processos seguintes (só `APROVADO` segue) e o que fazer: revisar ou reprocessar (D-18). Calculado a partir do erro e dos campos (seção 6), nunca preenchido à mão. |
 | `erro` | `null` ou `{codigo, mensagem}` | Explica uma falha de processamento (seção 7). Com erro, `tipo_evento` e `campos` saem `null`. |
 | `regras_aprovadas` | lista de `{regra, descricao}` | Mostra as checagens que o registro passou. As que falharam aparecem nos `motivos` e `alertas` dos campos. Sem esta lista, um documento aprovado não traria sinal de que foi validado. A descrição vem do catálogo de `regras.md`. |
 | `tipo_evento` | campo (seção 2) com `citacoes` | Fica no topo porque define quais chaves existem em `campos`. As citações são os sinais de natureza que sustentam a classificação (R-GRD-02). |
@@ -128,6 +129,8 @@ Alertas e o nível `MEDIA` não mudam o status.
 | Motivo certo | Regras dos motivos iguais a `motivo_revisao` | 4/4 |
 | Acurácia por campo | Valor igual ao gabarito, por campo e por classe | 100% |
 | Sem rótulo (acompanhamento) | Campos em `MEDIA` por falta de rótulo na citação | Sem meta; serve para completar a lista de sinônimos |
+
+**Estocasticidade (D-29):** as metas valem para cada uma das N execuções (padrão 100) de cada documento, sem o cache local; uma única execução fora da meta reprova o documento.
 
 ## 10. Correspondência com o gabarito
 
