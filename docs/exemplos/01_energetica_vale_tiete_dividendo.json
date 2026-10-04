@@ -1,0 +1,294 @@
+{
+  "documento": "01_energetica_vale_tiete_dividendo.pdf",
+  "tipo_pdf": "NATIVO",
+  "status": "APROVADO",
+  "erro": null,
+  "regras_aprovadas": [
+    {
+      "regra": "R-GRD-01",
+      "descricao": "Trecho citado existe no documento."
+    },
+    {
+      "regra": "R-GRD-02",
+      "descricao": "Valor está no trecho citado."
+    },
+    {
+      "regra": "R-ID-01",
+      "descricao": "Emissor encontrado na base de referência."
+    },
+    {
+      "regra": "R-ID-02",
+      "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+    },
+    {
+      "regra": "R-ID-03",
+      "descricao": "Nome do emissor confere com a base."
+    },
+    {
+      "regra": "R-ID-04",
+      "descricao": "Emissor com status ativo na base."
+    },
+    {
+      "regra": "R-IDF-01",
+      "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+    },
+    {
+      "regra": "R-IDF-04",
+      "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+    },
+    {
+      "regra": "R-IDF-05",
+      "descricao": "Classe coerente entre ticker, ISIN e aviso."
+    },
+    {
+      "regra": "R-IDF-06",
+      "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+    },
+    {
+      "regra": "R-DAT-01",
+      "descricao": "Aprovação ≤ data com < data ex."
+    },
+    {
+      "regra": "R-DAT-02",
+      "descricao": "Data de pagamento ou de crédito posterior à data com."
+    },
+    {
+      "regra": "R-DAT-03",
+      "descricao": "Data ex é o pregão seguinte à data com."
+    },
+    {
+      "regra": "R-DAT-04",
+      "descricao": "Datas de mercado em dia de pregão."
+    },
+    {
+      "regra": "R-VAL-01",
+      "descricao": "Valor bruto por ação positivo."
+    },
+    {
+      "regra": "R-VAL-04",
+      "descricao": "Valores monetários em BRL."
+    },
+    {
+      "regra": "R-REQ-01",
+      "descricao": "Campos obrigatórios da classe encontrados."
+    },
+    {
+      "regra": "R-REQ-02",
+      "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+    },
+    {
+      "regra": "R-REQ-03",
+      "descricao": "Nenhum campo de outra classe preenchido."
+    },
+    {
+      "regra": "R-CLS-01",
+      "descricao": "Título coerente com a natureza do evento."
+    },
+    {
+      "regra": "R-CLS-02",
+      "descricao": "Evento classificado na taxonomia."
+    },
+    {
+      "regra": "R-CNF-02",
+      "descricao": "Confiança do modelo acima do limite."
+    }
+  ],
+  "tipo_evento": {
+    "valor": "DIVIDENDO",
+    "citacoes": [
+      {
+        "pagina": 1,
+        "trecho": "aprovou a distribuição de dividendos referentes ao resultado do exercício social encerrado em 31 de dezembro de 2025"
+      },
+      {
+        "pagina": 1,
+        "trecho": "os dividendos estarão sujeitos à retenção de Imposto de Renda na Fonte (IRRF) à alíquota de 10% sobre a parcela que exceder R$ 50.000,00 mensais por beneficiário"
+      },
+      {
+        "pagina": 1,
+        "trecho": "Tipo de evento Dividendo"
+      }
+    ],
+    "confianca": {
+      "nivel": "ALTA",
+      "ocr": null,
+      "modelo": 0.997,
+      "justificativa": "Modelo 0,997; dois sinais de natureza convergem (resultado do exercício; tributação de dividendos), e rótulo e título concordam."
+    },
+    "revisao_humana": false,
+    "motivos": [],
+    "alertas": []
+  },
+  "campos": {
+    "emissor": {
+      "razao_social": {
+        "valor": "Energética Vale do Tietê S.A.",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "A Energética Vale do Tietê S.A. (“Companhia”)"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pela base de referência."
+        },
+        "base_referencia": "CONFERE",
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "cnpj": {
+        "valor": "12.345.678/0001-90",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "CNPJ/ME nº 12.345.678/0001-90"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela base de referência."
+        },
+        "base_referencia": "CONFERE",
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      }
+    },
+    "ativo": {
+      "isin": {
+        "valor": "BRTIETACNOR3",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "TIET3 (ISIN BRTIETACNOR3)"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela base de referência."
+        },
+        "base_referencia": "CONFERE",
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "ticker": {
+        "valor": "TIET3",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "Código de negociação TIET3 (ISIN BRTIETACNOR3)"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela base de referência."
+        },
+        "base_referencia": "CONFERE",
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "classe": {
+        "valor": "ON",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "Valor bruto por ação ordinária (ON)"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.998,
+          "justificativa": "Modelo 0,998; confirmado pela base de referência."
+        },
+        "base_referencia": "CONFERE",
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      }
+    },
+    "data_aprovacao": {
+      "valor": "2026-05-28",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Data de aprovação (RCA) 28/05/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.999,
+        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "data_com": {
+      "valor": "2026-06-12",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Data-base (“data com”) 12/06/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.999,
+        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela R-DAT-03 (data ex é o pregão seguinte)."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "data_ex": {
+      "valor": "2026-06-15",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Data “ex-dividendos” 15/06/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.999,
+        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela R-DAT-03 (pregão seguinte à data com)."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "data_pagamento": {
+      "valor": "2026-07-03",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Data de pagamento 03/07/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.998,
+        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "valor_bruto": {
+      "valor": "0.4275000000",
+      "moeda": "BRL",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Valor bruto por ação ordinária (ON) R$ 0,4275000000"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.998,
+        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    }
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "documento": "08_construtora_horizonte_bonificacao.pdf",
+  "tipo_pdf": "NATIVO",
+  "status": "REVISAO_HUMANA",
+  "erro": null,
+  "regras_aprovadas": [
+    {
+      "regra": "R-GRD-01",
+      "descricao": "Trecho citado existe no documento."
+    },
+    {
+      "regra": "R-GRD-02",
+      "descricao": "Valor está no trecho citado."
+    },
+    {
+      "regra": "R-IDF-01",
+      "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+    },
+    {
+      "regra": "R-IDF-04",
+      "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+    },
+    {
+      "regra": "R-IDF-05",
+      "descricao": "Classe coerente entre ticker, ISIN e aviso."
+    },
+    {
+      "regra": "R-IDF-06",
+      "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+    },
+    {
+      "regra": "R-DAT-01",
+      "descricao": "Aprovação ≤ data com < data ex."
+    },
+    {
+      "regra": "R-DAT-02",
+      "descricao": "Data de pagamento ou de crédito posterior à data com."
+    },
+    {
+      "regra": "R-DAT-03",
+      "descricao": "Data ex é o pregão seguinte à data com."
+    },
+    {
+      "regra": "R-DAT-04",
+      "descricao": "Datas de mercado em dia de pregão."
+    },
+    {
+      "regra": "R-VAL-04",
+      "descricao": "Valores monetários em BRL."
+    },
+    {
+      "regra": "R-PRO-01",
+      "descricao": "Proporção no formato antes:depois."
+    },
+    {
+      "regra": "R-PRO-02",
+      "descricao": "Direção da proporção coerente com a classe."
+    },
+    {
+      "regra": "R-PRO-03",
+      "descricao": "Custo atribuído positivo."
+    },
+    {
+      "regra": "R-REQ-01",
+      "descricao": "Campos obrigatórios da classe encontrados."
+    },
+    {
+      "regra": "R-REQ-02",
+      "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+    },
+    {
+      "regra": "R-REQ-03",
+      "descricao": "Nenhum campo de outra classe preenchido."
+    },
+    {
+      "regra": "R-CLS-01",
+      "descricao": "Título coerente com a natureza do evento."
+    },
+    {
+      "regra": "R-CLS-02",
+      "descricao": "Evento classificado na taxonomia."
+    },
+    {
+      "regra": "R-CNF-02",
+      "descricao": "Confiança do modelo acima do limite."
+    }
+  ],
+  "tipo_evento": {
+    "valor": "BONIFICACAO",
+    "citacoes": [
+      {
+        "pagina": 1,
+        "trecho": "aumento do capital social mediante capitalização de reservas, com a consequente bonificação em ações aos acionistas"
+      },
+      {
+        "pagina": 1,
+        "trecho": "1 (uma) ação nova para cada 20 (vinte) ações"
+      },
+      {
+        "pagina": 1,
+        "trecho": "O custo unitário atribuído às ações bonificadas, para fins fiscais, é de R$ 7,820000 por ação"
+      }
+    ],
+    "confianca": {
+      "nivel": "ALTA",
+      "ocr": null,
+      "modelo": 0.996,
+      "justificativa": "Modelo 0,996; três sinais de natureza convergem (capitalização de reservas; ações novas na proporção; custo atribuído para fins fiscais)."
+    },
+    "revisao_humana": false,
+    "motivos": [],
+    "alertas": []
+  },
+  "campos": {
+    "emissor": {
+      "razao_social": {
+        "valor": "Construtora Horizonte S.A.",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "A Construtora Horizonte S.A. comunica aos seus acionistas"
+        },
+        "confianca": {
+          "nivel": "MEDIA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; sem confirmação: não há rótulo do campo na citação e o emissor não está na base de referência."
+        },
+        "base_referencia": "NAO_ENCONTRADO",
+        "revisao_humana": true,
+        "motivos": [
+          {
+            "regra": "R-ID-01",
+            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+          }
+        ],
+        "alertas": []
+      },
+      "cnpj": {
+        "valor": "09.888.999/0001-21",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "CNPJ/ME nº 09.888.999/0001-21"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+        },
+        "base_referencia": "NAO_ENCONTRADO",
+        "revisao_humana": true,
+        "motivos": [
+          {
+            "regra": "R-ID-01",
+            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+          }
+        ],
+        "alertas": []
+      }
+    },
+    "ativo": {
+      "isin": {
+        "valor": "BRCNHZACNOR5",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "CNHZ3 (ISIN BRCNHZACNOR5)"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+        },
+        "base_referencia": "NAO_ENCONTRADO",
+        "revisao_humana": true,
+        "motivos": [
+          {
+            "regra": "R-ID-01",
+            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+          }
+        ],
+        "alertas": []
+      },
+      "ticker": {
+        "valor": "CNHZ3",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "Código de negociação CNHZ3 (ISIN BRCNHZACNOR5)"
+        },
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": 0.999,
+          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+        },
+        "base_referencia": "NAO_ENCONTRADO",
+        "revisao_humana": true,
+        "motivos": [
+          {
+            "regra": "R-ID-01",
+            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+          }
+        ],
+        "alertas": []
+      },
+      "classe": {
+        "valor": "ON",
+        "citacao": {
+          "pagina": 1,
+          "trecho": "CNHZ3 (ISIN BRCNHZACNOR5)"
+        },
+        "confianca": {
+          "nivel": "MEDIA",
+          "ocr": null,
+          "modelo": 0.99,
+          "justificativa": "Modelo 0,99; derivada do sufixo do ticker e do código de classe do ISIN; sem confirmação: não há rótulo do campo na citação e o emissor não está na base de referência."
+        },
+        "base_referencia": "NAO_ENCONTRADO",
+        "revisao_humana": true,
+        "motivos": [
+          {
+            "regra": "R-ID-01",
+            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+          }
+        ],
+        "alertas": []
+      }
+    },
+    "data_aprovacao": {
+      "valor": "2026-06-04",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Assembleia Geral Extraordinária de 04 de junho de 2026 aprovou aumento do capital social"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.998,
+        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "data_com": {
+      "valor": "2026-06-18",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Data-base (“data com”) 18/06/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.999,
+        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela R-DAT-03 (data ex é o pregão seguinte)."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "data_ex": {
+      "valor": "2026-06-19",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Data “ex-bonificação” 19/06/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.999,
+        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela R-DAT-03 (pregão seguinte à data com)."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "data_credito": {
+      "valor": "2026-06-26",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Crédito das ações bonificadas 26/06/2026"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.998,
+        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "proporcao": {
+      "valor": "20:21",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Proporção 1 ação nova para cada 20 ações (5%)"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.985,
+        "justificativa": "Modelo 0,985; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    },
+    "custo_atribuido": {
+      "valor": "7.820000",
+      "moeda": "BRL",
+      "citacao": {
+        "pagina": 1,
+        "trecho": "Custo atribuído (base fiscal) R$ 7,820000 por ação"
+      },
+      "confianca": {
+        "nivel": "ALTA",
+        "ocr": null,
+        "modelo": 0.998,
+        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+      },
+      "revisao_humana": false,
+      "motivos": [],
+      "alertas": []
+    }
+  }
+}
