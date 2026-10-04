@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-SAIDA = Path(__file__).resolve().parent.parent / "saida"
+SAIDA = Path(__file__).resolve().parents[2] / "saida"
 
 
 @pytest.mark.skipif(not (SAIDA / "01_energetica_vale_tiete_dividendo.json").exists(), reason="rode o lote antes")

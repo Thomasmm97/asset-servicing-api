@@ -7,7 +7,7 @@ import pytest
 from asset_servicing.evidencias import (normalizar_texto, para_data, para_decimal, para_fracao, rotulo_confere,
                                         span_no_trecho, verificar_evidencias)
 from asset_servicing.modelos import Leitura, TipoPdf
-from tests.test_regras import extracao
+from tests.unit.test_regras import extracao
 
 TEXTO = "Valor bruto por ação ordinária\n(ON)\nR$ 0,4275000000\nData-base (“data com”)\n12/06/2026"
 
