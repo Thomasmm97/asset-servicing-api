@@ -35,6 +35,7 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 | Validar dígito verificador do ISIN | desligado | 11 dos 13 ISINs do lote (fictícios) falham no cálculo (D-11) |
 | Validar dígitos verificadores do CNPJ | desligado | 11 dos 13 CNPJs do lote (fictícios) falham no cálculo (D-11) |
 | Calendário de pregões | calendário da B3: dias úteis menos os feriados da bolsa | Datas de mercado só existem em dia de pregão (D-12). A fonte dos feriados é decidida na Fase 3. |
+| Limite de confiança do OCR (R-CNF-01) | a definir no modelo de confiança; calibrado na Fase 4 | D-08 |
 
 ---
 
@@ -171,6 +172,19 @@ A moeda não é um campo próprio: é atributo de cada valor monetário (valor b
 | R-CLS-01 | O título diverge da natureza do evento. | REVISÃO HUMANA (D-06) | Título "Distribuição de Dividendos" e natureza JCP → revisão humana | Doc 03 dispara |
 | R-CLS-02 | Classe `INDETERMINADO`. | REVISÃO HUMANA (D-03) | `INDETERMINADO` → revisão humana | Nenhum caso no lote |
 
+## 9. Confiança da leitura
+
+Aplica-se a todas as classes, só em documentos escaneados.
+
+| ID | Regra | Comportamento | Caso de teste (Dado → Então) | No lote |
+|---|---|---|---|---|
+| R-CNF-01 | A confiança que o OCR atribui às palavras de cada valor está acima do limite configurado. | REVISÃO HUMANA | Data com escaneada com palavras lidas abaixo do limite → revisão humana do campo | Doc 07 passa, se a confiança do OCR ficar acima do limite (D-08) |
+
+**Notas:**
+- **Por campo, não por documento:** a regra olha só as palavras que formam cada valor. Um carimbo que borra a data de pagamento numa página nítida manda só esse campo para revisão; a média da página esconderia esse caso e penalizaria um documento com assinatura ou logotipo borrado e valores nítidos. Um documento inteiro ilegível dispara a R-CNF-01 (ou a R-REQ-01) em todos os campos, sem precisar de regra própria.
+- **Limites:** se o borrão fizer o OCR ler lixo, o modelo pode "corrigir" o valor pelo contexto; esse valor não está no texto do OCR, e o grounding falha (R-GRD, com retry). Um dígito lido errado com confiança alta passa pela R-CNF-01; só as checagens cruzadas pegam esse caso (R-DAT-03 nas datas, R-VAL-02 nos valores do JCP).
+- O limite e a forma de combinar a confiança das palavras de um valor são definidos no modelo de confiança.
+
 ---
 
 ## Mensagens
@@ -207,6 +221,7 @@ Catálogo único das mensagens ao operador (D-15). Para revisar ou acrescentar u
 | R-REQ-03 | "{campo} não se aplica a {tipo_evento}, mas veio preenchido ({valor})." |
 | R-CLS-01 | "Título do aviso (\"{titulo}\") diverge da natureza identificada ({tipo_evento})." |
 | R-CLS-02 | "Não foi possível classificar o evento ({motivo}): {justificativa}." |
+| R-CNF-01 | "Leitura incerta de {campo} ({valor}): confiança do OCR ({confianca_ocr}) abaixo do limite ({limite})." |
 
 ### Erros de processamento (D-18)
 
@@ -226,6 +241,7 @@ Quando o documento não pode ser processado, o JSON sai com `status: ERRO` e o o
 | Regras | `DIVIDENDO` | `JCP` | `BONIFICACAO` | `DESDOBRAMENTO` | `GRUPAMENTO` |
 |---|---|---|---|---|---|
 | R-GRD, R-ID, R-IDF, R-DAT-01, R-DAT-03, R-DAT-04, R-REQ, R-CLS | ✓ | ✓ | ✓ | ✓ | ✓ |
+| R-CNF-01 (só em escaneados) | ✓ | ✓ | ✓ | ✓ | ✓ |
 | R-DAT-02 | ✓ | ✓ | ✓ | — | — |
 | R-VAL-01 | ✓ | ✓ | — | — | — |
 | R-VAL-02, R-VAL-03 | — | ✓ | — | — | — |
