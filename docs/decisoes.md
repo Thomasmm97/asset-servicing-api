@@ -179,6 +179,37 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 
 ---
 
+## Fase 3 — Arquitetura
+
+### D-22 — Leitura de PDF nativo: PyMuPDF
+- **Contexto:** 7 dos 8 avisos têm camada de texto. A leitura precisa devolver o texto na ordem certa (rótulo junto do valor, para a checagem de rótulo da D-20), a posição de cada palavra e, no escaneado, a página como imagem para o OCR.
+- **Opções testadas nos 7 nativos:**
+
+  | Biblioteca | Tempo | Valores do gabarito achados | Posição por palavra | Observação |
+  |---|---|---|---|---|
+  | PyMuPDF | 22 ms | 49/49 | sim | Mantém inteiro o rótulo de várias linhas ("Imposto de Renda Retido na Fonte" → "17,5%") |
+  | pdfplumber | 138 ms | 49/49 | sim | Rótulo e valor na mesma linha, mas quebra o rótulo de várias linhas ao meio ("Imposto de Renda Retido na 17,5% Fonte") |
+  | pypdf | 33 ms | 49/49 | não | Só texto |
+
+  Também considerados: mandar o PDF direto ao modelo (o grounding precisa do texto local de qualquer forma, e o modelo e o código passariam a ver textos diferentes) e o Docling (D-23).
+- **Decisão:** PyMuPDF.
+- **Por quê / custo:** os três acertam igual; o PyMuPDF é o mais rápido, dá a posição de cada palavra, não quebra o rótulo de várias linhas (o que atrapalharia a checagem do rótulo mais próximo) e renderiza a página para o OCR, sem uma segunda dependência. O pypdf não dá posição por palavra. Custo: licença AGPL (aceitável num case; num produto fechado, exigiria licença comercial ou a troca pelo pdfplumber); rótulo e valor saem em linhas seguidas, não na mesma linha, o que a normalização de espaços do grounding resolve.
+
+### D-23 — OCR: Tesseract, com limite de 0,70
+- **Contexto:** o doc 07 é escaneado. A D-08 exige confiança por palavra, e a D-20 exige o rótulo junto do valor na citação.
+- **Opções testadas no doc 07:**
+
+  | Ferramenta | Tempo | Valores do gabarito achados | Confiança | Tabela |
+  |---|---|---|---|---|
+  | Tesseract 5.5 (`pytesseract`, 300 dpi) | 1,8 s | 9/9 | Por palavra: 0,74 a 0,96 nos valores | Linha preservada ("Data-base (data com) ...... 22/06/2026") |
+  | Docling 2.133 (motor RapidOCR) | 184 s na 1ª execução, com download de modelos | 9/9 | Só por página (OCR 0,98; layout 0,83) | Leu por colunas (rótulos de um lado, valores do outro) e perdeu o "J" de "Juros" |
+
+  Considerados sem teste: EasyOCR e PaddleOCR (pesados), serviços em nuvem (credenciais, custo, dados saem do ambiente), visão do modelo (sem confiança de OCR).
+- **Decisão:** Tesseract, com o limite da R-CNF-01 em 0,70.
+- **Por quê / custo:** é o único que entrega o que a D-08 e a D-20 exigem: confiança por palavra e o rótulo junto do valor. Usar o Tesseract como motor dentro do Docling não resolveria, porque a confiança continua por página e a leitura, por colunas. Limite: as leituras corretas do doc 07 ficaram entre 0,74 (o ISIN, com o parêntese grudado na palavra) e 0,96; com 0,95, cinco campos lidos certo iriam para revisão, e 0,70 fica logo abaixo da menor leitura correta. Custo: calibrado com um único escaneado, e a confiança do Tesseract é uma escala própria, não uma probabilidade; uma leitura errada com confiança acima de 0,70 passa pela R-CNF-01 e fica a cargo do grounding e das checagens cruzadas; é preciso instalar o Tesseract com o idioma português (`brew install tesseract tesseract-lang`).
+
+---
+
 ## Notas para as próximas fases
 
 Lembretes que nasceram numa fase e só são usados numa fase seguinte. Sai daqui quando for consumido.
