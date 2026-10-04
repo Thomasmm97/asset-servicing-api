@@ -68,7 +68,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Contexto:** o doc 07 é escaneado. Mandar todo escaneado para revisão elimina o risco de leitura, mas aumenta a carga do operador.
 - **Opções:** (A) todo escaneado vai para revisão; (B) escaneado passa pelas mesmas regras, e a confiança que o OCR atribui às palavras de cada valor entra na confiança do campo: abaixo do limite, o campo vai para revisão humana.
 - **Decisão:** B. O limite é definido no modelo de confiança (Fase 2) e calibrado na Fase 4. O gabarito assume leitura correta e confiança acima do limite: doc 07 sem revisão.
-- **Por quê / custo:** usa um sinal que só o OCR tem (a certeza da leitura de cada palavra), campo a campo, em vez de tratar o documento inteiro como suspeito. Restrição para a Fase 3: a ferramenta de OCR precisa devolver confiança por palavra; leitura só por visão do LLM não dá esse sinal. Custo: calibrar o limite; uma leitura errada com confiança alta continua dependendo do grounding e das checagens cruzadas (ex.: R-VAL-02).
+- **Por quê / custo:** usa um sinal que só o OCR tem (a certeza da leitura de cada palavra), campo a campo, em vez de tratar o documento inteiro como suspeito. Restrição para a Fase 3: a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação; leitura só por visão do LLM não dá esse sinal. Custo: calibrar o limite; uma leitura errada com confiança alta continua dependendo do grounding e das checagens cruzadas (ex.: R-VAL-02).
 
 ### D-09 — Convenções de valor do gabarito
 - **Contexto:** sem formato fixo, o eval acusa diferenças que são só de formato.
@@ -121,3 +121,12 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Opções:** (A) adotar os códigos ISO como classes; (B) taxonomia própria, sem relação com o padrão; (C) taxonomia própria no mesmo nível de tipo de evento, sem os indicadores e opções do padrão.
 - **Decisão:** C. Quatro das cinco classes têm equivalente direto: `DIVIDENDO` ↔ `DVCA`, `BONIFICACAO` ↔ `BONU`, `DESDOBRAMENTO` ↔ `SPLF`, `GRUPAMENTO` ↔ `SPLR`. O `JCP` não tem equivalente direto, e a prática de mercado varia.
 - **Por quê / custo:** mantém a taxonomia compatível com o padrão (um mapeamento futuro é uma tabela de correspondência), sem o custo de validar códigos e a prática de mercado do JCP agora. Custo: a saída não sai em ISO 20022; uma integração exigiria um adaptador.
+
+---
+
+## Notas para as próximas fases
+
+Lembretes que nasceram numa fase e só são usados numa fase seguinte. Sai daqui quando for consumido.
+
+- **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01).
+- **Fase 4 (eval):** quando um nome do JSON diferir da coluna do gabarito, o eval traduz. Ex.: a data da bonificação, se não se chamar `data_pagamento` no JSON (o gabarito usa `data_pagamento` para o crédito das ações, D-09).
