@@ -108,7 +108,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Contexto:** o enunciado exige saber de onde veio cada valor, e valor inventado é o erro mais caro do domínio.
 - **Opções:** (A) confiar no valor extraído; (B) pedir ao modelo que verifique a própria citação; (C) o código verifica que o trecho citado existe no documento e contém o valor.
 - **Decisão:** C (R-GRD-01 e R-GRD-02), com normalização de formato para datas, decimais e percentuais, e regras próprias para valores derivados (proporção, classe, moeda, tipo de evento).
-- **Por quê / custo:** checagem determinística, testável e sem custo de chamada; um modelo verificando a si mesmo compartilha os próprios pontos cegos. Custo: normalização por tipo de campo, e o grounding não prova que o valor pertence ao campo certo (só que está no documento).
+- **Por quê / custo:** checagem determinística, testável e sem custo de chamada; um modelo verificando a si mesmo compartilha os próprios pontos cegos. Custo: normalização por tipo de campo, e o grounding não prova que o valor pertence ao campo certo (só que está no documento); esse risco é reduzido, não eliminado, pelo sinal "rótulo do campo na citação" (D-20).
 
 ### D-15 — Mensagens ao operador centralizadas
 - **Contexto:** toda regra de revisão humana ou de alerta gera uma mensagem descritiva, com os valores envolvidos.
@@ -129,7 +129,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 ### D-17 — Formato da saída: extração plana, saída só com as chaves da classe
 - **Contexto:** cada classe tem campos diferentes (provento em dinheiro × evento em ações), e o operador precisa auditar cada valor sem reabrir o documento.
 - **Opções:** (A) objeto único, com todos os campos em todo documento e os que não se aplicam marcados; (B) formato por classe já na extração do modelo; (C) híbrido: o modelo extrai tudo num objeto plano, e o código monta a saída só com as chaves da classe.
-- **Decisão:** C. `tipo_evento` fica no topo, porque define as chaves de `campos`. Os campos se agrupam em `emissor` (razão social, CNPJ) e `ativo` (ISIN, ticker, classe), seguidos das datas e dos valores da classe; `INDETERMINADO` leva as chaves comuns e todo campo extraído com valor. Cada campo traz valor, citações, confiança, `revisao_humana`, motivos e alertas; os campos de emissor e ativo trazem também o resultado da base de referência, e os valores monetários, a moeda. Sem status por campo, ao contrário do que sugere a metodologia: as chaves por classe eliminam o "não se aplica", e os motivos explicam "não encontrado" e "adiado". Schema completo em `contrato.md`.
+- **Decisão:** C. `tipo_evento` fica no topo, porque define as chaves de `campos`. Os campos se agrupam em `emissor` (razão social, CNPJ) e `ativo` (ISIN, ticker, classe), seguidos das datas e dos valores da classe; `INDETERMINADO` leva as chaves comuns e todo campo extraído com valor. Cada campo traz valor, citação (no tipo de evento, citações), confiança, `revisao_humana`, motivos e alertas; os campos de emissor e ativo trazem também o resultado da base de referência, e os valores monetários, a moeda. Sem status por campo, ao contrário do que sugere a metodologia: as chaves por classe eliminam o "não se aplica", e os motivos explicam "não encontrado" e "adiado". Schema completo em `contrato.md`.
 - **Por quê / custo:** a extração plana preserva a prova de uma classificação errada: no doc 03, um JCP classificado como `DIVIDENDO` teria o valor líquido extraído, e a R-REQ-03 dispararia em vez de o valor sumir (na opção B, ele nem seria pedido ao modelo). A saída por classe mostra ao operador só o que importa para aquele evento. Custo: uma etapa de montagem no código; um valor que não se aplica à classe não tem chave e aparece só na mensagem da R-REQ-03 (no `tipo_evento`) e no log técnico.
 
 ### D-18 — Status do documento e erro de processamento
@@ -155,11 +155,37 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Decisão:** C, para os tokens do modelo e para as palavras do OCR.
 - **Por quê / custo:** basta um dígito incerto para o valor estar errado. Custo: o mínimo é severo, porque um único token ou palavra abaixo do limite manda o campo para revisão; em escaneados, isso pode aumentar a fila (calibrar na Fase 4).
 
+### D-20 — Modelo de confiança: limites, três níveis e confirmações
+- **Contexto:** o enunciado pede níveis de confiança justificados e roteamento dos campos de baixa confiança. Há dois sinais medidos por campo: a legibilidade do texto (confiança do OCR, só em escaneados) e a certeza da extração (logprob do modelo, normalizado para 0–1), ambos agregados pelo mínimo (D-19).
+- **Opções:** (A) três níveis calculados por sinais; (B) dois níveis (ALTA/BAIXA): um valor de fonte única viraria ALTA (exagera) ou BAIXA (os 8 documentos iriam para a fila); (C) nota numérica de 0 a 1 por soma ponderada: com 8 documentos, os pesos seriam arbitrários e a precisão, falsa; (D) autoavaliação declarada pelo modelo: mal calibrada e contrária ao princípio "confiança se calcula, não se pergunta".
+- **Decisão:** A, com os limites como porta de entrada:
+  - **BAIXA:** OCR ou modelo abaixo do limite (0,95, provisório) → revisão humana pela R-CNF-01 ou pela R-CNF-02.
+  - **ALTA:** acima dos limites e pelo menos uma confirmação: rótulo do campo na citação (o rótulo mais próximo do valor é o do campo, conferido pelo código), base de referência, R-DAT-03 (data com e data ex) ou R-VAL-02 (bruto, alíquota e líquido do JCP); no tipo de evento, dois ou mais sinais de natureza.
+  - **MÉDIA:** acima dos limites, sem confirmação. Segue automático: todo documento do lote tem ao menos um campo de fonte única, e mandar MÉDIA para revisão levaria os 8 para a fila. É onde o risco residual se concentra, e o eval acompanha.
+  - Uma citação por campo (no tipo de evento, várias). A concordância entre tabela e corpo como confirmação foi considerada e deixada de fora: simplifica, e o rótulo cobre o erro típico (valor real no campo errado).
+  - A confiança mede a leitura; a coerência é das regras. No doc 05, a data de pagamento sai ALTA e vai para revisão pela R-DAT-02: o operador sabe que a leitura está certa e que o erro está no aviso.
+- **Mitigações:** o prompt pede a menor citação (a linha da tabela com o rótulo; senão, a menor frase com rótulo e valor); o código confere o rótulo mais próximo; um sinônimo ausente da lista só rebaixa para MÉDIA, nunca manda para revisão.
+- **Por quê / custo:** cada nível tem causa verificável e justificativa legível, e o logprob é um sinal medido, não autoavaliação. Custo:
+  - limites sem calibração estatística com 8 documentos (decididos por critério, vigiados pela métrica de erros não roteados);
+  - o provider precisa devolver logprobs;
+  - um aviso que se contradiz entre tabela e corpo passa sem ser notado nos campos sem outra checagem cruzada (proporção, custo atribuído, data de aprovação), e, em escaneados, um dígito mal lido numa das ocorrências só é pego pela R-CNF-01; data com e data ex, valores do JCP e identificadores seguem cobertos pela R-DAT-03, pela R-VAL-02/03 e pela base;
+  - evolução não feita: citações múltiplas com uma regra "valor da tabela = valor do corpo".
+
+### D-21 — O documento é a unidade de roteamento
+- **Contexto:** os motivos de revisão ficam nos campos, mas os processos seguintes tratam o evento inteiro.
+- **Opções:** (A) roteamento por campo: os campos aprovados seguem e os outros esperam; (B) qualquer campo em revisão leva o documento inteiro para revisão, e a marcação do campo mostra onde olhar.
+- **Decisão:** B. O `status` é derivado pelo código: `ERRO` se o processamento falhou; senão `REVISAO_HUMANA` se algum campo (ou o `tipo_evento`) tem `revisao_humana: true`; senão `APROVADO`.
+- **Por quê / custo:** não existe provento aprovado em parte: sem a data de pagamento ou com a classe em dúvida, o cálculo do evento inteiro não pode seguir. Custo: o operador abre o documento inteiro, guiado pelas marcações dos campos.
+
 ---
 
 ## Notas para as próximas fases
 
 Lembretes que nasceram numa fase e só são usados numa fase seguinte. Sai daqui quando for consumido.
 
-- **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01).
+- **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01). Direção: Tesseract (instalar com `brew`, com o idioma português; o Python do sistema é o 3.9).
+- **Fase 3 (arquitetura):** o provider precisa devolver logprobs (a API do Claude e os modelos de raciocínio da OpenAI não devolvem; confirmar); a extração sai como resposta estruturada, não como argumento de tool, porque é onde os logprobs vêm; o cache guarda os logprobs (D-19, D-20).
+- **Fase 3 (arquitetura):** arquivo de rótulos e sinônimos por campo, alimentado pela coluna "Como aparece nos dados" do glossário de `dominio.md`; o prompt pede a menor citação (D-20).
 - **Fase 4 (eval):** o eval traduz os nomes do JSON para as colunas do gabarito: `status` → `revisao_humana` (`REVISAO_HUMANA` e `ERRO` → sim, D-18); campos dentro de `emissor` e `ativo` → colunas de mesmo nome, com `emissor.razao_social` → `emissor` e `ativo.classe` → `classe_acao`; `data_credito` da bonificação → `data_pagamento` (D-09); moeda de `valor_bruto` ou `custo_atribuido` → `moeda`; regras dos `motivos` dos campos → `motivo_revisao`.
+- **Fase 4 (eval):** risco de sinônimo ausente na lista de rótulos: medir quantos campos caíram para MÉDIA por falta de rótulo e completar a lista (D-20).
+- **Fase 4 (calibração):** calibrar os limites de 0,95 da R-CNF-01 e da R-CNF-02 com a distribuição medida no lote, em especial no doc 07 escaneado (D-19, D-20).
