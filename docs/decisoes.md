@@ -232,6 +232,18 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 ### D-26 — Modelo: `openai/gpt-5.6-luna` pelo OpenRouter
 - **Contexto:** o modelo extrai, classifica e chama as ferramentas de validação. A chave disponível é do OpenRouter (API compatível com o SDK da OpenAI).
 - **Opções testadas:** (A) `openai/gpt-4o-mini`: devolve logprobs, mas cortou os zeros de "0,4275000000" quando pedimos o valor normalizado; (B) `openai/gpt-4o-2024-11-20`: devolve logprobs e manteve o formato; (C) `openai/gpt-5.6-luna`: modelo de raciocínio, mais capaz e mais barato (US$ 0,20 / 1,20 por milhão de tokens), sem logprobs ("logprobs are not supported with reasoning models"); (D) híbrido: `gpt-4o` na extração e `luna` na validação.
+- **Teste no doc 03** (o caso mais difícil: o título diz "Dividendos", a natureza é JCP), com saída estruturada e pedido de logprobs:
+
+  | Modelo | Logprobs na prática | Classificação | Tempo | US$ por milhão de tokens (entrada / saída) |
+  |---|---|---|---|---|
+  | `gpt-5.6-luna` | não | JCP ✓ | 2,4 s | 0,20 / 1,20 |
+  | `gpt-4o-2024-11-20` | sim | JCP ✓ (probabilidade de J = 1,0) | 1,3 s | 2,50 / 10,00 |
+  | `qwen3.7-plus` | sim | JCP ✓ (J = 1,0) | 35,5 s | 0,32 / 1,28 |
+  | `deepseek-v4-pro` | sim, misturados com tokens especiais | JCP ✓ | 13,0 s | 0,21 / 0,42 |
+  | `grok-4.3` | não (anunciado pelo OpenRouter, não devolvido) | JCP ✓ | 5,5 s | 1,25 / 2,50 |
+  | `gpt-oss-120b` | sim | DIVIDENDO ✗ (J 0,56 × D 0,39) | 2,8 s | 0,04 / 0,17 |
+
+  Um caso só, não é benchmark. Os modelos fortes acertaram com probabilidade 1,0, e o logprob só mostrou hesitação no modelo fraco que errou. Todos copiaram os valores literais exatamente (D-24).
 - **Decisão:** C, em todas as etapas, com a versão no `config.py`.
 - **Por quê / custo:** o risco que sobra depois do grounding literal, do rótulo e das regras está nas decisões de interpretação (classificação, escolha entre candidatos, valores derivados), exatamente onde um modelo de raciocínio é mais forte. O híbrido seria mais um modelo para configurar e defender, com pouco ganho, porque o código já impõe as ferramentas que faltarem. Custo: sem logprobs (D-20, revisão); modelos de raciocínio não aceitam temperatura 0, então a reprodutibilidade fica a cargo do cache local de respostas (D-25); tokens de raciocínio aumentam latência e custo.
 
