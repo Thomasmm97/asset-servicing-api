@@ -86,7 +86,7 @@ Existe para que o modelo nunca seja forçado a escolher uma classe errada. Usar 
 | Frações | Sobras não inteiras após bonificação ou grupamento; vendidas em leilão na B3 e o produto é rateado. | "frações… alienadas em leilão na B3" |
 | Inplit / split | Inplit = grupamento. Split = desdobramento. | "Grupamento de Ações (Inplit)" |
 | Classe (ON / PN) | Ação ordinária / preferencial. O valor do provento é informado por classe. | "por ação ordinária (ON)", "por ação preferencial (PN)" |
-| Ticker | Código de negociação: 4 letras + sufixo de classe (3 = ON, 4 = PN; 5/6 = PNA/PNB; 11 = unit). | "TIET3", "BMRD4" |
+| Ticker | Código de negociação: 4 caracteres (em geral letras; ex.: B3SA3) + sufixo de classe (3 = ON, 4 = PN; 5 a 8 = preferenciais de classes A a D; 11 = unit). | "TIET3", "BMRD4" |
 | ISIN | 12 caracteres. Padrão brasileiro: BR + emissor (4) + tipo de ativo (ACN = ação) + classe (OR = ON, PR = PN) + dígito verificador. | "BRTIETACNOR3", "BRBMRDACNPR7" |
 
 ---
