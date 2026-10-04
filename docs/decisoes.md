@@ -5,6 +5,21 @@
 
 ---
 
+## Escopo da entrega (In)
+
+O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formalizados: o que não está nesta lista não entra nesta entrega (ex.: API, interface para o operador, banco de dados).
+
+- Execução em lote, pela linha de comando, sobre a pasta `documents/`.
+- Leitura de PDF nativo e OCR para escaneado, com confiança por palavra (D-08).
+- Extração dos campos mínimos do enunciado, com evidência (página e trecho) por campo.
+- Classificação na taxonomia de `dominio.md`.
+- Validação pelas regras de `regras.md`, incluindo a base de referência, via tools.
+- Confiança por campo e roteamento para revisão humana, com motivo.
+- Saída: 1 JSON por documento + relatório de exceções.
+- Script de avaliação contra `evals/gabarito.csv`.
+
+---
+
 ## Fase 0 — Domínio e lote
 
 ### D-01 — Classificar pela natureza do evento, não pelo título
