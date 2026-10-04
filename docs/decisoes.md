@@ -113,7 +113,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 ### D-15 — Mensagens ao operador centralizadas
 - **Contexto:** toda regra de revisão humana ou de alerta gera uma mensagem descritiva, com os valores envolvidos.
 - **Opções:** (A) mensagem junto de cada regra; (B) catálogo único, indexado pelo ID da regra.
-- **Decisão:** B. Nos documentos, a seção "Mensagens" de `regras.md`; no código, um único arquivo de mensagens com a mesma chave.
+- **Decisão:** B. Nos documentos, a seção "Mensagens" de `regras.md`, com a descrição curta de cada regra (mostrada em `regras_aprovadas` quando ela passa), a mensagem (mostrada no campo quando ela falha) e as mensagens dos erros de processamento (D-18); no código, um único arquivo de textos com a mesma chave.
 - **Por quê / custo:** revisar o tom e o conteúdo de todas as mensagens num lugar só; acrescentar uma regra é acrescentar uma linha. Custo: uma indireção entre a regra e o seu texto.
 
 ### D-16 — Taxonomia no nível de tipo de evento do ISO 20022, sem adotar os códigos
@@ -146,4 +146,4 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 Lembretes que nasceram numa fase e só são usados numa fase seguinte. Sai daqui quando for consumido.
 
 - **Fase 3 (arquitetura):** a ferramenta de OCR precisa devolver a confiança e a posição de cada palavra, para o código achar as palavras do valor dentro da citação e calcular a confiança do campo (D-08, R-CNF-01).
-- **Fase 4 (eval):** quando um nome do JSON diferir da coluna do gabarito, o eval traduz. Ex.: a data da bonificação, se não se chamar `data_pagamento` no JSON (o gabarito usa `data_pagamento` para o crédito das ações, D-09).
+- **Fase 4 (eval):** o eval traduz os nomes do JSON para as colunas do gabarito: `status` → `revisao_humana` (`REVISAO_HUMANA` e `ERRO` → sim, D-18); campos dentro de `emissor` e `ativo` → colunas de mesmo nome, com `emissor.razao_social` → `emissor` e `ativo.classe` → `classe_acao`; `data_credito` da bonificação → `data_pagamento` (D-09); moeda de `valor_bruto` ou `custo_atribuido` → `moeda`; regras dos `motivos` dos campos → `motivo_revisao`.
