@@ -49,11 +49,11 @@
 - **Decisão:** A. O campo sai vazio, com o motivo explícito.
 - **Por quê / custo:** um único caminho para o humano é mais simples. Custo: o operador não distingue de imediato "conferir a extração" de "aguardar aviso complementar"; o motivo da revisão faz essa distinção.
 
-### D-08 — Política para documentos escaneados adiada para a fase de OCR
-- **Contexto:** o doc 07 é escaneado. Mandar todo escaneado para revisão elimina o risco de leitura, mas aumenta a carga do operador; tratar a leitura como sinal de confiança automatiza, mas depende das checagens cruzadas.
-- **Opções:** (A) todo escaneado vai para revisão; (B) escaneado passa se a leitura bater nas checagens (golden record e líquido = bruto × (1 − alíquota)).
-- **Decisão:** adiada para a fase em que o OCR for implementado. O gabarito assume leitura correta: doc 07 sem revisão.
-- **Por quê / custo:** a escolha depende da qualidade do OCR, que ainda não existe. Custo: o roteamento do doc 07 no gabarito pode mudar.
+### D-08 — Documento escaneado: confiança do OCR por campo
+- **Contexto:** o doc 07 é escaneado. Mandar todo escaneado para revisão elimina o risco de leitura, mas aumenta a carga do operador.
+- **Opções:** (A) todo escaneado vai para revisão; (B) escaneado passa pelas mesmas regras, e a confiança que o OCR atribui às palavras de cada valor entra na confiança do campo: abaixo do limite, o campo vai para revisão humana.
+- **Decisão:** B. O limite é definido no modelo de confiança (Fase 2) e calibrado na Fase 4. O gabarito assume leitura correta e confiança acima do limite: doc 07 sem revisão.
+- **Por quê / custo:** usa um sinal que só o OCR tem (a certeza da leitura de cada palavra), campo a campo, em vez de tratar o documento inteiro como suspeito. Restrição para a Fase 3: a ferramenta de OCR precisa devolver confiança por palavra; leitura só por visão do LLM não dá esse sinal. Custo: calibrar o limite; uma leitura errada com confiança alta continua dependendo do grounding e das checagens cruzadas (ex.: R-VAL-02).
 
 ### D-09 — Convenções de valor do gabarito
 - **Contexto:** sem formato fixo, o eval acusa diferenças que são só de formato.

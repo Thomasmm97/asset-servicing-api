@@ -40,7 +40,7 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 
 ## 1. Evidência (grounding)
 
-Aplica-se a todos os campos extraídos, em todas as classes. A verificação é dupla e segue esta ordem: primeiro, o trecho citado existe no documento (R-GRD-01); depois, o valor está no trecho citado (R-GRD-02). A ordem importa: se o trecho foi inventado, comparar o valor com ele não prova nada. Em documentos escaneados, o texto do documento é o resultado do OCR; a tolerância da comparação a ruído de leitura é definida na fase de OCR.
+Aplica-se a todos os campos extraídos, em todas as classes. A verificação é dupla e segue esta ordem: primeiro, o trecho citado existe no documento (R-GRD-01); depois, o valor está no trecho citado (R-GRD-02). A ordem importa: se o trecho foi inventado, comparar o valor com ele não prova nada. Em documentos escaneados, o texto do documento é o resultado do OCR; a tolerância da comparação a ruído de leitura é definida na Fase 3, e a confiança que o OCR atribui às palavras de cada valor entra na confiança do campo (D-08).
 
 | ID | Regra | Comportamento | Caso de teste (Dado → Então) | No lote |
 |---|---|---|---|---|
@@ -233,7 +233,7 @@ Aplicando as regras aos valores de `evals/gabarito.csv` (mensagens já preenchid
 | 04 | R-REQ-02 | — | "Data de pagamento adiada pelo emissor (\"A definir (vide aviso complementar)\"); aguardar aviso complementar." | sim |
 | 05 | R-DAT-02 | — | "Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026)." | sim |
 | 06 | — | — | — | não |
-| 07 | — | — | — | não (política para escaneados pendente, D-08) |
+| 07 | — | — | — | não (com leitura correta e confiança do OCR acima do limite, D-08) |
 | 08 | R-ID-01 | — | "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)." | sim |
 
 As regras reproduzem a coluna de revisão do gabarito nos 8 documentos. No doc 08, as regras R-ID-02 a R-ID-04 não chegam a ser avaliadas, porque não há registro na base. Com a extração certa, nenhum documento dispara retry: as quatro revisões vêm de regras que apontam o documento (03, 04 e 05) ou a base (08).

@@ -18,7 +18,7 @@
 | 07 | escaneado | `JCP` | Leitura de imagem com ruído; valores com 10 casas decimais | não¹ |
 | 08 | nativo | `BONIFICACAO` | Emissor ausente do golden record; custo atribuído (R$) não é pagamento | sim |
 
-¹ O gabarito assume leitura correta. A política de roteamento para escaneados fica para a fase de OCR (D-08).
+¹ O gabarito assume leitura correta e confiança do OCR acima do limite (D-08).
 
 ---
 
@@ -91,7 +91,7 @@ Legenda: **T** = só na tabela · **C** = só no corpo · **T+C** = nos dois · 
 - **Problemas:** PDF escaneado (imagem, sem texto selecionável), com ruído de fundo, leve inclinação e artefatos nas linhas pontilhadas (",,,,,,"). Valores com 10 casas são o ponto mais frágil da leitura.
 - **Deduzido:** o conteúdo é íntegro e coerente. A conta líquido = bruto × 0,825 confere e funciona como verificação da leitura: um dígito lido errado quebra a conta. Aprovação só no corpo.
 - **Golden:** match em todas as chaves (classe PN).
-- **Revisão:** não, assumindo leitura correta; política para escaneados adiada para a fase de OCR (D-08).
+- **Revisão:** não, assumindo leitura correta e confiança do OCR acima do limite (D-08).
 
 ### Doc 08 — Construtora Horizonte · `BONIFICACAO`
 - **Problemas:** (1) o emissor não consta no golden record, por nenhuma chave; (2) o custo atribuído de R$ 7,82/ação é base fiscal, não pagamento, e o modelo pode extraí-lo como "valor" do evento.
@@ -129,3 +129,4 @@ Os candidatos a regra levantados aqui foram consolidados em `regras.md`, incluin
 - Papel das datas por classe: provisório (D-09); usado em `regras.md`, seção 3.
 - Precisão numérica: valores com até 10 casas decimais → decimal exato, nunca float.
 - Sinal de confiança: concordância corpo × tabela (data com, data ex e alíquota aparecem nos dois lugares).
+- Sinal de confiança em escaneados: confiança do OCR nas palavras de cada valor; limite a definir (D-08).
