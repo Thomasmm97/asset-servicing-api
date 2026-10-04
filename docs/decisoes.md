@@ -139,6 +139,22 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Decisão:** C. `status`: `APROVADO` (success), `REVISAO_HUMANA` (fail: o documento foi lido, mas os dados têm problema) ou `ERRO` (error: o documento não pôde ser processado). `erro`: `null`, ou `{codigo, mensagem}`, com código de uma lista fechada (`FALHA_MODELO`, `PDF_ILEGIVEL`, `FALHA_OCR`, `ERRO_INTERNO`) e mensagem do catálogo (D-15); com erro, `tipo_evento` e `campos` saem `null`. O `status` substitui o booleano `revisao_humana` no nível do documento; nos campos, o booleano continua. A falha na chamada ao modelo, antes a R-PRC-01 com revisão humana, passa a ser o código `FALHA_MODELO`.
 - **Por quê / custo:** uma única chave responde "pode seguir?" (só `APROVADO` segue) e "o que fazer" (revisar ou reprocessar), e o código do erro permite filtrar e tratar por tipo sem ler o texto. Custo: o eval traduz o `status` para a coluna `revisao_humana` do gabarito (`REVISAO_HUMANA` e `ERRO` → sim); um tipo novo de erro é uma linha a mais na lista de códigos.
 
+### D-19 — Agregação da confiança por campo: o mínimo
+- **Contexto:** o modelo gera cada valor em vários tokens, e o OCR lê cada valor em uma ou mais palavras; cada token e cada palavra têm a sua probabilidade. O logprob do modelo é normalizado para 0–1 (probabilidade = e^logprob; ex.: −0,01 → 0,990), e a confiança do OCR também. O limite de revisão (R-CNF-01 e R-CNF-02) precisa de um número só por campo.
+- **Opções:** (A) probabilidade conjunta (produto); (B) média; (C) mínimo. Exemplo com limite de 0,95 (provisório); o número de tokens de cada valor depende do tokenizador:
+
+  | Agregação | Fórmula | CNPJ (10 tokens a 0,99) | `BRL` (1 token a 0,99) | CNPJ (9 tokens a 0,999 + 1 a 0,70) |
+  |---|---|---|---|---|
+  | Conjunta | Produto: 0,99 × 0,99 × … | 0,99¹⁰ = 0,904: revisão ¹ | 0,99 | 0,694: revisão |
+  | Média | Soma ÷ quantidade | 0,99 | 0,99 | 0,969: passa ² |
+  | Mínimo | O menor token | 0,99 | 0,99 | 0,70: revisão ³ |
+
+  ¹ A conjunta pune o tamanho, não a dúvida: cada token tem 99% de certeza, mas o produto de 10 deles fica abaixo do limite, enquanto um valor de 1 token, igualmente certo, passa.
+  ² A média dilui um dígito duvidoso, que é justamente o erro que importa.
+  ³ O mínimo responde à pergunta certa (existe algum pedaço do valor de que o modelo não tem certeza?), sem depender do tamanho do valor.
+- **Decisão:** C, para os tokens do modelo e para as palavras do OCR.
+- **Por quê / custo:** basta um dígito incerto para o valor estar errado. Custo: o mínimo é severo, porque um único token ou palavra abaixo do limite manda o campo para revisão; em escaneados, isso pode aumentar a fila (calibrar na Fase 4).
+
 ---
 
 ## Notas para as próximas fases
