@@ -50,7 +50,7 @@ Aplica-se a todos os campos extraídos, em todas as classes. A verificação é 
 **Notas:**
 - **O grounding é a defesa direta contra valor inventado**, o erro que o enunciado chama de prejuízo. O modelo pode citar um trecho que não existe (R-GRD-01) ou citar o trecho certo e transcrever o valor errado (R-GRD-02). As duas verificações são feitas pelo código, não pelo modelo (D-14).
 - **Normalização (R-GRD-02):** datas em dd/mm/aaaa ou por extenso ("12 de junho de 2026"); decimais com vírgula e "R$"; percentuais ("17,5%" ↔ 0.175); identificadores comparados literalmente.
-- **Valores derivados (R-GRD-02):** a proporção `20:21` deriva de "1 ação nova para cada 20", e o trecho precisa conter os números de que ela sai; a classe da ação deriva de "ON"/"ordinária" ou "PN"/"preferencial", ou do sufixo do ticker e do código de classe do ISIN citados (os docs 06 e 08 não escrevem a classe por extenso); a moeda deriva do símbolo ou do nome no trecho ("R$" → BRL, "US$" → USD); o tipo de evento deriva dos sinais de natureza (`dominio.md`), e o trecho citado precisa conter pelo menos um deles.
+- **Valores derivados (R-GRD-02):** a proporção `20:21` deriva de "1 ação nova para cada 20", e o trecho precisa conter os números de que ela sai; a classe da ação deriva de "ON"/"ordinária" ou "PN"/"preferencial", ou do sufixo do ticker e do código de classe do ISIN citados (os docs 06 e 08 não escrevem a classe por extenso); a moeda de cada valor monetário deriva do símbolo ou do nome na citação do próprio valor ("R$" → BRL, "US$" → USD); o tipo de evento deriva dos sinais de natureza (`dominio.md`), e o trecho citado precisa conter pelo menos um deles.
 - **Limite:** o grounding confirma que o valor está no documento, não que pertence ao campo certo (ex.: a data ex citada como data de pagamento). Esse erro é pego, em parte, pelas regras de ordem das datas e de campos por classe.
 
 ## 2. Identificação e base de referência
@@ -120,13 +120,13 @@ Aplica-se a todas as classes.
 | R-VAL-01 | Valor bruto por ação > 0. | `DIVIDENDO`, `JCP` | REVISÃO HUMANA | Bruto 0 → revisão humana | Todos passam |
 | R-VAL-02 | Líquido = bruto × (1 − alíquota), com tolerância de uma unidade na última casa decimal do líquido informado. | `JCP` | REVISÃO HUMANA | Bruto 0,2050, alíquota 17,5%, líquido 0,1700 → revisão humana | 02, 03, 04 e 07 passam (conta exata) |
 | R-VAL-03 | Alíquota extraída = alíquota configurada vigente na data com. | `JCP` | REVISÃO HUMANA | Alíquota 15% com data com em 2026 → revisão humana | 02, 03, 04 e 07 passam |
-| R-VAL-04 | Moeda identificada (código ISO 4217, a partir do símbolo ou do nome no documento) e igual a BRL. | `DIVIDENDO`, `JCP`, `BONIFICACAO` (custo atribuído) | REVISÃO HUMANA | "US$ 0,25" → moeda USD → revisão humana | Todos passam ("R$" → BRL) |
+| R-VAL-04 | A moeda de cada valor monetário (valor bruto, valor líquido, custo atribuído) é identificada (código ISO 4217, a partir do símbolo ou do nome na citação do valor) e é BRL. | `DIVIDENDO`, `JCP`, `BONIFICACAO` | REVISÃO HUMANA | Valor bruto "US$ 0,25" → moeda USD → revisão humana; valor sem símbolo nem nome de moeda → revisão humana | Todos passam ("R$" → BRL) |
 
 **Notas:**
 - **R-VAL-03, por que importa:** no JCP, o imposto é retido na fonte, e o líquido creditado a cada acionista é bruto × (1 − alíquota). Alíquota errada significa pagamento errado para toda a base de acionistas e imposto recolhido errado pela fonte pagadora: erro financeiro e fiscal ao mesmo tempo, o tipo de erro que o enunciado destaca.
 - **R-VAL-03, o que pega:** (1) erro de leitura da alíquota, como o OCR lendo "17,5%" como "1,75%" ou o modelo pegando os 10% da regra de dividendo do doc 01; na maioria desses casos, a R-VAL-02 também dispara. (2) Um aviso coerente por dentro, mas com a alíquota errada: um aviso de 2026 que aplica os 15% antigos e calcula o líquido com 15%. A conta fecha e a R-VAL-02 passa, mas o acionista receberia o valor errado. Só a R-VAL-03 pega esse caso.
 - **R-VAL-03, por que a alíquota é configuração com vigência:** ela muda por lei (passou de 15% para 17,5% em 2026, segundo os avisos do lote). Com vigência, cada aviso é conferido pela alíquota da sua época (um aviso de 2025 com 15% passa), e uma nova mudança é uma linha de configuração, não código. Isenções e imunidades são aplicadas por acionista nos processos seguintes; a regra confere a alíquota geral informada no aviso.
-- **R-VAL-04, identificar e mandar para revisão:** a moeda é sempre identificada (campo obrigatório, com grounding a partir do símbolo ou do nome no documento), e o operador vê qual é. Se não for BRL, o documento vai para revisão: um provento em outra moeda exige tratamento de câmbio (taxa e data de conversão) que esta entrega não define. Só identificar e seguir automático pressuporia que os processos seguintes tratam moeda estrangeira.
+- **R-VAL-04, identificar e mandar para revisão:** a moeda é atributo de cada valor monetário, identificada a partir do símbolo ou do nome na citação do próprio valor, e o operador vê qual é. Moeda não identificada também vai para revisão: um valor sem moeda é incompleto. Se não for BRL, o documento vai para revisão: um provento em outra moeda exige tratamento de câmbio (taxa e data de conversão) que esta entrega não define. Só identificar e seguir automático pressuporia que os processos seguintes tratam moeda estrangeira.
 - **R-VAL-03, por que a data com como referência da vigência:** a retenção acontece no pagamento ou no crédito, o que vier primeiro (como diz o doc 03), e o crédito costuma ocorrer junto com a declaração. Um aviso cuja data com e cujo pagamento atravessam uma mudança de alíquota é caso de borda.
 
 ## 6. Proporção (evento em ações)
@@ -143,11 +143,13 @@ Aplica-se a todas as classes.
 
 | Classe | Obrigatórios além dos comuns | Não se aplica |
 |---|---|---|
-| `DIVIDENDO` | valor bruto, moeda, pagamento | alíquota, valor líquido, proporção, custo atribuído |
-| `JCP` | valor bruto, alíquota, valor líquido, moeda, pagamento | proporção, custo atribuído |
-| `BONIFICACAO` | proporção, custo atribuído, moeda, pagamento (crédito das ações) | valor bruto, alíquota, valor líquido |
-| `DESDOBRAMENTO` | proporção | valor bruto, alíquota, valor líquido, custo atribuído, moeda, pagamento |
-| `GRUPAMENTO` | proporção | valor bruto, alíquota, valor líquido, custo atribuído, moeda, pagamento |
+| `DIVIDENDO` | valor bruto, pagamento | alíquota, valor líquido, proporção, custo atribuído |
+| `JCP` | valor bruto, alíquota, valor líquido, pagamento | proporção, custo atribuído |
+| `BONIFICACAO` | proporção, custo atribuído, crédito das ações | valor bruto, alíquota, valor líquido |
+| `DESDOBRAMENTO` | proporção | valor bruto, alíquota, valor líquido, custo atribuído, pagamento |
+| `GRUPAMENTO` | proporção | valor bruto, alíquota, valor líquido, custo atribuído, pagamento |
+
+A moeda não é um campo próprio: é atributo de cada valor monetário (valor bruto, valor líquido, custo atribuído) e é conferida pela R-VAL-04.
 
 | ID | Regra | Comportamento | Caso de teste (Dado → Então) | No lote |
 |---|---|---|---|---|
@@ -195,7 +197,7 @@ Catálogo único das mensagens ao operador (D-15). Para revisar ou acrescentar u
 | R-VAL-01 | "Valor bruto por ação ({valor_bruto}) não é positivo." |
 | R-VAL-02 | "Valor líquido ({valor_liquido}) não confere com bruto × (1 − alíquota) = {liquido_esperado}." |
 | R-VAL-03 | "Alíquota de IRRF informada ({aliquota}) difere da vigente em {data_com} ({aliquota_vigente})." |
-| R-VAL-04 | "Moeda {moeda} diferente de BRL; proventos em outra moeda não têm tratamento automático nesta entrega." |
+| R-VAL-04 | "Moeda de {campo} não é BRL ({moeda}); valores em outra moeda ou sem moeda identificada não têm tratamento automático nesta entrega." |
 | R-PRO-01 | "Proporção \"{proporcao}\" fora do formato antes:depois com inteiros positivos." |
 | R-PRO-02 | "Proporção {proporcao} incoerente com {tipo_evento}: a quantidade de ações deveria {aumentar_ou_diminuir}." |
 | R-PRO-03 | "Custo atribuído ({custo_atribuido}) não é positivo." |
