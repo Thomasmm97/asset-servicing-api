@@ -75,7 +75,7 @@
 
 **Objetivo:** o menor desenho que cumpre as Fases 1–2 e que você consegue defender e estender ao vivo.
 
-1. **Pipeline em estágios** (ex.: ingestão → extração → validação → confiança → roteamento → saída). Para cada estágio: entrada, saída, se é LLM ou determinístico, o que pode dar errado e o que acontece quando dá.
+1. **Caso de uso → pipeline.** Fluxo principal e alternativos; para cada etapa: entrada, saída, se é LLM ou determinística, quais regras roda, o que pode dar errado e o que acontece quando dá. O caso de uso dá os verbos (etapas, funções, tools); o schema e a taxonomia dão os substantivos.
 2. **Quanto de "agente".** A decisão central do case: o que o LLM decide sozinho (quais tools chama, se reextrai depois de uma falha) e o que o código impõe. Registre as alternativas e o porquê.
 3. **Desenho das tools.** Para cada uma: nome, propósito, entrada, saída, erros. Pequenas, determinísticas, testáveis isoladamente.
 4. **Stack com justificativa.** Provider/modelo, leitura de PDF, OCR ou visão para escaneados, validação de schema, testes. Para cada escolha: por quê, e por que não a alternativa. Menos dependências, menos para defender.
