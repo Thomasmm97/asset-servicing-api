@@ -23,6 +23,7 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 | **Falha na chamada ao modelo** | Erro intermitente: tempo esgotado, limite de requisições, provedor indisponível | Repete a mesma chamada, com espera crescente entre as tentativas (backoff) | Revisão humana, com o motivo R-PRC-01. |
 
 - Cada tipo tem o seu limite de 2 tentativas; um não consome o do outro.
+- Cada tentativa (motivo, resposta do modelo, resultado) fica registrada no log técnico do documento; o JSON do operador mostra só o resultado final.
 - As demais regras não disparam retry. Com o grounding garantindo que cada valor está no documento, uma violação delas aponta para o próprio documento ou para a base, e um novo processamento não corrige.
 
 ## Configuração
