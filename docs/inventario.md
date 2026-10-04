@@ -11,7 +11,7 @@
 |---|---|---|---|---|
 | 01 | nativo | `DIVIDENDO` | Menção a IRRF num dividendo: não é sinal de JCP nem gera valor líquido | não |
 | 02 | nativo | `JCP` | Baixa (caso base de JCP); aprovação só no corpo | não |
-| 03 | nativo | `JCP` | Título "Distribuição de Dividendos" contradiz o corpo, que descreve JCP | não |
+| 03 | nativo | `JCP` | Título "Distribuição de Dividendos" contradiz o corpo, que descreve JCP | sim |
 | 04 | nativo | `JCP` | Data de pagamento "a definir": não inventar | sim |
 | 05 | nativo | `DIVIDENDO` | Data de pagamento (10/07) anterior à data com (15/07) | sim |
 | 06 | nativo | `GRUPAMENTO` | Sem valor, moeda e pagamento: "não se aplica" ≠ "ausente" | não |
@@ -67,7 +67,7 @@ Legenda: **T** = só na tabela · **C** = só no corpo · **T+C** = nos dois · 
 - "Imputado ao dividendo mínimo obrigatório" não torna o evento dividendo (ver glossário em `dominio.md`).
 - Data de aprovação só no corpo. Líquido = bruto × 0,825 confere.
 - **Golden:** match em todas as chaves (classe ON).
-- **Revisão:** não; sai com alerta de divergência título × natureza (D-06).
+- **Revisão:** sim, por divergência entre título e natureza (D-06); a classe JCP já vai preenchida para o operador confirmar.
 
 ### Doc 04 — Rede Varejo Brasil · `JCP`
 - **Problemas:** data de pagamento "A definir (vide aviso complementar)", na tabela e em destaque no corpo. Risco de o modelo inventar uma data ou reaproveitar outra (ex.: data ex).

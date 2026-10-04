@@ -163,7 +163,7 @@ Aplica-se a todas as classes.
 
 | ID | Regra | Comportamento | Caso de teste (Dado → Então) | No lote |
 |---|---|---|---|---|
-| R-CLS-01 | O título diverge da natureza do evento. | ALERTA (D-06) | Título "Distribuição de Dividendos" e natureza JCP → alerta | Doc 03 dispara |
+| R-CLS-01 | O título diverge da natureza do evento. | REVISÃO HUMANA (D-06) | Título "Distribuição de Dividendos" e natureza JCP → revisão humana | Doc 03 dispara |
 | R-CLS-02 | Classe `INDETERMINADO`. | REVISÃO HUMANA (D-03) | `INDETERMINADO` → revisão humana | Nenhum caso no lote |
 
 ---
@@ -228,11 +228,11 @@ Aplicando as regras aos valores de `evals/gabarito.csv` (mensagens já preenchid
 |---|---|---|---|---|
 | 01 | — | — | — | não |
 | 02 | — | — | — | não |
-| 03 | — | R-CLS-01 | Alerta: "Título do aviso (\"Distribuição de Dividendos\") diverge da natureza identificada (JCP)." | não |
+| 03 | R-CLS-01 | — | "Título do aviso (\"Distribuição de Dividendos\") diverge da natureza identificada (JCP)." | sim |
 | 04 | R-REQ-02 | — | "Data de pagamento adiada pelo emissor (\"A definir (vide aviso complementar)\"); aguardar aviso complementar." | sim |
 | 05 | R-DAT-02 | — | "Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026)." | sim |
 | 06 | — | — | — | não |
 | 07 | — | — | — | não (política para escaneados pendente, D-08) |
 | 08 | R-ID-01 | — | "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)." | sim |
 
-As regras reproduzem a coluna de revisão do gabarito nos 8 documentos. No doc 08, as regras R-ID-02 a R-ID-04 não chegam a ser avaliadas, porque não há registro na base. Com a extração certa, nenhum documento dispara retry: as três revisões vêm de regras que apontam o documento (04 e 05) ou a base (08).
+As regras reproduzem a coluna de revisão do gabarito nos 8 documentos. No doc 08, as regras R-ID-02 a R-ID-04 não chegam a ser avaliadas, porque não há registro na base. Com a extração certa, nenhum documento dispara retry: as quatro revisões vêm de regras que apontam o documento (03, 04 e 05) ou a base (08).

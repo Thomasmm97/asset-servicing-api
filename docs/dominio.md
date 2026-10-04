@@ -55,7 +55,7 @@ Existe para que o modelo nunca seja forçado a escolher uma classe errada. Usar 
 | `EVIDENCIA_INSUFICIENTE` | O documento não traz, ou não deixa ler, os trechos que permitem decidir a natureza. |
 
 **Não usar** quando:
-- só o título ou o rótulo diverge e a natureza converge → classifica e registra alerta (princípio 1, seção 3; caso do doc 03 no inventário);
+- só o título ou o rótulo diverge e a natureza converge → classifica pela natureza e manda para revisão humana com a classe preenchida (princípio 1, seção 3; R-CLS-01; caso do doc 03 no inventário);
 - a classe é clara, mas um campo está ausente ou ilegível → é problema de campo, não de classe;
 - a confiança é apenas moderada → classifica com a confiança correspondente; a revisão vem do roteamento, não da classe.
 
@@ -95,5 +95,5 @@ Existe para que o modelo nunca seja forçado a escolher uma classe errada. Usar 
 
 > Derivados da análise do lote (`inventario.md`). Orientam o prompt e o modelo de confiança.
 
-1. **Natureza, não título.** Hierarquia de evidência: natureza (origem, base legal, forma de cálculo, tributação) > rótulo da tabela ("Tipo de evento") > título. Quando os níveis divergem mas a natureza converge, classifica-se pela natureza e registra-se um alerta. *Origem: doc 03.*
+1. **Natureza, não título.** Hierarquia de evidência: natureza (origem, base legal, forma de cálculo, tributação) > rótulo da tabela ("Tipo de evento") > título. Quando os níveis divergem mas a natureza converge, classifica-se pela natureza e o documento vai para revisão humana, com a classe já preenchida para o operador confirmar (D-06). *Origem: doc 03.*
 2. **Fase não é tipo.** "Distribuição", "pagamento" e "crédito" descrevem o andamento do evento, não a sua natureza. *Origem: títulos "Pagamento de Dividendos" e "Distribuição de Dividendos".*

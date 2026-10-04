@@ -10,7 +10,7 @@
 ### D-01 — Classificar pela natureza do evento, não pelo título
 - **Contexto:** o doc 03 tem o título "Distribuição de Dividendos", mas o corpo descreve JCP (remuneração do capital próprio, PL × TJLP, IRRF de 17,5% com valor líquido). Classificar errado muda o tratamento tributário.
 - **Opções:** (A) título; (B) rótulo "Tipo de evento" da tabela; (C) natureza (origem, base legal, forma de cálculo, tributação), com hierarquia natureza > rótulo > título.
-- **Decisão:** C. Divergência entre os níveis, com a natureza convergente, gera alerta.
+- **Decisão:** C. Divergência entre os níveis, com a natureza convergente, manda o documento para revisão humana com a classe já preenchida (D-06).
 - **Por quê / custo:** título e rótulo são as evidências mais fáceis de estarem erradas; a natureza é o que determina o tratamento downstream. Custo: o prompt precisa ensinar os sinais de natureza (`dominio.md`, seção 1).
 
 ### D-02 — Lista simples de classes, sem subtipos
@@ -37,11 +37,11 @@
 - **Decisão:** B.
 - **Por quê / custo:** é a principal fonte de confusão com bonificação (ambos aumentam a quantidade de ações) e com grupamento (direção oposta). Custo: uma classe sem caso de teste no lote.
 
-### D-06 — Divergência título × natureza gera alerta, não revisão (doc 03)
+### D-06 — Divergência título × natureza manda para revisão humana (doc 03)
 - **Contexto:** no doc 03, três sinais independentes de natureza convergem para JCP; só o título diverge.
-- **Opções:** (A) revisão humana; (B) classificar como JCP, com alerta e sem revisão.
-- **Decisão:** B.
-- **Por quê / custo:** coerente com D-01. É a opção menos conservadora: se a classificação estiver errada, o erro muda a tributação. Pergunta provável na sessão ao vivo: "por que um aviso com título contraditório passou sem revisão?"
+- **Opções:** (A) classificar como JCP e mandar para revisão humana, com a classe já preenchida; (B) classificar como JCP, com alerta e sem revisão.
+- **Decisão:** A. A primeira versão era B; foi trocada pela opção conservadora.
+- **Por quê / custo:** um erro de classificação muda a tributação, e um aviso que se contradiz é exatamente o caso em que um humano deve confirmar. O operador não refaz o trabalho: recebe a classe JCP com as evidências e só confirma. Custo: um documento a mais na fila de revisão.
 
 ### D-07 — Campo adiado pelo emissor vai para revisão humana (doc 04)
 - **Contexto:** a data de pagamento do doc 04 está "a definir (vide aviso complementar)". O registro está correto, mas incompleto.
