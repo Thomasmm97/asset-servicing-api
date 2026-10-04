@@ -1,7 +1,7 @@
 # Contrato de saída
 
 > O que o sistema entrega para cada documento e por quê. Decisões de origem: D-17 (formato), D-18 (status e erro), D-19 e D-20 (confiança), D-21 (roteamento).
-> Exemplos preenchidos à mão: `docs/exemplos/01_energetica_vale_tiete_dividendo.json` (aprovado) e `docs/exemplos/08_construtora_horizonte_bonificacao.json` (revisão humana). As probabilidades do modelo nos exemplos são ilustrativas.
+> Exemplos preenchidos à mão: `docs/exemplos/01_energetica_vale_tiete_dividendo.json` (aprovado) e `docs/exemplos/08_construtora_horizonte_bonificacao.json` (revisão humana).
 
 A saída fica em `saida/`: um JSON por documento (`saida/<documento>.json`) e o relatório de exceções (`saida/relatorio_excecoes.md`).
 
@@ -57,13 +57,13 @@ Iguais às do gabarito (D-09): datas em ISO 8601; decimais como texto, com ponto
 | Chave | Significado |
 |---|---|
 | `ocr` | Menor confiança do OCR entre as palavras do valor, de 0 a 1; `null` em PDF nativo. |
-| `modelo` | Menor probabilidade entre os tokens do valor (logprob normalizado: e^logprob), de 0 a 1; `null` se o provider não devolver logprobs. |
+| `modelo` | Menor probabilidade entre os tokens do valor (logprob normalizado: e^logprob), de 0 a 1. `null` nesta entrega: o modelo escolhido não devolve logprobs (D-20, D-26). |
 | `nivel` | `ALTA`, `MEDIA` ou `BAIXA`, pelas regras abaixo. |
 | `justificativa` | Texto gerado a partir dos sinais: valores medidos e confirmações encontradas. |
 
 | Nível | Quando | Efeito |
 |---|---|---|
-| `BAIXA` | `ocr` abaixo de 0,70 (D-23) ou `modelo` abaixo de 0,95 (provisório) | Revisão humana (R-CNF-01 ou R-CNF-02) |
+| `BAIXA` | `ocr` abaixo de 0,70 (D-23); `modelo` abaixo de 0,95 se o logprob for ligado | Revisão humana (R-CNF-01; R-CNF-02, desligada) |
 | `ALTA` | Acima dos limites e pelo menos uma confirmação: rótulo do campo na citação (o rótulo mais próximo do valor é o do campo), base de referência, R-DAT-03 ou R-VAL-02; no `tipo_evento`, dois ou mais sinais de natureza | Segue |
 | `MEDIA` | Acima dos limites, sem confirmação | Segue; é onde o risco residual se concentra |
 

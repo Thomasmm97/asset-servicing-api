@@ -36,7 +36,7 @@ O retry é uma etapa do processamento, separada do comportamento das regras: só
 | Validar dígitos verificadores do CNPJ | desligado | 11 dos 13 CNPJs do lote (fictícios) falham no cálculo (D-11) |
 | Calendário de pregões | calendário da B3: dias úteis menos os feriados da bolsa | Datas de mercado só existem em dia de pregão (D-12). A fonte dos feriados é decidida na Fase 3. |
 | Limite de confiança do OCR (R-CNF-01) | 0,70; menor confiança entre as palavras do valor; calibrado no doc 07 (leituras corretas entre 0,74 e 0,96) | D-08, D-19, D-23 |
-| Limite de confiança do modelo (R-CNF-02) | 0,95, provisório; menor probabilidade entre os tokens do valor; calibrado na Fase 4 | D-19, D-20 |
+| Limite de confiança do modelo (R-CNF-02) | desligada: o modelo escolhido não devolve logprobs; se ligada, 0,95 pelo mínimo entre os tokens do valor | D-19, D-20, D-26 |
 
 ---
 
@@ -175,12 +175,12 @@ A moeda não é um campo próprio: é atributo de cada valor monetário (valor b
 
 ## 9. Confiança da leitura
 
-Aplica-se a todas as classes. A R-CNF-01 vale só em documentos escaneados; a R-CNF-02, sempre que o provider devolve logprobs. Agregação pelo mínimo (D-19); níveis de confiança em D-20.
+Aplica-se a todas as classes. A R-CNF-01 vale só em documentos escaneados; a R-CNF-02 está desligada, porque o modelo escolhido não devolve logprobs (D-26), e fica documentada para um modelo que devolva. Agregação pelo mínimo (D-19); níveis de confiança em D-20.
 
 | ID | Regra | Comportamento | Caso de teste (Dado → Então) | No lote |
 |---|---|---|---|---|
 | R-CNF-01 | A confiança que o OCR atribui às palavras de cada valor está acima do limite configurado. | REVISÃO HUMANA | Data com escaneada com palavras lidas abaixo do limite → revisão humana do campo | Doc 07 passa, se a confiança do OCR ficar acima do limite (D-08) |
-| R-CNF-02 | A probabilidade que o modelo atribui aos tokens de cada valor (logprob normalizado para 0–1) está acima do limite configurado. | REVISÃO HUMANA | Valor bruto extraído com um token de probabilidade 0,70 → revisão humana do campo | Todos passam, se a extração estiver segura (a medir na Fase 4) |
+| R-CNF-02 | A probabilidade que o modelo atribui aos tokens de cada valor (logprob normalizado para 0–1) está acima do limite configurado. | REVISÃO HUMANA, quando ligada | Valor bruto extraído com um token de probabilidade 0,70 → revisão humana do campo | Desligada (D-20, D-26) |
 
 **Notas:**
 - **Por campo, não por documento:** a regra olha só as palavras que formam cada valor. Um carimbo que borra a data de pagamento numa página nítida manda só esse campo para revisão; a média da página esconderia esse caso e penalizaria um documento com assinatura ou logotipo borrado e valores nítidos. Um documento inteiro ilegível dispara a R-CNF-01 (ou a R-REQ-01) em todos os campos, sem precisar de regra própria.
@@ -246,7 +246,7 @@ Quando o documento não pode ser processado, o JSON sai com `status: ERRO` e o o
 |---|---|---|---|---|---|
 | R-GRD, R-ID, R-IDF, R-DAT-01, R-DAT-03, R-DAT-04, R-REQ, R-CLS | ✓ | ✓ | ✓ | ✓ | ✓ |
 | R-CNF-01 (só em escaneados) | ✓ | ✓ | ✓ | ✓ | ✓ |
-| R-CNF-02 (com logprobs) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| R-CNF-02 (desligada) | ✓ | ✓ | ✓ | ✓ | ✓ |
 | R-DAT-02 | ✓ | ✓ | ✓ | — | — |
 | R-VAL-01 | ✓ | ✓ | — | — | — |
 | R-VAL-02, R-VAL-03 | — | ✓ | — | — | — |

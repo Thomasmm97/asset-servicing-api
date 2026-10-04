@@ -79,10 +79,6 @@
     {
       "regra": "R-CLS-02",
       "descricao": "Evento classificado na taxonomia."
-    },
-    {
-      "regra": "R-CNF-02",
-      "descricao": "Confiança do modelo acima do limite."
     }
   ],
   "tipo_evento": {
@@ -104,8 +100,8 @@
     "confianca": {
       "nivel": "ALTA",
       "ocr": null,
-      "modelo": 0.996,
-      "justificativa": "Modelo 0,996; três sinais de natureza convergem (capitalização de reservas; ações novas na proporção; custo atribuído para fins fiscais)."
+      "modelo": null,
+      "justificativa": "Três sinais de natureza convergem (capitalização de reservas; ações novas na proporção; custo atribuído para fins fiscais)."
     },
     "revisao_humana": false,
     "motivos": [],
@@ -122,8 +118,8 @@
         "confianca": {
           "nivel": "MEDIA",
           "ocr": null,
-          "modelo": 0.999,
-          "justificativa": "Modelo 0,999; sem confirmação: não há rótulo do campo na citação e o emissor não está na base de referência."
+          "modelo": null,
+          "justificativa": "Sem confirmação: não há rótulo do campo na citação e o emissor não está na base de referência."
         },
         "base_referencia": "NAO_ENCONTRADO",
         "revisao_humana": true,
@@ -144,8 +140,8 @@
         "confianca": {
           "nivel": "ALTA",
           "ocr": null,
-          "modelo": 0.999,
-          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+          "modelo": null,
+          "justificativa": "Confirmado pelo rótulo do campo na citação."
         },
         "base_referencia": "NAO_ENCONTRADO",
         "revisao_humana": true,
@@ -168,8 +164,8 @@
         "confianca": {
           "nivel": "ALTA",
           "ocr": null,
-          "modelo": 0.999,
-          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+          "modelo": null,
+          "justificativa": "Confirmado pelo rótulo do campo na citação."
         },
         "base_referencia": "NAO_ENCONTRADO",
         "revisao_humana": true,
@@ -190,8 +186,8 @@
         "confianca": {
           "nivel": "ALTA",
           "ocr": null,
-          "modelo": 0.999,
-          "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação."
+          "modelo": null,
+          "justificativa": "Confirmado pelo rótulo do campo na citação."
         },
         "base_referencia": "NAO_ENCONTRADO",
         "revisao_humana": true,
@@ -212,8 +208,8 @@
         "confianca": {
           "nivel": "MEDIA",
           "ocr": null,
-          "modelo": 0.99,
-          "justificativa": "Modelo 0,99; derivada do sufixo do ticker e do código de classe do ISIN; sem confirmação: não há rótulo do campo na citação e o emissor não está na base de referência."
+          "modelo": null,
+          "justificativa": "Derivada do sufixo do ticker e do código de classe do ISIN; sem confirmação: não há rótulo do campo na citação e o emissor não está na base de referência."
         },
         "base_referencia": "NAO_ENCONTRADO",
         "revisao_humana": true,
@@ -235,8 +231,8 @@
       "confianca": {
         "nivel": "ALTA",
         "ocr": null,
-        "modelo": 0.998,
-        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+        "modelo": null,
+        "justificativa": "Confirmado pelo rótulo do campo na citação."
       },
       "revisao_humana": false,
       "motivos": [],
@@ -251,8 +247,8 @@
       "confianca": {
         "nivel": "ALTA",
         "ocr": null,
-        "modelo": 0.999,
-        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela R-DAT-03 (data ex é o pregão seguinte)."
+        "modelo": null,
+        "justificativa": "Confirmado pelo rótulo do campo na citação e pela R-DAT-03 (data ex é o pregão seguinte)."
       },
       "revisao_humana": false,
       "motivos": [],
@@ -267,8 +263,8 @@
       "confianca": {
         "nivel": "ALTA",
         "ocr": null,
-        "modelo": 0.999,
-        "justificativa": "Modelo 0,999; confirmado pelo rótulo do campo na citação e pela R-DAT-03 (pregão seguinte à data com)."
+        "modelo": null,
+        "justificativa": "Confirmado pelo rótulo do campo na citação e pela R-DAT-03 (pregão seguinte à data com)."
       },
       "revisao_humana": false,
       "motivos": [],
@@ -283,8 +279,8 @@
       "confianca": {
         "nivel": "ALTA",
         "ocr": null,
-        "modelo": 0.998,
-        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+        "modelo": null,
+        "justificativa": "Confirmado pelo rótulo do campo na citação."
       },
       "revisao_humana": false,
       "motivos": [],
@@ -299,8 +295,8 @@
       "confianca": {
         "nivel": "ALTA",
         "ocr": null,
-        "modelo": 0.985,
-        "justificativa": "Modelo 0,985; confirmado pelo rótulo do campo na citação."
+        "modelo": null,
+        "justificativa": "Confirmado pelo rótulo do campo na citação."
       },
       "revisao_humana": false,
       "motivos": [],
@@ -316,8 +312,8 @@
       "confianca": {
         "nivel": "ALTA",
         "ocr": null,
-        "modelo": 0.998,
-        "justificativa": "Modelo 0,998; confirmado pelo rótulo do campo na citação."
+        "modelo": null,
+        "justificativa": "Confirmado pelo rótulo do campo na citação."
       },
       "revisao_humana": false,
       "motivos": [],
