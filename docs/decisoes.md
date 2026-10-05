@@ -273,7 +273,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 ### D-30 — Rastreamento por documento
 - **Contexto:** é preciso reconstruir o caminho de um documento (o que foi lido, o que o modelo respondeu, cada retry, cada ferramenta, o que decidiu o roteamento) sem misturar isso no JSON do operador.
 - **Opções:** (A) log de texto; (B) trace JSONL por documento; (C) OpenTelemetry; (D) serviço externo (Langfuse, LangSmith, Logfire).
-- **Decisão:** B: `saida/traces/<documento>.jsonl`, uma linha por etapa (`trace_id`, etapa, início, duração, tentativa, cache, `cached_tokens`, ferramenta e quem a chamou, resumo de entrada e saída, erro), gravada por um gerenciador de contexto. O `trace_id` vai também no JSON do operador.
+- **Decisão:** B: `saida/traces/<documento>.jsonl`, uma linha por etapa (`trace_id`, etapa, início, duração, tentativa, modelo e prompt de sistema de cada chamada, cache, `cached_tokens`, ferramenta e quem a chamou, resumo de entrada e saída, erro), gravada por um gerenciador de contexto. O `trace_id` vai também no JSON do operador.
 - **Por quê / custo:** estruturado (dá para filtrar e somar tempos por etapa), sem dependência e sem dados saindo do ambiente. O OpenTelemetry seria o padrão de mercado, mas é configuração demais para 8 documentos; os serviços externos exigem conta e enviam os dados para fora. Custo: o formato é próprio; migrar para OpenTelemetry depois é trocar o gerenciador de contexto.
 
 ### D-31 — Saída num único JSON do lote, com o relatório de exceções como campo

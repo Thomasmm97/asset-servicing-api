@@ -153,7 +153,7 @@ As assinaturas reais estão na seção 11, junto com o papel de cada função.
 
 ## 8. Rastreamento (D-30)
 
-Um arquivo JSONL por execução em `saida/traces/<trace_id>.jsonl` (o `trace_id` tem o documento e a data e hora, então execuções paralelas do mesmo documento não se misturam), uma linha por etapa ou evento, gravada pelo gerenciador de contexto `etapa` e pela função `registrar`: `trace_id`, etapa, início, duração, tentativa, cache local (acerto ou falha), `cached_tokens`, ferramenta chamada (pelo modelo ou imposta pelo código), resumo da entrada e da saída, erro. O mesmo `trace_id` vai no JSON do operador, ligando o registro ao rastro técnico. O JSON do operador mostra só o resultado (D-13).
+Um arquivo JSONL por execução em `saida/traces/<trace_id>.jsonl` (o `trace_id` tem o documento e a data e hora, então execuções paralelas do mesmo documento não se misturam), uma linha por etapa ou evento, gravada pelo gerenciador de contexto `etapa` e pela função `registrar`: `trace_id`, etapa, início, duração, tentativa, modelo e prompt de sistema de cada chamada (o texto do template, sem o documento), cache local (acerto ou falha), `cached_tokens`, ferramenta chamada (pelo modelo ou imposta pelo código), resumo da entrada e da saída, erro. O mesmo `trace_id` vai no JSON do operador, ligando o registro ao rastro técnico. O JSON do operador mostra só o resultado (D-13).
 
 ## 9. Eval e teste de estocasticidade (D-29)
 
