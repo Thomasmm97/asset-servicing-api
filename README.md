@@ -106,7 +106,7 @@ Registradas com opções e custo em [docs/decisoes.md](docs/decisoes.md) (D-01 a
 | Classe pela natureza; título divergente vai para revisão com a classe preenchida (D-01, D-06) | O doc 03 se chama "Distribuição de Dividendos" e é JCP, e errar muda a tributação | Um documento a mais na fila |
 | Grounding pelo código, com valor literal normalizado pelo código (D-14, D-24) | Valor inventado é o erro mais caro, e o modelo não deve conferir a si mesmo | Um normalizador por tipo de campo |
 | Ferramentas sem argumentos de valor (D-27) | O modelo não consegue alterar um valor ao repassá-lo | A parte agêntica é fina, de propósito |
-| `status` com 3 estados (APROVADO, REVISAO_HUMANA, ERRO); o documento é a unidade de roteamento (D-18, D-21) | Uma chave diz se o registro segue e o que fazer; não existe provento aprovado em parte | O operador abre o documento inteiro |
+| `status` com 3 estados (APROVADO, REVISAO_HUMANA, ERRO); o documento é a unidade de roteamento (D-18, D-21) | Uma chave diz se o registro segue e o que fazer; não existe provento aprovado em parte | Um campo em revisão segura o registro inteiro, mesmo com os outros campos aprovados |
 | `gpt-5.6-luna`, sem logprobs (D-26) | O logprob só ajuda onde o modelo interpreta, e ali o modelo forte acertou com probabilidade 1,0 (testado) | Sem medida de hesitação; reprodutibilidade pelo cache |
 | PyMuPDF e Tesseract, escolhidos por teste (D-22, D-23) | Posição e confiança por palavra; o Docling só dá confiança por página e leu a tabela por colunas | Tesseract precisa ser instalado |
 

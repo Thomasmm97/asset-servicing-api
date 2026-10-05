@@ -189,7 +189,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Contexto:** os motivos de revisão ficam nos campos, mas os processos seguintes tratam o evento inteiro.
 - **Opções:** (A) roteamento por campo: os campos aprovados seguem e os outros esperam; (B) qualquer campo em revisão leva o documento inteiro para revisão, e a marcação do campo mostra onde olhar.
 - **Decisão:** B. O `status` é derivado pelo código: `ERRO` se o processamento falhou; senão `REVISAO_HUMANA` se algum campo (ou o `tipo_evento`) tem `revisao_humana: true`; senão `APROVADO`.
-- **Por quê / custo:** não existe provento aprovado em parte: sem a data de pagamento ou com a classe em dúvida, o cálculo do evento inteiro não pode seguir. Custo: o operador abre o documento inteiro, guiado pelas marcações dos campos.
+- **Por quê / custo:** não existe provento aprovado em parte: sem a data de pagamento ou com a classe em dúvida, o cálculo do evento inteiro não pode seguir. Custo: um campo em revisão segura o registro inteiro, mesmo com os outros campos aprovados; o operador confere só os campos marcados, pelas citações, sem reabrir o PDF.
 
 ---
 
