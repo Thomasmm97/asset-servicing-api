@@ -4,8 +4,17 @@ Agente code-first que lê avisos de eventos corporativos (PDF nativo ou escanead
 
 ## Como rodar
 
+Requisitos: Python 3.14 e Tesseract com o idioma português (o OCR do doc 07, escaneado).
+
+| Sistema | Instalação |
+|---|---|
+| macOS | `brew install python@3.14 tesseract tesseract-lang` |
+| Windows | Python 3.14 de [python.org](https://www.python.org/downloads/); Tesseract pelo [instalador da UB Mannheim](https://github.com/UB-Mannheim/tesseract/wiki), marcando *Portuguese* em *Additional language data* |
+| Linux (Debian/Ubuntu) | Python 3.14 (python.org ou o gerenciador da distribuição); `sudo apt install tesseract-ocr tesseract-ocr-por` |
+
+macOS e Linux:
+
 ```bash
-brew install python@3.14 tesseract tesseract-lang
 python3.14 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
@@ -13,6 +22,16 @@ python -m asset_servicing           # lê documents/ e escreve saida/lote.json
 python -m tests.evals.avaliar       # métricas contra tests/evals/gabarito.csv
 pytest                              # 53 testes unitários, sem API
 pytest -m estocastico               # 50 execuções por documento, chamando a API (EXECUCOES=5 para uma versão rápida)
+```
+
+Windows (PowerShell): os mesmos comandos; muda só a criação do ambiente e a variável de ambiente.
+
+```powershell
+py -3.14 -m venv .venv; .venv\Scripts\Activate.ps1   # se bloqueado: Set-ExecutionPolicy -Scope Process Bypass
+$env:PATH += ";C:\Program Files\Tesseract-OCR"       # se o instalador não pôs o Tesseract no PATH
+pip install -r requirements.txt
+python -m asset_servicing
+$env:EXECUCOES=5; pytest -m estocastico
 ```
 
 As respostas do modelo usadas na entrega estão no cache local versionado (`cache/`), então o lote roda **sem chave de API**. Para chamar o modelo de novo, crie um `.env` com `OPENROUTER_API_KEY=...`.
