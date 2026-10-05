@@ -3,7 +3,7 @@
 > O que o sistema entrega para cada documento e por quê. Decisões de origem: D-17 (formato), D-18 (status e erro), D-19 e D-20 (confiança), D-21 (roteamento).
 > Exemplos preenchidos à mão: `docs/exemplos/01_energetica_vale_tiete_dividendo.json` (aprovado) e `docs/exemplos/08_construtora_horizonte_bonificacao.json` (revisão humana).
 
-A saída fica em `saida/`: um JSON por documento (`saida/<documento>.json`) e o relatório de exceções (`saida/relatorio_excecoes.md`).
+A saída fica em `saida/`: um JSON por documento (`saida/<documento>.json`) e o relatório de exceções do lote (`saida/relatorio_excecoes.json`).
 
 ---
 
@@ -128,7 +128,7 @@ Alertas e o nível `MEDIA` não mudam o status.
 }
 ```
 
-Cada apontamento aparece uma vez, com todos os campos que ele aponta. `saida/relatorio_excecoes.md` é a versão legível dos mesmos dados, para o operador decidir por onde começar: os totais, uma tabela só com os documentos que têm motivo, alerta ou erro, e a lista dos aprovados sem exceção.
+Cada apontamento aparece uma vez, com todos os campos que ele aponta. Os documentos aprovados aparecem com `motivos` vazio, o que permite ao operador filtrar só os que pedem atenção.
 
 ## 9. Métricas e metas (eval)
 

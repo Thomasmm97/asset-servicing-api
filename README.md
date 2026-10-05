@@ -19,7 +19,7 @@ pip install -r requirements.txt
 **Rodar o lote:**
 
 ```bash
-python -m asset_servicing             # lê documents/ e escreve em saida/
+python -m asset_servicing             # lê documents/ e escreve em saida/ (JSON por documento + relatorio_excecoes.json)
 python -m evals.avaliar               # compara saida/ com evals/gabarito.csv
 pytest                                # 52 testes unitários (tests/unit/): regras, evidências, montagem, saída; sem API
 ```
@@ -38,8 +38,7 @@ EXECUCOES=5 pytest -m estocastico     # versão rápida
 | Arquivo | Para quem | Para quê |
 |---|---|---|
 | `saida/<documento>.json` | Operador e processos seguintes (cálculo de provento, custódia, conciliação) | O registro do documento, exigido pelo enunciado: cada valor com origem, confiança, validação e motivo de revisão, auditável sem reabrir o PDF ([contrato](docs/contrato.md); exemplos em [docs/exemplos/](docs/exemplos/)) |
-| `saida/relatorio_excecoes.json` | Sistemas (fila de revisão, painel, monitoramento) | O relatório de exceções do lote num único JSON: totais e, para todos os documentos, status, tipo de evento, erro, motivos e alertas, cada um com os campos que aponta |
-| `saida/relatorio_excecoes.md` | Operador, no começo do dia | A versão legível do mesmo relatório: totais e só os documentos com motivo de revisão, alerta ou erro, com a mensagem de cada um |
+| `saida/relatorio_excecoes.json` | Operador e sistemas (fila de revisão, painel) | O relatório de exceções do lote num único JSON: totais e, para todos os documentos, status, tipo de evento, erro, motivos e alertas, cada um com os campos que aponta e a mensagem |
 | `saida/traces/<trace_id>.jsonl` | Engenharia e auditoria | O caminho técnico de cada execução: etapas e durações, cada chamada ao modelo (do cache ou não, `cached_tokens`), cada retry e o motivo, cada ferramenta e quem a chamou (o modelo ou o código), erros. Serve para depurar ("por que o doc 03 foi para revisão?"), para reconstruir uma decisão numa auditoria e para medir desempenho. Fica fora do JSON do operador, que mostra só o resultado (D-13, D-30); o `trace_id` liga os dois |
 | `cache/<hash>.json` | Quem roda o projeto | As respostas do modelo usadas nesta entrega, uma por arquivo, indexadas pelo hash da requisição (modelo, mensagens, schema, ferramentas). Garante a reprodutibilidade (o modelo de raciocínio não aceita temperatura 0), permite rodar o clone limpo sem chave de API e evita pagar de novo por chamadas iguais durante o desenvolvimento. Qualquer mudança no prompt, no schema, no modelo ou no texto do documento muda o hash e gera uma chamada nova. Não confundir com o cache de prompt do provider (D-25), que fica do lado da OpenAI. O teste de estocasticidade não usa este cache |
 
@@ -62,7 +61,7 @@ documents/*.pdf ── 1º documento em série, demais em paralelo (20 workers)
 [6 confiança]    OCR, rótulo do campo na citação, base de referência, regras cruzadas
 [7 montagem]     só as chaves da classe; status calculado
    ▼
-saida/*.json + relatorio_excecoes.json/.md + traces/
+saida/*.json + relatorio_excecoes.json + traces/
 ```
 
 Detalhes em [docs/arquitetura.md](docs/arquitetura.md): caso de uso, camadas, por que cada arquivo e cada função existem, testes das bibliotecas.

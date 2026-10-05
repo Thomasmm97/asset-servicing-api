@@ -34,4 +34,3 @@ def test_relatorio_json_tem_todos_os_documentos_e_os_totais(tmp_path):
     assert dados["totais"] == {"processados": 2, "aprovados": 0, "revisao_humana": 0, "erro": 2, "com_alerta": 0}
     assert [d["documento"] for d in dados["documentos"]] == ["a.pdf", "b.pdf"]
     assert dados["documentos"][0]["erro"]["codigo"] == "FALHA_OCR"
-    assert (tmp_path / "relatorio_excecoes.md").exists()

@@ -67,11 +67,10 @@ def gravar_registro(registro: Registro, pasta: Path) -> Path:
 
 
 def gerar_relatorio(registros: list[Registro], pasta: Path) -> Path:
-    """Relatório de exceções do lote (contrato.md, seção 8): um JSON com todos os documentos e a versão legível em Markdown."""
+    """Relatório de exceções do lote (contrato.md, seção 8): um JSON com os totais e todos os documentos."""
     dados = relatorio(registros)
     arquivo = pasta / "relatorio_excecoes.json"
     arquivo.write_text(json.dumps(dados, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (pasta / "relatorio_excecoes.md").write_text(_markdown(dados), encoding="utf-8")
     return arquivo
 
 
@@ -111,27 +110,6 @@ def _agrupar(registro: Registro, tipo: str) -> list[dict]:
         for a in getattr(campo, tipo):
             agrupados.setdefault((a.regra, a.mensagem), []).append(nome)
     return [{"regra": regra, "campos": nomes, "mensagem": mensagem} for (regra, mensagem), nomes in agrupados.items()]
-
-
-def _markdown(dados: dict) -> str:
-    t = dados["totais"]
-    linhas = ["# Relatório de exceções", "",
-              f"Processados: {t['processados']} · Aprovados: {t['aprovados']} · Revisão humana: {t['revisao_humana']} · "
-              f"Erro: {t['erro']} · Com alerta: {t['com_alerta']}", "",
-              "| Documento | Tipo de evento | Status | Motivos | Alertas |", "|---|---|---|---|---|"]
-    limpos = []
-    for d in dados["documentos"]:
-        nome = Path(d["documento"]).stem
-        motivos = [f"{m['regra']} ({', '.join(m['campos'])}): {m['mensagem']}" for m in d["motivos"]]
-        alertas = [f"{a['regra']} ({', '.join(a['campos'])}): {a['mensagem']}" for a in d["alertas"]]
-        if d["erro"]:
-            motivos = [f"{d['erro']['codigo']}: {d['erro']['mensagem']}"]
-        if not motivos and not alertas:
-            limpos.append(nome)
-            continue
-        linhas.append(f"| {nome} | {d['tipo_evento'] or '—'} | {d['status']} | {'<br>'.join(motivos) or '—'} | {'<br>'.join(alertas) or '—'} |")
-    linhas += ["", "Aprovados sem exceção: " + (", ".join(limpos) or "nenhum") + "."]
-    return "\n".join(linhas) + "\n"
 
 
 def _ordenar(obj):
