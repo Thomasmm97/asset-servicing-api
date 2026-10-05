@@ -110,8 +110,8 @@ asset_servicing/
   montagem.py     # confiança (R-CNF), registro com as chaves da classe e status
   saida.py        # JSON, relatório de exceções e trace
   pipeline.py     # um documento; o lote (1º em série, demais em paralelo)
-tests/evals/avaliar.py  # métricas contra tests/evals/gabarito.csv
-tests/            # test_regras.py, test_evidencias.py, test_montagem.py, test_estocasticidade.py
+tests/unit/       # test_regras.py, test_evidencias.py, test_montagem.py, test_saida.py
+tests/evals/      # avaliar.py (métricas contra gabarito.csv), test_lote.py, test_estocasticidade.py
 ```
 
 Abaixo disso (uns 5 arquivos), cada arquivo passaria de 500 linhas e ficaria difícil de navegar ao vivo.
@@ -158,9 +158,11 @@ Um arquivo JSONL por execução em `saida/traces/<trace_id>.jsonl` (o `trace_id`
 ## 9. Eval e teste de estocasticidade (D-29)
 
 - **`tests/evals/avaliar.py`:** compara `saida/` com o gabarito e imprime as métricas do `contrato.md` (seção 9). Usa o cache local: roda sem chave de API.
-- **`tests/test_estocasticidade.py`** (`pytest -m estocastico`, fora da suíte padrão): um teste por documento, parametrizado. Cada documento é lido uma vez (a leitura é determinística) e processado N vezes (padrão 50) **sem o cache local**; a primeira execução vai em série, para gravar o prefixo no cache do provider, e as demais vão em paralelo com 20 workers. O teste do documento passa só se **nenhuma** execução falhar em alguma métrica com meta: erro não roteado, valor inventado, classificação, roteamento, motivo ou acurácia por campo.
-- **Limite do provider:** o OpenRouter limita contas novas a 20 requisições por minuto neste modelo (erro 429 "new-account-rpm", descoberto na primeira rodada do lote). O cliente tem um limitador de ritmo (`LIMITE_RPM` no `config.py`), e o agente encerra assim que as 3 ferramentas foram chamadas, então cada execução faz 2 chamadas.
-- **Estimativa:** N = 50 (decisão do usuário, para reduzir tempo e custo): 8 documentos × 50 × 2 chamadas = 800 chamadas a 20 por minuto ≈ 32 a 40 minutos. Com o limite da conta liberado, os 20 workers derrubam isso para poucos minutos.
+- **`tests/evals/test_lote.py`** (suíte padrão): cada documento passa uma vez pelo pipeline inteiro, pelo cache local (sem API), e é comparado com o gabarito pela mesma função `falhas`.
+- **`tests/evals/test_estocasticidade.py`** (`pytest -m estocastico`, fora da suíte padrão): um teste por documento, parametrizado; `-k` escolhe os documentos. Cada documento é lido uma vez (a leitura é determinística) e processado N vezes (padrão 50, `EXECUCOES`): a extração vai **sem o cache local**, e o agente usa um cache temporário, porque não muda o resultado (D-27). A primeira execução vai em série, para gravar o prefixo no cache do provider, e as demais vão em paralelo com 20 workers. O teste do documento passa só se **nenhuma** execução falhar em alguma métrica com meta: erro não roteado, valor inventado, classificação, roteamento, motivo ou acurácia por campo.
+- **Limite do provider:** o OpenRouter limita contas novas a 20 requisições por minuto neste modelo (erro 429 "new-account-rpm", confirmado por medição). O cliente tem um limitador de ritmo (`LIMITE_RPM` no `config.py`); mais workers não aceleram nada.
+- **Tempo:** com o agente pelo cache, cerca de 1,05 chamada por execução: 8 documentos × 50 ≈ 420 chamadas ≈ 21 minutos (42 com o agente ao vivo). `EXECUCOES=10 pytest -m estocastico -k 01` leva menos de 1 minuto.
+- **Resultado:** na D-29 (400 execuções, 397 sem falha, nenhum erro sem revisão).
 
 ## 10. Revisão de projeto: SOLID e simplicidade
 

@@ -20,8 +20,9 @@ pip install -r requirements.txt
 
 python -m asset_servicing           # lê entrada/documentos/ e escreve saida/lote.json
 python -m tests.evals.avaliar       # métricas contra tests/evals/gabarito.csv
-pytest                              # 53 testes unitários, sem API
-pytest -m estocastico               # 50 execuções por documento, chamando a API (EXECUCOES=5 para uma versão rápida)
+pytest                              # 61 testes, sem API: 53 unitários + cada documento uma vez, pelo cache
+pytest -m estocastico               # 50 execuções por documento na API (~21 min)
+EXECUCOES=10 pytest -m estocastico -k 01   # versão rápida: menos execuções, só o doc 01
 ```
 
 Windows (PowerShell): os mesmos comandos; muda só a criação do ambiente e a variável de ambiente.
@@ -31,7 +32,7 @@ py -3.14 -m venv .venv; .venv\Scripts\Activate.ps1   # se bloqueado: Set-Executi
 $env:PATH += ";C:\Program Files\Tesseract-OCR"       # se o instalador não pôs o Tesseract no PATH
 pip install -r requirements.txt
 python -m asset_servicing
-$env:EXECUCOES=5; pytest -m estocastico
+$env:EXECUCOES=10; pytest -m estocastico -k 01
 ```
 
 As respostas do modelo usadas na entrega estão no cache local versionado (`cache/`), então o lote roda **sem chave de API**. Para chamar o modelo de novo, crie um `.env` com `OPENROUTER_API_KEY=...`.
@@ -110,9 +111,9 @@ Registradas com opções e custo em [docs/decisoes.md](docs/decisoes.md) (D-01 a
 
 | Verificação | Resultado |
 |---|---|
-| Testes unitários (`pytest`) | 53 passam, sem API |
+| Testes (`pytest`) | 61 passam, sem API: 53 unitários e 8 de lote (cada documento uma vez, pelo cache, contra o gabarito) |
 | Eval contra o gabarito | 8/8 documentos dentro de todas as metas: zero erros não roteados, zero valores inventados, classificação e roteamento 8/8, motivo certo 4/4, acurácia por campo 100% |
-| Estocasticidade (50 execuções por documento) | [tests/evals/resultado_estocasticidade.txt](tests/evals/resultado_estocasticidade.txt) |
+| Estocasticidade (400 execuções: 50 por documento, sem cache, agente ao vivo) | 397 sem falha (99,25%). **Nenhum erro passou sem revisão**: as 3 falhas foram para revisão humana (ver Limitações). Zero erros de processamento; o retry resolveu 36 alucinações e 7 timeouts; zero erros 429 com o limitador. A meta da D-29 (zero falhas em cada documento) foi atingida em 6 dos 8 documentos |
 
 Revisões humanas no lote, todas previstas no gabarito:
 - 03, R-CLS-01: o título diz dividendos e a natureza é JCP;
@@ -127,8 +128,13 @@ Revisões humanas no lote, todas previstas no gabarito:
   - **regras cruzadas:** só cobrem data com e data ex e a conta do JCP, e uma troca que continua coerente passa.
 
   O risco que sobra é medido pelo eval (erros não roteados) e pelo teste de estocasticidade.
+- **Falhas do teste de estocasticidade (3 em 400), todas roteadas para revisão:**
+  - 2 execuções do doc 01: o modelo leu como alíquota os 10% de IR por beneficiário (regra geral, não alíquota do evento). A R-REQ-03 (campo que não se aplica à classe) mandou o documento para revisão sem necessidade;
+  - 1 execução do doc 08: a classe veio vazia, e a R-REQ-01 acrescentou um motivo ao documento, que já ia para revisão pela R-ID-01.
+
+  Próximo passo: ajustar a descrição da alíquota e a mensagem do retry de alucinação e repetir o teste nesses dois documentos (`-k`). Não foi feito antes do prazo para não arriscar o eval 8/8.
 - O limite de 0,70 do OCR foi calibrado com um único escaneado.
-- A conta do OpenRouter tem limite de 20 requisições por minuto neste modelo, o que alonga o teste de estocasticidade.
+- A conta do OpenRouter tem limite de 20 requisições por minuto neste modelo (confirmado por medição), o que alonga o teste de estocasticidade. Para encurtá-lo, o agente usa um cache temporário no teste (ele não muda o resultado, D-27), e `-k` escolhe os documentos.
 - O cache é indexado pelo texto lido. Outra versão do Tesseract (a usada foi a 5.5.3) pode mudar o texto do doc 07 e exigir uma chamada nova, com chave.
 
 ## Documentação
