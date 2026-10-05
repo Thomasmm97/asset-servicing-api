@@ -103,6 +103,11 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Opções:** (A) sem retry: toda falha vai direto para o comportamento da regra; (B) retry com histórico das tentativas no JSON do operador; (C) até 2 retries por tipo, com o histórico só no log técnico.
 - **Decisão:** C. O retry é etapa do processamento, separada do comportamento das regras; cada tentativa (motivo, resposta do modelo, resultado) fica registrada no log técnico do documento. Alucinação: disparada só por R-GRD-01 e R-GRD-02 (valor sem respaldo no documento); a nova chamada informa o problema e pede o trecho de cada valor. A R-REQ-03 (campo que não se aplica à classe veio preenchido) não dispara retry: o valor costuma estar no documento, e o retry poderia apagar a prova de uma classificação errada (doc 03). Falha na chamada: repete a mesma chamada, com espera crescente; se persistir, o documento sai com status `ERRO` e código `FALHA_MODELO` (D-18; antes, revisão humana pela R-PRC-01).
 - **Por quê / custo:** menos revisões causadas por erro passageiro, com um mecanismo simples. Limitar o retry por alucinação a esses sinais evita insistir em inconsistências que estão no documento ou na base, o que induziria o modelo a inventar. Custo: até 2 chamadas extras por tipo de falha; o operador não vê no JSON que um valor foi corrigido num retry (a informação fica no log técnico).
+- **Evidência (teste de estocasticidade, 400 execuções, D-29):**
+  - falha na chamada: 13 chamadas receberam erro 429 na primeira tentativa (limite de 20 requisições por minuto da conta no OpenRouter), e o retry com espera resolveu todas; nenhuma execução terminou em `FALHA_MODELO`;
+  - alucinação: 33 execuções tiveram citações que o grounding não achou no texto, e o retry com o problema informado resolveu todas.
+
+  Cada caso está no trace da execução (D-30).
 
 ### D-14 — Grounding verificado pelo código
 - **Contexto:** o enunciado exige saber de onde veio cada valor, e valor inventado é o erro mais caro do domínio.
