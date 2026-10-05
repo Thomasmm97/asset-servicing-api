@@ -230,7 +230,8 @@ class Campos(BaseModel):
         """Campos preenchidos, achatados (emissor e ativo abertos)."""
         planos = {n: getattr(self.emissor, n) for n in Emissor.model_fields}
         planos |= {n: getattr(self.ativo, n) for n in Ativo.model_fields}
-        planos |= {n: getattr(self, n) for n in self.model_fields_set if n not in ("emissor", "ativo")}
+        planos |= {n: getattr(self, n) for n in type(self).model_fields  # ordem fixa: a saída não varia entre execuções
+                   if n in self.model_fields_set and n not in ("emissor", "ativo")}
         return planos
 
 
