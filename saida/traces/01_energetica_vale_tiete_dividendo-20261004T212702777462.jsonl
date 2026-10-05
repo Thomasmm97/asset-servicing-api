@@ -1,0 +1,11 @@
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.780", "evento": "etapa", "etapa": "leitura", "duracao_ms": 3, "tipo_pdf": "NATIVO", "palavras": 215}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.781", "evento": "chamada_modelo", "cache_local": true, "hash": "97e6e61db070"}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.782", "evento": "etapa", "etapa": "extracao", "duracao_ms": 1, "tentativa": 0, "tipo_evento": "DIVIDENDO"}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.782", "evento": "etapa", "etapa": "evidencias", "duracao_ms": 1, "tentativa": 0, "falhas": []}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.782", "evento": "etapa", "etapa": "normalizacao", "duracao_ms": 0, "falhas": []}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.782", "evento": "chamada_modelo", "cache_local": true, "hash": "b2bfd4bb1eda"}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.783", "evento": "ferramenta", "nome": "validar_identificacao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.783", "evento": "ferramenta", "nome": "validar_datas", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.783", "evento": "ferramenta", "nome": "validar_valores_e_proporcao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.783", "evento": "etapa", "etapa": "validacao", "duracao_ms": 0}
+{"trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462", "momento": "2026-10-04T21:27:02.784", "evento": "etapa", "etapa": "montagem", "duracao_ms": 1, "status": "APROVADO"}

@@ -10,7 +10,7 @@
     "excecoes": [
       {
         "documento": "03_siderurgica_paranaense_proventos.pdf",
-        "trace_id": "03_siderurgica_paranaense_proventos-20261004T212524265737",
+        "trace_id": "03_siderurgica_paranaense_proventos-20261004T212702784348",
         "tipo_evento": "JCP",
         "status": "REVISAO_HUMANA",
         "erro": null,
@@ -27,7 +27,7 @@
       },
       {
         "documento": "04_rede_varejo_jcp_sem_data.pdf",
-        "trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867",
+        "trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581",
         "tipo_evento": "JCP",
         "status": "REVISAO_HUMANA",
         "erro": null,
@@ -44,7 +44,7 @@
       },
       {
         "documento": "05_aurora_saneamento_dividendo_datas.pdf",
-        "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283",
+        "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212702790706",
         "tipo_evento": "DIVIDENDO",
         "status": "REVISAO_HUMANA",
         "erro": null,
@@ -62,7 +62,7 @@
       },
       {
         "documento": "08_construtora_horizonte_bonificacao.pdf",
-        "trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567",
+        "trace_id": "08_construtora_horizonte_bonificacao-20261004T212702793508",
         "tipo_evento": "BONIFICACAO",
         "status": "REVISAO_HUMANA",
         "erro": null,
@@ -86,7 +86,7 @@
   "documentos": [
     {
       "documento": "01_energetica_vale_tiete_dividendo.pdf",
-      "trace_id": "01_energetica_vale_tiete_dividendo-20261004T212513316906",
+      "trace_id": "01_energetica_vale_tiete_dividendo-20261004T212702777462",
       "tipo_pdf": "NATIVO",
       "status": "APROVADO",
       "erro": null,
@@ -377,7 +377,7 @@
     },
     {
       "documento": "02_banco_meridional_jcp.pdf",
-      "trace_id": "02_banco_meridional_jcp-20261004T212524265582",
+      "trace_id": "02_banco_meridional_jcp-20261004T212702784276",
       "tipo_pdf": "NATIVO",
       "status": "APROVADO",
       "erro": null,
@@ -709,7 +709,7 @@
     },
     {
       "documento": "03_siderurgica_paranaense_proventos.pdf",
-      "trace_id": "03_siderurgica_paranaense_proventos-20261004T212524265737",
+      "trace_id": "03_siderurgica_paranaense_proventos-20261004T212702784348",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
@@ -1046,7 +1046,7 @@
     },
     {
       "documento": "04_rede_varejo_jcp_sem_data.pdf",
-      "trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867",
+      "trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
@@ -1370,7 +1370,7 @@
     },
     {
       "documento": "05_aurora_saneamento_dividendo_datas.pdf",
-      "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283",
+      "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212702790706",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
@@ -1667,7 +1667,7 @@
     },
     {
       "documento": "06_petroquimica_litoral_grupamento.pdf",
-      "trace_id": "06_petroquimica_litoral_grupamento-20261004T212524266401",
+      "trace_id": "06_petroquimica_litoral_grupamento-20261004T212702793251",
       "tipo_pdf": "NATIVO",
       "status": "APROVADO",
       "erro": null,
@@ -1933,7 +1933,7 @@
     },
     {
       "documento": "07_telecom_norte_jcp_SCAN.pdf",
-      "trace_id": "07_telecom_norte_jcp_SCAN-20261004T212524272821",
+      "trace_id": "07_telecom_norte_jcp_SCAN-20261004T212702793418",
       "tipo_pdf": "ESCANEADO",
       "status": "APROVADO",
       "erro": null,
@@ -2269,7 +2269,7 @@
     },
     {
       "documento": "08_construtora_horizonte_bonificacao.pdf",
-      "trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567",
+      "trace_id": "08_construtora_horizonte_bonificacao-20261004T212702793508",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,

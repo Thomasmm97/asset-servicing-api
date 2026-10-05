@@ -1,0 +1,11 @@
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:02.800", "evento": "etapa", "etapa": "leitura", "duracao_ms": 7, "tipo_pdf": "NATIVO", "palavras": 198}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.239", "evento": "chamada_modelo", "cache_local": true, "hash": "c51e13944dc7"}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.239", "evento": "etapa", "etapa": "extracao", "duracao_ms": 2, "tentativa": 0, "tipo_evento": "JCP"}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.243", "evento": "etapa", "etapa": "evidencias", "duracao_ms": 1, "tentativa": 0, "falhas": []}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.244", "evento": "etapa", "etapa": "normalizacao", "duracao_ms": 0, "falhas": []}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.247", "evento": "chamada_modelo", "cache_local": true, "hash": "6e12d93fd2ba"}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.248", "evento": "ferramenta", "nome": "validar_identificacao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.249", "evento": "ferramenta", "nome": "validar_datas", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.250", "evento": "ferramenta", "nome": "validar_valores_e_proporcao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.251", "evento": "etapa", "etapa": "validacao", "duracao_ms": 5}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212702787581", "momento": "2026-10-04T21:27:03.252", "evento": "etapa", "etapa": "montagem", "duracao_ms": 1, "status": "REVISAO_HUMANA"}
