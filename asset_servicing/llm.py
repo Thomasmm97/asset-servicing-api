@@ -50,17 +50,18 @@ def chamar_modelo(mensagens: list[dict], schema: type[Extracao] | None = None,
                   "schema": schema.model_json_schema() if schema else None}
     chave = hashlib.sha256(json.dumps(requisicao, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     arquivo = config.PASTA_CACHE / f"{chave}.json"
+    origem = {"modelo": config.MODELO, "prompt": mensagens[0]["content"]}  # o prompt de sistema, sem o documento
     if usar_cache and arquivo.exists():
         dados = json.loads(arquivo.read_text(encoding="utf-8"))
         resposta = RespostaModelo(conteudo=dados["conteudo"], cached_tokens=dados["cached_tokens"], do_cache_local=True,
                                   chamadas=[ChamadaFerramenta(**c) for c in dados["chamadas"]])
-        registrar("chamada_modelo", cache_local=True, hash=chave[:12])
+        registrar("chamada_modelo", **origem, cache_local=True, hash=chave[:12])
         return resposta
     erro = None
     for tentativa in range(config.MAX_RETRIES + 1):
         try:
             resposta = _chamar_api(mensagens, schema, ferramentas)
-            registrar("chamada_modelo", cache_local=False, hash=chave[:12], tentativa=tentativa,
+            registrar("chamada_modelo", **origem, cache_local=False, hash=chave[:12], tentativa=tentativa,
                       cached_tokens=resposta.cached_tokens)
             if usar_cache:
                 _gravar_cache(arquivo, resposta)
