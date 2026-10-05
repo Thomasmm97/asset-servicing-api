@@ -113,10 +113,22 @@ Alertas e o nível `MEDIA` não mudam o status.
 
 ## 8. Relatório de exceções
 
-`saida/relatorio_excecoes.md`, curto, para o operador decidir por onde começar:
-- totais: processados, aprovados, em revisão humana, com erro, com alerta;
-- uma tabela com os documentos que têm motivo, alerta ou erro: documento, tipo de evento, status, motivos (regra, campo e mensagem), alertas;
-- a lista dos documentos aprovados sem exceção.
+`saida/relatorio_excecoes.json`: um único JSON do lote, gerado pelo sistema, com todos os documentos:
+
+```json
+{
+  "totais": { "processados": 8, "aprovados": 4, "revisao_humana": 4, "erro": 0, "com_alerta": 0 },
+  "documentos": [
+    { "documento": "08_construtora_horizonte_bonificacao.pdf", "trace_id": "…", "tipo_evento": "BONIFICACAO",
+      "status": "REVISAO_HUMANA", "erro": null,
+      "motivos": [ { "regra": "R-ID-01", "campos": ["razao_social", "cnpj", "isin", "ticker", "classe"],
+                     "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)." } ],
+      "alertas": [] }
+  ]
+}
+```
+
+Cada apontamento aparece uma vez, com todos os campos que ele aponta. `saida/relatorio_excecoes.md` é a versão legível dos mesmos dados, para o operador decidir por onde começar: os totais, uma tabela só com os documentos que têm motivo, alerta ou erro, e a lista dos aprovados sem exceção.
 
 ## 9. Métricas e metas (eval)
 

@@ -242,7 +242,8 @@ A regra entre elas: **o domínio nunca importa a camada do modelo.** Por isso as
 
 **`saida.py`**
 - `para_dict(registro)`: o JSON como o operador vê (só as chaves preenchidas, em ordem legível).
-- `gravar_registro(registro, pasta)`, `gerar_relatorio(registros, pasta)`: JSON por documento e relatório de exceções.
+- `gravar_registro(registro, pasta)`: JSON por documento.
+- `gerar_relatorio(registros, pasta)`: relatório de exceções do lote, em `relatorio_excecoes.json` (todos os documentos, para sistemas) e `relatorio_excecoes.md` (legível), ambos a partir de `relatorio(registros)`.
 - `iniciar_trace(trace_id)`, `registrar(evento, **dados)`, `etapa(nome, **dados)`: o trace da execução, por thread.
 
 **`pipeline.py`**

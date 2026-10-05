@@ -67,33 +67,42 @@ def gravar_registro(registro: Registro, pasta: Path) -> Path:
 
 
 def gerar_relatorio(registros: list[Registro], pasta: Path) -> Path:
-    """Relatório de exceções (contrato.md, seção 8)."""
-    contagem = {s: sum(r.status == s for r in registros) for s in Status}
-    com_alerta = [r for r in registros if _apontamentos(r, "alertas")]
-    linhas = ["# Relatório de exceções", "",
-              f"Processados: {len(registros)} · Aprovados: {contagem[Status.APROVADO]} · "
-              f"Revisão humana: {contagem[Status.REVISAO_HUMANA]} · Erro: {contagem[Status.ERRO]} · "
-              f"Com alerta: {len(com_alerta)}", "",
-              "| Documento | Tipo de evento | Status | Motivos | Alertas |", "|---|---|---|---|---|"]
-    limpos = []
-    for r in sorted(registros, key=lambda r: r.documento):
-        motivos, alertas = _apontamentos(r, "motivos"), _apontamentos(r, "alertas")
-        if r.erro:
-            motivos = [f"{r.erro.codigo.value}: {r.erro.mensagem}"]
-        if not motivos and not alertas:
-            limpos.append(Path(r.documento).stem)
-            continue
-        tipo = r.tipo_evento.valor.value if r.tipo_evento else "—"
-        linhas.append(f"| {Path(r.documento).stem} | {tipo} | {r.status.value} | "
-                      f"{'<br>'.join(motivos) or '—'} | {'<br>'.join(alertas) or '—'} |")
-    linhas += ["", "Aprovados sem exceção: " + (", ".join(limpos) or "nenhum") + "."]
-    arquivo = pasta / "relatorio_excecoes.md"
-    arquivo.write_text("\n".join(linhas) + "\n", encoding="utf-8")
+    """Relatório de exceções do lote (contrato.md, seção 8): um JSON com todos os documentos e a versão legível em Markdown."""
+    dados = relatorio(registros)
+    arquivo = pasta / "relatorio_excecoes.json"
+    arquivo.write_text(json.dumps(dados, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (pasta / "relatorio_excecoes.md").write_text(_markdown(dados), encoding="utf-8")
     return arquivo
 
 
-def _apontamentos(registro: Registro, tipo: str) -> list[str]:
-    """'R-ID-01 (razao_social, cnpj): mensagem', juntando os campos que têm o mesmo apontamento."""
+def relatorio(registros: list[Registro]) -> dict:
+    documentos = [_resumo(r) for r in sorted(registros, key=lambda r: r.documento)]
+    return {
+        "totais": {
+            "processados": len(documentos),
+            "aprovados": sum(d["status"] == Status.APROVADO.value for d in documentos),
+            "revisao_humana": sum(d["status"] == Status.REVISAO_HUMANA.value for d in documentos),
+            "erro": sum(d["status"] == Status.ERRO.value for d in documentos),
+            "com_alerta": sum(bool(d["alertas"]) for d in documentos),
+        },
+        "documentos": documentos,
+    }
+
+
+def _resumo(registro: Registro) -> dict:
+    return {
+        "documento": registro.documento,
+        "trace_id": registro.trace_id,
+        "tipo_evento": registro.tipo_evento.valor.value if registro.tipo_evento else None,
+        "status": registro.status.value,
+        "erro": registro.erro.model_dump(mode="json") if registro.erro else None,
+        "motivos": _agrupar(registro, "motivos"),
+        "alertas": _agrupar(registro, "alertas"),
+    }
+
+
+def _agrupar(registro: Registro, tipo: str) -> list[dict]:
+    """Um item por apontamento, com todos os campos que ele aponta (ex.: R-ID-01 nos 5 campos de emissor e ativo)."""
     if registro.erro:
         return []
     campos = {"tipo_evento": registro.tipo_evento} | registro.campos.todos()
@@ -101,7 +110,28 @@ def _apontamentos(registro: Registro, tipo: str) -> list[str]:
     for nome, campo in campos.items():
         for a in getattr(campo, tipo):
             agrupados.setdefault((a.regra, a.mensagem), []).append(nome)
-    return [f"{regra} ({', '.join(nomes)}): {mensagem}" for (regra, mensagem), nomes in agrupados.items()]
+    return [{"regra": regra, "campos": nomes, "mensagem": mensagem} for (regra, mensagem), nomes in agrupados.items()]
+
+
+def _markdown(dados: dict) -> str:
+    t = dados["totais"]
+    linhas = ["# Relatório de exceções", "",
+              f"Processados: {t['processados']} · Aprovados: {t['aprovados']} · Revisão humana: {t['revisao_humana']} · "
+              f"Erro: {t['erro']} · Com alerta: {t['com_alerta']}", "",
+              "| Documento | Tipo de evento | Status | Motivos | Alertas |", "|---|---|---|---|---|"]
+    limpos = []
+    for d in dados["documentos"]:
+        nome = Path(d["documento"]).stem
+        motivos = [f"{m['regra']} ({', '.join(m['campos'])}): {m['mensagem']}" for m in d["motivos"]]
+        alertas = [f"{a['regra']} ({', '.join(a['campos'])}): {a['mensagem']}" for a in d["alertas"]]
+        if d["erro"]:
+            motivos = [f"{d['erro']['codigo']}: {d['erro']['mensagem']}"]
+        if not motivos and not alertas:
+            limpos.append(nome)
+            continue
+        linhas.append(f"| {nome} | {d['tipo_evento'] or '—'} | {d['status']} | {'<br>'.join(motivos) or '—'} | {'<br>'.join(alertas) or '—'} |")
+    linhas += ["", "Aprovados sem exceção: " + (", ".join(limpos) or "nenhum") + "."]
+    return "\n".join(linhas) + "\n"
 
 
 def _ordenar(obj):
