@@ -18,7 +18,7 @@ macOS e Linux:
 python3.14 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-python -m asset_servicing           # lê documents/ e escreve saida/lote.json
+python -m asset_servicing           # lê entrada/documentos/ e escreve saida/lote.json
 python -m tests.evals.avaliar       # métricas contra tests/evals/gabarito.csv
 pytest                              # 53 testes unitários, sem API
 pytest -m estocastico               # 50 execuções por documento, chamando a API (EXECUCOES=5 para uma versão rápida)
@@ -58,7 +58,7 @@ As respostas do modelo usadas na entrega estão no cache local versionado (`cach
 ## Arquitetura
 
 ```
-documents/*.pdf  (1º documento em série, demais em paralelo)
+entrada/documentos/*.pdf  (1º documento em série, demais em paralelo)
   → leitura       PyMuPDF (nativo) ou Tesseract (escaneado), com posição e confiança por palavra
   → extração      modelo: valores literais, citações, tipo de evento
   → evidências    o trecho existe? o valor está no trecho? senão, retry com o problema (máx. 2)

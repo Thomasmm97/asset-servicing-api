@@ -6,7 +6,7 @@
 
 ## 1. Caso de uso → pipeline
 
-**Caso de uso:** processar o lote de avisos em `documents/` e gerar, para cada documento, um JSON auditável em `saida/`, mais o relatório de exceções.
+**Caso de uso:** processar o lote de avisos em `entrada/documentos/` e gerar, para cada documento, um JSON auditável em `saida/`, mais o relatório de exceções.
 
 **Fluxo principal** (por documento):
 
@@ -26,7 +26,7 @@
 **Lote (D-25):** o primeiro documento é processado sozinho, para gravar a parte fixa do prompt no cache do provider; os demais vão em paralelo (`ThreadPoolExecutor`, 20 workers no `config.py`; 20 chamadas simultâneas testadas sem erro de limite, latência de 2,6 a 4,3 s). Dentro de um documento, as etapas são em série. A saída é ordenada pelo nome do documento.
 
 ```
-documents/*.pdf ── 1º documento em série, demais em paralelo
+entrada/documentos/*.pdf ── 1º documento em série, demais em paralelo
    │
    ▼
 [1 ler_documento] ──► Leitura (texto + palavras com confiança e posição)
@@ -99,7 +99,7 @@ As camadas são uma regra de dependência, não pastas: **o domínio nunca impor
 
 ```
 asset_servicing/
-  __main__.py     # CLI: python -m asset_servicing [documents/] [--saida saida/]
+  __main__.py     # CLI: python -m asset_servicing [entrada/documentos/] [--saida saida/]
   config.py       # modelo, workers, tentativas, limite do OCR, IRRF com vigência, dígitos verificadores, feriados B3, chaves por classe, rótulos e sinônimos
   mensagens.py    # descrição curta + mensagem por regra; mensagens dos erros (D-15)
   modelos.py      # classes Pydantic e enums

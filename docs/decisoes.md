@@ -9,7 +9,7 @@
 
 O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formalizados: o que não está nesta lista não entra nesta entrega (ex.: API, interface para o operador, banco de dados).
 
-- Execução em lote, pela linha de comando, sobre a pasta `documents/`.
+- Execução em lote, pela linha de comando, sobre a pasta `entrada/documentos/`.
 - Leitura de PDF nativo e OCR para escaneado, com confiança por palavra (D-08).
 - Extração dos campos mínimos do enunciado, com evidência (página e trecho) por campo.
 - Classificação na taxonomia de `dominio.md`.
@@ -79,7 +79,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 ### D-10 — Entradas versionadas no repositório, fora de `tests/evals/`
 - **Contexto:** os PDFs e o golden record estavam em `tests/evals/`, como se fossem fixtures de avaliação, e as pastas originais estavam no `.gitignore`.
 - **Opções:** (A) manter em `tests/evals/`; (B) fora do repositório, com instrução no README; (C) versionados em `documents/` e `golden_records/`.
-- **Decisão:** C. `tests/evals/` guarda só o que serve para avaliar o sistema (gabarito e script de eval).
+- **Decisão:** C. `tests/evals/` guarda só o que serve para avaliar o sistema (gabarito e script de eval). Na Fase 5, as duas entradas foram reunidas em `entrada/` (`entrada/documentos/` e `entrada/golden_records.csv`, sem espaço no nome), espelhando `saida/`.
 - **Por quê / custo:** são entrada do sistema; quem clonar o repositório roda direto (gate da Fase 5). Custo: o repositório é público, então os dados ficam visíveis antes da entrega (são sintéticos).
 
 ---

@@ -29,7 +29,7 @@ A saída fica em `saida/lote.json`: o relatório de exceções do lote e um obje
 | `citacao` | todos, exceto `tipo_evento` | `{pagina, trecho}`: de onde veio o valor. O trecho existe no documento (R-GRD-01) e contém o valor (R-GRD-02). Uma citação por campo: a linha da tabela com o rótulo do campo ou, se não houver, a menor frase com rótulo e valor. |
 | `citacoes` | só `tipo_evento` | Lista de `{pagina, trecho}`, um por sinal de natureza. |
 | `confianca` | todos | `{nivel, ocr, modelo, justificativa}` (seção 5); `null` quando o valor é `null`. |
-| `base_referencia` | campos de `emissor` e `ativo` | `CONFERE`, `DIVERGE` ou `NAO_ENCONTRADO`: o resultado da validação contra `golden records.csv`, campo a campo. O detalhe de uma divergência vai na mensagem do motivo. |
+| `base_referencia` | campos de `emissor` e `ativo` | `CONFERE`, `DIVERGE` ou `NAO_ENCONTRADO`: o resultado da validação contra `entrada/golden_records.csv`, campo a campo. O detalhe de uma divergência vai na mensagem do motivo. |
 | `revisao_humana` | todos | `true` se algum motivo aponta este campo. |
 | `motivos` | todos | Lista de `{regra, mensagem}`: por que o campo vai para revisão humana. |
 | `alertas` | todos | Lista de `{regra, mensagem}`: o que o operador deve saber, sem ir para revisão. |
