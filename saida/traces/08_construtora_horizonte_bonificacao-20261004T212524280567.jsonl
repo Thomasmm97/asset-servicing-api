@@ -1,0 +1,11 @@
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:24.303", "evento": "etapa", "etapa": "leitura", "duracao_ms": 9, "tipo_pdf": "NATIVO", "palavras": 191}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:33.282", "evento": "chamada_modelo", "cache_local": false, "hash": "b16afafb6557", "tentativa": 0, "cached_tokens": 3136}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:33.284", "evento": "etapa", "etapa": "extracao", "duracao_ms": 8547, "tentativa": 0, "tipo_evento": "BONIFICACAO"}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:33.286", "evento": "etapa", "etapa": "evidencias", "duracao_ms": 3, "tentativa": 0, "falhas": []}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:33.286", "evento": "etapa", "etapa": "normalizacao", "duracao_ms": 0, "falhas": []}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:35.004", "evento": "chamada_modelo", "cache_local": false, "hash": "585fccee0bab", "tentativa": 0, "cached_tokens": 0}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:35.006", "evento": "ferramenta", "nome": "validar_identificacao", "chamada_por": "modelo", "ocorrencias": 1}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:35.006", "evento": "ferramenta", "nome": "validar_datas", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:35.006", "evento": "ferramenta", "nome": "validar_valores_e_proporcao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:35.006", "evento": "etapa", "etapa": "validacao", "duracao_ms": 1720}
+{"trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567", "momento": "2026-10-04T21:25:35.009", "evento": "etapa", "etapa": "montagem", "duracao_ms": 2, "status": "REVISAO_HUMANA"}

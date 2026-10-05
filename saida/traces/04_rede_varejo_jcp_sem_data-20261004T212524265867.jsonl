@@ -1,0 +1,11 @@
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:24.287", "evento": "etapa", "etapa": "leitura", "duracao_ms": 21, "tipo_pdf": "NATIVO", "palavras": 198}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:33.873", "evento": "chamada_modelo", "cache_local": false, "hash": "c51e13944dc7", "tentativa": 0, "cached_tokens": 3136}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:33.874", "evento": "etapa", "etapa": "extracao", "duracao_ms": 9500, "tentativa": 0, "tipo_evento": "JCP"}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:33.877", "evento": "etapa", "etapa": "evidencias", "duracao_ms": 2, "tentativa": 0, "falhas": []}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:33.877", "evento": "etapa", "etapa": "normalizacao", "duracao_ms": 0, "falhas": []}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:35.823", "evento": "chamada_modelo", "cache_local": false, "hash": "6e12d93fd2ba", "tentativa": 0, "cached_tokens": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:35.825", "evento": "ferramenta", "nome": "validar_identificacao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:35.825", "evento": "ferramenta", "nome": "validar_datas", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:35.825", "evento": "ferramenta", "nome": "validar_valores_e_proporcao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:35.825", "evento": "etapa", "etapa": "validacao", "duracao_ms": 1948}
+{"trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867", "momento": "2026-10-04T21:25:35.827", "evento": "etapa", "etapa": "montagem", "duracao_ms": 2, "status": "REVISAO_HUMANA"}

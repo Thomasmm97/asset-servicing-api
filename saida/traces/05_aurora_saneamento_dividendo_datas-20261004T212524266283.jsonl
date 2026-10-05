@@ -1,0 +1,11 @@
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:24.299", "evento": "etapa", "etapa": "leitura", "duracao_ms": 27, "tipo_pdf": "NATIVO", "palavras": 155}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:31.663", "evento": "chamada_modelo", "cache_local": false, "hash": "c507274a8772", "tentativa": 0, "cached_tokens": 3136}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:31.664", "evento": "etapa", "etapa": "extracao", "duracao_ms": 6921, "tentativa": 0, "tipo_evento": "DIVIDENDO"}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:31.666", "evento": "etapa", "etapa": "evidencias", "duracao_ms": 2, "tentativa": 0, "falhas": []}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:31.666", "evento": "etapa", "etapa": "normalizacao", "duracao_ms": 0, "falhas": []}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:35.277", "evento": "chamada_modelo", "cache_local": false, "hash": "10a701388a06", "tentativa": 0, "cached_tokens": 0}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:35.278", "evento": "ferramenta", "nome": "validar_identificacao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:35.278", "evento": "ferramenta", "nome": "validar_datas", "chamada_por": "modelo", "ocorrencias": 1}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:35.279", "evento": "ferramenta", "nome": "validar_valores_e_proporcao", "chamada_por": "modelo", "ocorrencias": 0}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:35.279", "evento": "etapa", "etapa": "validacao", "duracao_ms": 3612}
+{"trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283", "momento": "2026-10-04T21:25:35.281", "evento": "etapa", "etapa": "montagem", "duracao_ms": 2, "status": "REVISAO_HUMANA"}

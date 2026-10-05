@@ -1,0 +1,2595 @@
+{
+  "relatorio_excecoes": {
+    "totais": {
+      "processados": 8,
+      "aprovados": 4,
+      "revisao_humana": 4,
+      "erro": 0,
+      "com_alerta": 0
+    },
+    "excecoes": [
+      {
+        "documento": "03_siderurgica_paranaense_proventos.pdf",
+        "trace_id": "03_siderurgica_paranaense_proventos-20261004T212524265737",
+        "tipo_evento": "JCP",
+        "status": "REVISAO_HUMANA",
+        "erro": null,
+        "motivos": [
+          {
+            "regra": "R-CLS-01",
+            "campos": [
+              "tipo_evento"
+            ],
+            "mensagem": "Título do aviso (\"AVISO AOS ACIONISTAS — Distribuição de Dividendos\") diverge da natureza identificada (JCP)."
+          }
+        ],
+        "alertas": []
+      },
+      {
+        "documento": "04_rede_varejo_jcp_sem_data.pdf",
+        "trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867",
+        "tipo_evento": "JCP",
+        "status": "REVISAO_HUMANA",
+        "erro": null,
+        "motivos": [
+          {
+            "regra": "R-REQ-02",
+            "campos": [
+              "data_pagamento"
+            ],
+            "mensagem": "Data de pagamento adiado pelo emissor (\"Data de pagamento A definir (vide aviso complementar)\"); aguardar aviso complementar."
+          }
+        ],
+        "alertas": []
+      },
+      {
+        "documento": "05_aurora_saneamento_dividendo_datas.pdf",
+        "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283",
+        "tipo_evento": "DIVIDENDO",
+        "status": "REVISAO_HUMANA",
+        "erro": null,
+        "motivos": [
+          {
+            "regra": "R-DAT-02",
+            "campos": [
+              "data_com",
+              "data_pagamento"
+            ],
+            "mensagem": "Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026)."
+          }
+        ],
+        "alertas": []
+      },
+      {
+        "documento": "08_construtora_horizonte_bonificacao.pdf",
+        "trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567",
+        "tipo_evento": "BONIFICACAO",
+        "status": "REVISAO_HUMANA",
+        "erro": null,
+        "motivos": [
+          {
+            "regra": "R-ID-01",
+            "campos": [
+              "razao_social",
+              "cnpj",
+              "isin",
+              "ticker",
+              "classe"
+            ],
+            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+          }
+        ],
+        "alertas": []
+      }
+    ]
+  },
+  "documentos": [
+    {
+      "documento": "01_energetica_vale_tiete_dividendo.pdf",
+      "trace_id": "01_energetica_vale_tiete_dividendo-20261004T212513316906",
+      "tipo_pdf": "NATIVO",
+      "status": "APROVADO",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-02",
+          "descricao": "Data de pagamento ou de crédito posterior à data com."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-01",
+          "descricao": "Valor bruto por ação positivo."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "DIVIDENDO",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "aprovou a distribuição de dividendos referentes ao resultado do exercício social encerrado em 31 de dezembro de 2025."
+          },
+          {
+            "pagina": 1,
+            "trecho": "Tipo de evento\nDividendo"
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "2 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "ENERGÉTICA VALE DO TIETÊ S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "ENERGÉTICA VALE DO TIETÊ S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "12.345.678/0001-90",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 12.345.678/0001-90 | NIRE 35.300.000.001"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRTIETACNOR3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nTIET3 (ISIN BRTIETACNOR3)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "TIET3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nTIET3 (ISIN BRTIETACNOR3)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "ON",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Valor bruto por ação ordinária\n(ON)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-05-28",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de aprovação (RCA)\n28/05/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-12",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (“data com”)\n12/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-15",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data “ex-dividendos”\n15/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_pagamento": {
+          "valor": "2026-07-03",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de pagamento\n03/07/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_bruto": {
+          "valor": "0.4275000000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor bruto por ação ordinária\n(ON)\nR$ 0,4275000000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "02_banco_meridional_jcp.pdf",
+      "trace_id": "02_banco_meridional_jcp-20261004T212524265582",
+      "tipo_pdf": "NATIVO",
+      "status": "APROVADO",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-02",
+          "descricao": "Data de pagamento ou de crédito posterior à data com."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-01",
+          "descricao": "Valor bruto por ação positivo."
+        },
+        {
+          "regra": "R-VAL-02",
+          "descricao": "Líquido = bruto × (1 − alíquota)."
+        },
+        {
+          "regra": "R-VAL-03",
+          "descricao": "Alíquota de IRRF igual à vigente na data com."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "JCP",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "O Banco Meridional do Brasil S.A. (“Banco”) comunica aos seus acionistas que o Conselho de Administração, em reunião realizada em 02 de junho de 2026, aprovou o crédito de Juros sobre o Capital Próprio (JCP), com base no patrimônio líquido apurado nas demonstrações financeiras do exercício corrente, nos termos do art. 9º da Lei nº 9.249/95."
+          },
+          {
+            "pagina": 1,
+            "trecho": "Sobre o valor bruto incidirá Imposto de Renda Retido na Fonte (IRRF) à alíquota de 17,5%, conforme legislação vigente a partir de 1º de janeiro de 2026, ressalvados os acionistas comprovadamente imunes ou isentos."
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "2 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "BANCO MERIDIONAL DO BRASIL S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "BANCO MERIDIONAL DO BRASIL S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "60.111.222/0001-55",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 60.111.222/0001-55 | NIRE 35.300.000.002"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRBMRDACNPR7",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação BMRD4 (ISIN BRBMRDACNPR7)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "BMRD4",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação BMRD4 (ISIN BRBMRDACNPR7)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "PN",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Valor bruto por ação preferencial (PN)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-06-02",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "O Banco Meridional do Brasil S.A. (“Banco”) comunica aos seus acionistas que o Conselho de Administração, em reunião realizada em 02 de junho de 2026, aprovou o crédito de Juros sobre o Capital Próprio (JCP), com base no patrimônio líquido apurado nas demonstrações financeiras do exercício corrente, nos termos do art. 9º da Lei nº 9.249/95."
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-16",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (“data com”)\n16/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-17",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data “ex-JCP”\n17/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_pagamento": {
+          "valor": "2026-08-14",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de pagamento\n14/08/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_bruto": {
+          "valor": "0.1738420000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor bruto por ação preferencial\n(PN)\nR$ 0,1738420000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "aliquota_irrf": {
+          "valor": "0.175",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "IRRF na fonte\n17,5%"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_liquido": {
+          "valor": "0.1434196500",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor líquido por ação (PN)\nR$ 0,1434196500"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "03_siderurgica_paranaense_proventos.pdf",
+      "trace_id": "03_siderurgica_paranaense_proventos-20261004T212524265737",
+      "tipo_pdf": "NATIVO",
+      "status": "REVISAO_HUMANA",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-02",
+          "descricao": "Data de pagamento ou de crédito posterior à data com."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-01",
+          "descricao": "Valor bruto por ação positivo."
+        },
+        {
+          "regra": "R-VAL-02",
+          "descricao": "Líquido = bruto × (1 − alíquota)."
+        },
+        {
+          "regra": "R-VAL-03",
+          "descricao": "Alíquota de IRRF igual à vigente na data com."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "JCP",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "Remuneração do capital próprio"
+          },
+          {
+            "pagina": 1,
+            "trecho": "calculados sobre as contas do patrimônio líquido e limitados à variação pro rata die da Taxa de Juros de Longo Prazo"
+          },
+          {
+            "pagina": 1,
+            "trecho": "O valor ora deliberado será objeto de retenção de Imposto de Renda na Fonte à alíquota de 17,5%"
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "3 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": true,
+        "motivos": [
+          {
+            "regra": "R-CLS-01",
+            "mensagem": "Título do aviso (\"AVISO AOS ACIONISTAS — Distribuição de Dividendos\") diverge da natureza identificada (JCP)."
+          }
+        ],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "COMPANHIA SIDERÚRGICA PARANAENSE S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "COMPANHIA SIDERÚRGICA PARANAENSE S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "76.543.210/0001-12",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 76.543.210/0001-12 | NIRE 41.300.000.003"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRCSPRACNOR1",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação CSPR3 (ISIN BRCSPRACNOR1)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "CSPR3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação CSPR3 (ISIN BRCSPRACNOR1)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "ON",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Valor bruto por ação ON"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-06-05",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "A Companhia Siderúrgica Paranaense S.A. comunica aos seus acionistas a deliberação do Conselho de Administração, em reunião de 05 de junho de 2026, que aprovou a distribuição de proventos a título de remuneração do capital próprio aos acionistas, calculados sobre as contas do patrimônio líquido e limitados à variação pro rata die da Taxa de Juros de Longo Prazo, na forma da legislação aplicável."
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-19",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (“data com”) 19/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-22",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data “ex” 22/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_pagamento": {
+          "valor": "2026-09-11",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de pagamento 11/09/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_bruto": {
+          "valor": "0.0921500000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor bruto por ação ON\nR$ 0,0921500000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "aliquota_irrf": {
+          "valor": "0.175",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Imposto de Renda Retido na\nFonte\n17,5%"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_liquido": {
+          "valor": "0.0760237500",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor líquido por ação ON\nR$ 0,0760237500"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "04_rede_varejo_jcp_sem_data.pdf",
+      "trace_id": "04_rede_varejo_jcp_sem_data-20261004T212524265867",
+      "tipo_pdf": "NATIVO",
+      "status": "REVISAO_HUMANA",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-01",
+          "descricao": "Valor bruto por ação positivo."
+        },
+        {
+          "regra": "R-VAL-02",
+          "descricao": "Líquido = bruto × (1 − alíquota)."
+        },
+        {
+          "regra": "R-VAL-03",
+          "descricao": "Alíquota de IRRF igual à vigente na data com."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "JCP",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "A Rede Varejo Brasil S.A. informa que o Conselho de Administração, em reunião realizada em 09 de junho de 2026, aprovou o pagamento de Juros sobre o Capital Próprio (JCP), com retenção de IRRF de 17,5% sobre o valor bruto."
+          },
+          {
+            "pagina": 1,
+            "trecho": "Tipo de evento\nJuros sobre o Capital Próprio (JCP)"
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "2 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "REDE VAREJO BRASIL S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "REDE VAREJO BRASIL S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "08.777.666/0001-33",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 08.777.666/0001-33 | NIRE 35.300.000.004"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRRVBRACNOR9",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nRVBR3 (ISIN BRRVBRACNOR9)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "RVBR3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nRVBR3 (ISIN BRRVBRACNOR9)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "ON",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Valor bruto por ação ON"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-06-09",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "A Rede Varejo Brasil S.A. informa que o Conselho de Administração, em reunião realizada em 09 de junho de 2026, aprovou o pagamento de Juros sobre o Capital Próprio (JCP), com retenção de IRRF de 17,5% sobre o valor bruto."
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-23",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (“data com”)\n23/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-24",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data “ex-JCP”\n24/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_pagamento": {
+          "valor": null,
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de pagamento\nA definir (vide aviso complementar)"
+          },
+          "confianca": null,
+          "revisao_humana": true,
+          "motivos": [
+            {
+              "regra": "R-REQ-02",
+              "mensagem": "Data de pagamento adiado pelo emissor (\"Data de pagamento A definir (vide aviso complementar)\"); aguardar aviso complementar."
+            }
+          ],
+          "alertas": []
+        },
+        "valor_bruto": {
+          "valor": "0.2050000000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor bruto por ação ON\nR$ 0,2050000000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "aliquota_irrf": {
+          "valor": "0.175",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "IRRF na fonte\n17,5%"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_liquido": {
+          "valor": "0.1691250000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor líquido por ação ON\nR$ 0,1691250000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "05_aurora_saneamento_dividendo_datas.pdf",
+      "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T212524266283",
+      "tipo_pdf": "NATIVO",
+      "status": "REVISAO_HUMANA",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-01",
+          "descricao": "Valor bruto por ação positivo."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "DIVIDENDO",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "A Aurora Saneamento S.A. comunica que o Conselho de Administração, em reunião de 01 de junho de 2026, aprovou a distribuição de dividendos intercalares à conta de reservas de lucros, conforme abaixo."
+          },
+          {
+            "pagina": 1,
+            "trecho": "Tipo de evento\nDividendo intercalar"
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "2 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "AURORA SANEAMENTO S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "AURORA SANEAMENTO S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "22.333.444/0001-77",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 22.333.444/0001-77 | NIRE 33.300.000.005"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRAURSACNOR4",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nAURS3 (ISIN BRAURSACNOR4)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "AURS3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nAURS3 (ISIN BRAURSACNOR4)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "ON",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Valor bruto por ação ON\nR$ 0,3100000000"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-06-01",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de aprovação (RCA)\n01/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-07-15",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (“data com”)\n15/07/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": true,
+          "motivos": [
+            {
+              "regra": "R-DAT-02",
+              "mensagem": "Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026)."
+            }
+          ],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-07-16",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data “ex-dividendos”\n16/07/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_pagamento": {
+          "valor": "2026-07-10",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de pagamento\n10/07/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": true,
+          "motivos": [
+            {
+              "regra": "R-DAT-02",
+              "mensagem": "Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026)."
+            }
+          ],
+          "alertas": []
+        },
+        "valor_bruto": {
+          "valor": "0.3100000000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor bruto por ação ON\nR$ 0,3100000000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "06_petroquimica_litoral_grupamento.pdf",
+      "trace_id": "06_petroquimica_litoral_grupamento-20261004T212524266401",
+      "tipo_pdf": "NATIVO",
+      "status": "APROVADO",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-PRO-01",
+          "descricao": "Proporção no formato antes:depois."
+        },
+        {
+          "regra": "R-PRO-02",
+          "descricao": "Direção da proporção coerente com a classe."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "GRUPAMENTO",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "Tipo de evento\nGrupamento de ações (inplit)"
+          }
+        ],
+        "confianca": {
+          "nivel": "MEDIA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "1 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "PETROQUÍMICA LITORAL S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "PETROQUÍMICA LITORAL S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "55.666.777/0001-08",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 55.666.777/0001-08 | NIRE 35.300.000.006"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRPQLTACNOR8",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nPQLT3 (ISIN BRPQLTACNOR8)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "PQLT3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nPQLT3 (ISIN BRPQLTACNOR8)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "ON",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação\nPQLT3 (ISIN BRPQLTACNOR8)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-05-30",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "realizada em 30 de maio de 2026 aprovou o grupamento da totalidade das ações representativas do capital social"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-26",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base do grupamento\n26/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-29",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Início da negociação grupada\n29/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "proporcao": {
+          "valor": "10:1",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Proporção\n10:1 (dez para uma)"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "07_telecom_norte_jcp_SCAN.pdf",
+      "trace_id": "07_telecom_norte_jcp_SCAN-20261004T212524272821",
+      "tipo_pdf": "ESCANEADO",
+      "status": "APROVADO",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-ID-01",
+          "descricao": "Emissor encontrado na base de referência."
+        },
+        {
+          "regra": "R-ID-02",
+          "descricao": "CNPJ, ISIN, ticker e classe conferem com a base."
+        },
+        {
+          "regra": "R-ID-03",
+          "descricao": "Nome do emissor confere com a base."
+        },
+        {
+          "regra": "R-ID-04",
+          "descricao": "Emissor com status ativo na base."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-02",
+          "descricao": "Data de pagamento ou de crédito posterior à data com."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-01",
+          "descricao": "Valor bruto por ação positivo."
+        },
+        {
+          "regra": "R-VAL-02",
+          "descricao": "Líquido = bruto × (1 − alíquota)."
+        },
+        {
+          "regra": "R-VAL-03",
+          "descricao": "Alíquota de IRRF igual à vigente na data com."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        },
+        {
+          "regra": "R-CNF-01",
+          "descricao": "Confiança do OCR acima do limite."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "JCP",
+        "citacoes": [
+          {
+            "pagina": 0,
+            "trecho": "Juros sobre o Capital Próprio (JCP)"
+          },
+          {
+            "pagina": 0,
+            "trecho": "...aprovou o crédito de Juros sobre o Capital Próprio (JCP), nos termos do art. 9º da Lei nº 9.249/95, com retenção de Imposto de Renda na Fonte (IRRF) à alíquota de 17,5% sobre o valor bruto."
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "2 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "TELECOM NORTE PARTICIPAÇÕES S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "TELECOM NORTE PARTICIPAÇÕES S.A."
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": 0.94,
+              "modelo": null,
+              "justificativa": "OCR 0,94; confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "33.222.111/0001-44",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 33.222.111/0001-44 | NIRE 33.300.000.007"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": 0.92,
+              "modelo": null,
+              "justificativa": "OCR 0,92; confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRTLNRACNPR2",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação .......... TLNR4 (ISIN BRTLNRACNPR2)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": 0.74,
+              "modelo": null,
+              "justificativa": "OCR 0,74; confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "TLNR4",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação .......... TLNR4 (ISIN BRTLNRACNPR2)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": 0.9,
+              "modelo": null,
+              "justificativa": "OCR 0,90; confirmado por rótulo do campo na citação, base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "PN",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Valor bruto por ação PN ,,,,,,,,; R$ 0,1124300000"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": 0.92,
+              "modelo": null,
+              "justificativa": "OCR 0,92; confirmado por base de referência."
+            },
+            "base_referencia": "CONFERE",
+            "revisao_humana": false,
+            "motivos": [],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-06-06",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "O Conselho de Administração, em reunião realizada em 06 de junho de 2026, aprovou o crédito de Juros sobre o Capital Próprio (JCP), nos termos do art. 9º da Lei nº 9.249/95, com retenção de Imposto de Renda na Fonte (IRRF) à alíquota de 17,5% sobre o valor bruto."
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.94,
+            "modelo": null,
+            "justificativa": "OCR 0,94; confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-22",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (data com) ............ 22/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.96,
+            "modelo": null,
+            "justificativa": "OCR 0,96; confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-23",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data ex-JCP .......c 23/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.96,
+            "modelo": null,
+            "justificativa": "OCR 0,96; confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_pagamento": {
+          "valor": "2026-08-21",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data de pagamento .............. 21/08/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.96,
+            "modelo": null,
+            "justificativa": "OCR 0,96; confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_bruto": {
+          "valor": "0.1124300000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor bruto por ação PN ,,,,,,,,; R$ 0,1124300000"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.91,
+            "modelo": null,
+            "justificativa": "OCR 0,91; confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "aliquota_irrf": {
+          "valor": "0.175",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "IRRF na fonte ........... 17,5%"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.96,
+            "modelo": null,
+            "justificativa": "OCR 0,96; confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "valor_liquido": {
+          "valor": "0.0927547500",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Valor líquido por ação PN ,,,,,, R$ 0,0927547500"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": 0.92,
+            "modelo": null,
+            "justificativa": "OCR 0,92; confirmado por rótulo do campo na citação, R-VAL-02."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    },
+    {
+      "documento": "08_construtora_horizonte_bonificacao.pdf",
+      "trace_id": "08_construtora_horizonte_bonificacao-20261004T212524280567",
+      "tipo_pdf": "NATIVO",
+      "status": "REVISAO_HUMANA",
+      "erro": null,
+      "regras_aprovadas": [
+        {
+          "regra": "R-GRD-01",
+          "descricao": "Trecho citado existe no documento."
+        },
+        {
+          "regra": "R-GRD-02",
+          "descricao": "Valor está no trecho citado."
+        },
+        {
+          "regra": "R-GRD-03",
+          "descricao": "Valor em formato reconhecido."
+        },
+        {
+          "regra": "R-IDF-01",
+          "descricao": "ISIN no formato BR + 9 caracteres + dígito."
+        },
+        {
+          "regra": "R-IDF-04",
+          "descricao": "Ticker no formato 4 caracteres + sufixo de classe."
+        },
+        {
+          "regra": "R-IDF-05",
+          "descricao": "Classe coerente entre ticker, ISIN e aviso."
+        },
+        {
+          "regra": "R-IDF-06",
+          "descricao": "Raiz do ticker igual ao código do emissor no ISIN."
+        },
+        {
+          "regra": "R-DAT-01",
+          "descricao": "Aprovação ≤ data com < data ex."
+        },
+        {
+          "regra": "R-DAT-02",
+          "descricao": "Data de pagamento ou de crédito posterior à data com."
+        },
+        {
+          "regra": "R-DAT-03",
+          "descricao": "Data ex é o pregão seguinte à data com."
+        },
+        {
+          "regra": "R-DAT-04",
+          "descricao": "Datas de mercado em dia de pregão."
+        },
+        {
+          "regra": "R-VAL-04",
+          "descricao": "Valores monetários em BRL."
+        },
+        {
+          "regra": "R-PRO-01",
+          "descricao": "Proporção no formato antes:depois."
+        },
+        {
+          "regra": "R-PRO-02",
+          "descricao": "Direção da proporção coerente com a classe."
+        },
+        {
+          "regra": "R-PRO-03",
+          "descricao": "Custo atribuído positivo."
+        },
+        {
+          "regra": "R-REQ-01",
+          "descricao": "Campos obrigatórios da classe encontrados."
+        },
+        {
+          "regra": "R-REQ-02",
+          "descricao": "Nenhum campo obrigatório adiado pelo emissor."
+        },
+        {
+          "regra": "R-REQ-03",
+          "descricao": "Nenhum campo de outra classe preenchido."
+        },
+        {
+          "regra": "R-CLS-01",
+          "descricao": "Título coerente com a natureza do evento."
+        },
+        {
+          "regra": "R-CLS-02",
+          "descricao": "Evento classificado na taxonomia."
+        }
+      ],
+      "tipo_evento": {
+        "valor": "BONIFICACAO",
+        "citacoes": [
+          {
+            "pagina": 1,
+            "trecho": "A Construtora Horizonte S.A. comunica aos seus acionistas que a Assembleia Geral Extraordinária de 04 de junho de 2026 aprovou aumento do capital social mediante capitalização de reservas, com a consequente bonificação em ações aos acionistas."
+          },
+          {
+            "pagina": 1,
+            "trecho": "A bonificação será atribuída na proporção de 1 (uma) ação nova para cada 20 (vinte) ações de que forem titulares os acionistas inscritos nos registros da Companhia ao final do dia 18 de junho de 2026 (“data com”)."
+          }
+        ],
+        "confianca": {
+          "nivel": "ALTA",
+          "ocr": null,
+          "modelo": null,
+          "justificativa": "2 sinal(is) de natureza citado(s)."
+        },
+        "revisao_humana": false,
+        "motivos": [],
+        "alertas": []
+      },
+      "campos": {
+        "emissor": {
+          "razao_social": {
+            "valor": "Construtora Horizonte S.A.",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "CONSTRUTORA HORIZONTE S.A."
+            },
+            "confianca": {
+              "nivel": "MEDIA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Sem confirmação independente: sem rótulo do campo na citação, base de referência ou regra cruzada."
+            },
+            "base_referencia": "NAO_ENCONTRADO",
+            "revisao_humana": true,
+            "motivos": [
+              {
+                "regra": "R-ID-01",
+                "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+              }
+            ],
+            "alertas": []
+          },
+          "cnpj": {
+            "valor": "09.888.999/0001-21",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Companhia Aberta | CNPJ/ME nº 09.888.999/0001-21 | NIRE 35.300.000.008"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação."
+            },
+            "base_referencia": "NAO_ENCONTRADO",
+            "revisao_humana": true,
+            "motivos": [
+              {
+                "regra": "R-ID-01",
+                "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+              }
+            ],
+            "alertas": []
+          }
+        },
+        "ativo": {
+          "isin": {
+            "valor": "BRCNHZACNOR5",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação CNHZ3 (ISIN BRCNHZACNOR5)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação."
+            },
+            "base_referencia": "NAO_ENCONTRADO",
+            "revisao_humana": true,
+            "motivos": [
+              {
+                "regra": "R-ID-01",
+                "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+              }
+            ],
+            "alertas": []
+          },
+          "ticker": {
+            "valor": "CNHZ3",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação CNHZ3 (ISIN BRCNHZACNOR5)"
+            },
+            "confianca": {
+              "nivel": "ALTA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Confirmado por rótulo do campo na citação."
+            },
+            "base_referencia": "NAO_ENCONTRADO",
+            "revisao_humana": true,
+            "motivos": [
+              {
+                "regra": "R-ID-01",
+                "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+              }
+            ],
+            "alertas": []
+          },
+          "classe": {
+            "valor": "ON",
+            "citacao": {
+              "pagina": 1,
+              "trecho": "Código de negociação CNHZ3 (ISIN BRCNHZACNOR5)"
+            },
+            "confianca": {
+              "nivel": "MEDIA",
+              "ocr": null,
+              "modelo": null,
+              "justificativa": "Sem confirmação independente: sem rótulo do campo na citação, base de referência ou regra cruzada."
+            },
+            "base_referencia": "NAO_ENCONTRADO",
+            "revisao_humana": true,
+            "motivos": [
+              {
+                "regra": "R-ID-01",
+                "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+              }
+            ],
+            "alertas": []
+          }
+        },
+        "data_aprovacao": {
+          "valor": "2026-06-04",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "A Construtora Horizonte S.A. comunica aos seus acionistas que a Assembleia Geral Extraordinária de 04 de junho de 2026 aprovou aumento do capital social mediante capitalização de reservas, com a consequente bonificação em ações aos acionistas."
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_com": {
+          "valor": "2026-06-18",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data-base (“data com”)\n18/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_ex": {
+          "valor": "2026-06-19",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Data “ex-bonificação”\n19/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação, R-DAT-03."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "data_credito": {
+          "valor": "2026-06-26",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Crédito das ações bonificadas\n26/06/2026"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "proporcao": {
+          "valor": "20:21",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Proporção\n1 ação nova para cada 20 ações (5%)"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        },
+        "custo_atribuido": {
+          "valor": "7.820000",
+          "moeda": "BRL",
+          "citacao": {
+            "pagina": 1,
+            "trecho": "Custo atribuído (base fiscal)\nR$ 7,820000 por ação"
+          },
+          "confianca": {
+            "nivel": "ALTA",
+            "ocr": null,
+            "modelo": null,
+            "justificativa": "Confirmado por rótulo do campo na citação."
+          },
+          "revisao_humana": false,
+          "motivos": [],
+          "alertas": []
+        }
+      }
+    }
+  ]
+}
