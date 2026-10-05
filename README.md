@@ -20,13 +20,13 @@ pip install -r requirements.txt
 
 ```bash
 python -m asset_servicing             # lê documents/ e escreve em saida/ (JSON por documento + relatorio_excecoes.json)
-python -m evals.avaliar               # compara saida/ com evals/gabarito.csv
+python -m tests.evals.avaliar               # compara saida/ com tests/evals/gabarito.csv
 pytest                                # 52 testes unitários (tests/unit/): regras, evidências, montagem, saída; sem API
 ```
 
 **Não precisa de chave de API para reproduzir a entrega:** as respostas do modelo estão no cache local versionado (`cache/`), e o lote roda inteiro a partir dele. Para chamar o modelo de novo (outro documento, prompt alterado), crie um `.env` com `OPENROUTER_API_KEY=...`.
 
-**Teste de estocasticidade** (`evals/test_estocasticidade.py`; chama a API e ignora o cache local; ~35 min com o limite da conta):
+**Teste de estocasticidade** (`tests/evals/test_estocasticidade.py`; chama a API e ignora o cache local; ~35 min com o limite da conta):
 
 ```bash
 pytest -m estocastico                 # 50 execuções por documento
@@ -105,7 +105,7 @@ Todas registradas, com opções e custo, em [docs/decisoes.md](docs/decisoes.md)
 - O lote é sintético: os identificadores não passam nos dígitos verificadores, e os nomes não são de empresas reais.
 - A alíquota de IRRF sobre JCP é de 15% até 2025 e de 17,5% desde 2026, conforme os avisos do lote; ela é configuração com vigência, conferida pela data com.
 - O calendário de pregões usa os feriados nacionais da B3 de 2025 e 2026, mais 24/12 e 31/12; fechamentos extraordinários não entram.
-- O gabarito foi feito antes do código ([evals/gabarito.csv](evals/gabarito.csv)) e assume leitura correta do escaneado (doc 07).
+- O gabarito foi feito antes do código ([tests/evals/gabarito.csv](tests/evals/gabarito.csv)) e assume leitura correta do escaneado (doc 07).
 - Um aviso traz um único evento.
 
 ## Resultados
@@ -113,8 +113,8 @@ Todas registradas, com opções e custo, em [docs/decisoes.md](docs/decisoes.md)
 | Verificação | Resultado |
 |---|---|
 | Testes (`pytest`) | 52 passam, sem API, em 0,05 s |
-| Eval contra o gabarito (`python -m evals.avaliar`) | 8/8 documentos dentro de todas as metas: zero erros não roteados, zero valores inventados, classificação 8/8, roteamento 8/8, motivo certo 4/4, acurácia por campo 100% |
-| Estocasticidade (`pytest -m estocastico`, 50 execuções por documento) | Ver [evals/resultado_estocasticidade.txt](evals/resultado_estocasticidade.txt) |
+| Eval contra o gabarito (`python -m tests.evals.avaliar`) | 8/8 documentos dentro de todas as metas: zero erros não roteados, zero valores inventados, classificação 8/8, roteamento 8/8, motivo certo 4/4, acurácia por campo 100% |
+| Estocasticidade (`pytest -m estocastico`, 50 execuções por documento) | Ver [tests/evals/resultado_estocasticidade.txt](tests/evals/resultado_estocasticidade.txt) |
 
 Revisões humanas no lote, todas esperadas pelo gabarito:
 

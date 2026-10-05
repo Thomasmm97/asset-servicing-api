@@ -1,7 +1,7 @@
 # Inventário do lote — Fase 0
 
 > Registro do que o sistema vai enfrentar: os 8 avisos e a base de referência. São fatos sobre este lote; o documento congela depois da Fase 0.
-> Classes e vocabulário: `dominio.md`. Decisões: `decisoes.md`. Respostas esperadas: `evals/gabarito.csv`.
+> Classes e vocabulário: `dominio.md`. Decisões: `decisoes.md`. Respostas esperadas: `tests/evals/gabarito.csv`.
 
 ---
 

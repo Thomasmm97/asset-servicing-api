@@ -15,7 +15,7 @@ from asset_servicing import config
 from asset_servicing.leitura import ler_documento
 from asset_servicing.pipeline import processar_documento
 from asset_servicing.saida import para_dict
-from evals.avaliar import carregar_gabarito, falhas
+from tests.evals.avaliar import carregar_gabarito, falhas
 
 pytestmark = pytest.mark.estocastico
 N = int(os.environ.get("EXECUCOES", "50"))

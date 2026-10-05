@@ -16,7 +16,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - Validação pelas regras de `regras.md`, incluindo a base de referência, via tools.
 - Confiança por campo e roteamento para revisão humana, com motivo.
 - Saída: 1 JSON por documento + relatório de exceções.
-- Script de avaliação contra `evals/gabarito.csv`.
+- Script de avaliação contra `tests/evals/gabarito.csv`.
 
 ---
 
@@ -76,10 +76,10 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Decisão:** uma linha por evento; datas em ISO 8601; decimais com ponto e todas as casas do documento; alíquota como fração (`0.175`); moeda em ISO 4217 (`BRL`); proporção `antes:depois` (grupamento `10:1`, bonificação `20:21`), confirmada na Fase 1 (R-PRO-01 e R-PRO-02); papel das datas conforme a tabela "Papel das datas por classe" de `regras.md`, seção 4 (ex.: doc 06, data-base → `data_com` e início da negociação grupada → `data_ex`; doc 08, crédito das ações → `data_pagamento`); vazio = ausente, `n/a` = não se aplica; motivo da revisão como ID da regra (`R-CLS-01`; mais de um separado por `;`).
 - **Por quê / custo:** comparação exata e sem ambiguidade ("1:20" na bonificação pode ser lido nos dois sentidos; `antes:depois` não). Com o ID da regra, o eval confere se o documento foi para revisão pelo motivo certo, e não só se foi. Custo: o gabarito depende dos IDs das regras; renumerar uma regra exige atualizar o gabarito.
 
-### D-10 — Entradas versionadas no repositório, fora de `evals/`
-- **Contexto:** os PDFs e o golden record estavam em `evals/`, como se fossem fixtures de avaliação, e as pastas originais estavam no `.gitignore`.
-- **Opções:** (A) manter em `evals/`; (B) fora do repositório, com instrução no README; (C) versionados em `documents/` e `golden_records/`.
-- **Decisão:** C. `evals/` guarda só o que serve para avaliar o sistema (gabarito e script de eval).
+### D-10 — Entradas versionadas no repositório, fora de `tests/evals/`
+- **Contexto:** os PDFs e o golden record estavam em `tests/evals/`, como se fossem fixtures de avaliação, e as pastas originais estavam no `.gitignore`.
+- **Opções:** (A) manter em `tests/evals/`; (B) fora do repositório, com instrução no README; (C) versionados em `documents/` e `golden_records/`.
+- **Decisão:** C. `tests/evals/` guarda só o que serve para avaliar o sistema (gabarito e script de eval).
 - **Por quê / custo:** são entrada do sistema; quem clonar o repositório roda direto (gate da Fase 5). Custo: o repositório é público, então os dados ficam visíveis antes da entrega (são sintéticos).
 
 ---

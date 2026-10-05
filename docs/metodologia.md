@@ -29,7 +29,7 @@
 
 **Teste de cada seção:** ela precisa ter um consumidor numa fase seguinte (prompt, schema, regras, eval). Se não alimenta nada, sai.
 
-**Artefatos (neste projeto):** `docs/inventario.md` (registro descritivo do lote; congela após a fase), `docs/dominio.md` (especificação viva: taxonomia, glossário, princípios), `evals/gabarito.csv` e as primeiras entradas de `docs/decisoes.md`.
+**Artefatos (neste projeto):** `docs/inventario.md` (registro descritivo do lote; congela após a fase), `docs/dominio.md` (especificação viva: taxonomia, glossário, princípios), `tests/evals/gabarito.csv` e as primeiras entradas de `docs/decisoes.md`.
 
 **Gate:** para cada documento você sabe dizer qual é a saída correta e qual é o principal problema.
 

@@ -146,7 +146,7 @@ Cada apontamento aparece uma vez, com todos os campos que ele aponta. Os documen
 
 ## 10. Correspondência com o gabarito
 
-O eval traduz os nomes do JSON para as colunas de `evals/gabarito.csv`:
+O eval traduz os nomes do JSON para as colunas de `tests/evals/gabarito.csv`:
 - `status` → `revisao_humana` (`REVISAO_HUMANA` e `ERRO` → sim);
 - campos de `emissor` e `ativo` → colunas de mesmo nome, com `emissor.razao_social` → `emissor` e `ativo.classe` → `classe_acao`;
 - `data_credito` → `data_pagamento`;

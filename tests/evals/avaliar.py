@@ -1,6 +1,6 @@
 """Compara a saída com evals/gabarito.csv e imprime as métricas do contrato (docs/contrato.md, seção 9).
 
-Uso: python -m evals.avaliar [saida/]
+Uso: python -m tests.evals.avaliar [saida/]
 """
 
 import csv
@@ -10,13 +10,13 @@ from pathlib import Path
 
 from asset_servicing.regras import _nome
 
-RAIZ = Path(__file__).resolve().parent.parent
+RAIZ = Path(__file__).resolve().parents[2]
 AUSENTE = object()  # chave que não existe na classe (gabarito: n/a)
 COLUNAS = ["emissor", "cnpj", "isin", "ticker", "classe_acao", "tipo_evento", "data_aprovacao", "data_com", "data_ex",
            "data_pagamento", "valor_bruto", "aliquota_irrf", "valor_liquido", "proporcao", "custo_atribuido", "moeda"]
 
 
-def carregar_gabarito(caminho: Path = RAIZ / "evals" / "gabarito.csv") -> dict[str, dict]:
+def carregar_gabarito(caminho: Path = Path(__file__).with_name("gabarito.csv")) -> dict[str, dict]:
     with open(caminho, encoding="utf-8") as f:
         return {linha["doc"]: linha for linha in csv.DictReader(f)}
 

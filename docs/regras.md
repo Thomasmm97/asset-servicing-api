@@ -261,7 +261,7 @@ Quando o documento não pode ser processado, o JSON sai com `status: ERRO` e o o
 
 ## Verificação contra o gabarito
 
-Aplicando as regras aos valores de `evals/gabarito.csv` (mensagens já preenchidas, como o operador as veria):
+Aplicando as regras aos valores de `tests/evals/gabarito.csv` (mensagens já preenchidas, como o operador as veria):
 
 | Doc | Revisão humana | Alertas | Mensagem ao operador | Revisão no gabarito |
 |---|---|---|---|---|
