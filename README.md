@@ -72,32 +72,26 @@ entrada/documentos/*.pdf  (1º documento em série, demais em paralelo)
 
 ### Fluxograma
 
-Em amarelo, o modelo e as etapas que o chamam; o resto do processamento é código determinístico.
+Em amarelo, as etapas que chamam o modelo (`gpt-5.6-luna` pelo OpenRouter, com as respostas guardadas em `cache/`); o resto é código determinístico.
 
 ```mermaid
 flowchart TD
-    pdf[/"entrada/documentos/*.pdf"/] --> leitura
+    pdf[/"entrada/documentos/*.pdf"/] --> doc
     subgraph doc ["cada documento · 1º em série, demais em paralelo"]
-        leitura["leitura<br/>nativo: PyMuPDF · escaneado: Tesseract<br/>posição e confiança por palavra"] --> extracao(["extração e classificação<br/>1 chamada estruturada<br/>valores literais + citações"])
-        extracao --> evidencias{"a citação está no documento<br/>e contém o valor?"}
-        evidencias -- "não: retry com o problema (máx. 2)" --> extracao
-        evidencias -- "sim, ou descarte com motivo após 2 retries" --> normalizacao["normalização<br/>literal → formato do contrato"]
-        normalizacao --> validacao(["validação: agente<br/>até 3 rodadas de tool calling"])
-        validacao <-->|"o modelo escolhe; o código injeta os valores"| ferramentas["3 ferramentas = regras<br/>identificação · datas · valores e proporção<br/>as que faltarem, o código chama"]
-        validacao --> regras["regras no código<br/>campos da classe · classificação"]
-        regras --> montagem["montagem<br/>confiança por campo · chaves da classe<br/>status APROVADO ou REVISAO_HUMANA"]
+        leitura["leitura<br/>PyMuPDF ou Tesseract"] --> extracao(["extração e classificação<br/>valores literais + citações"])
+        extracao --> evidencias{"evidências<br/>conferem?"}
+        evidencias -- "não: retry com<br/>o problema (máx. 2)" --> extracao
+        evidencias -- "sim, ou descarte<br/>com motivo" --> normalizacao["normalização<br/>literal → contrato"]
+        normalizacao --> validacao(["validação: agente<br/>escolhe as ferramentas"])
+        validacao <-->|"o código injeta<br/>os valores"| ferramentas["3 ferramentas<br/>regras determinísticas"]
+        validacao --> regras["regras no código<br/>campos da classe<br/>e classificação"]
+        regras --> montagem["montagem<br/>confiança e status"]
     end
-    doc -->|"falha em qualquer etapa"| erro["registro de erro<br/>status ERRO"]
     montagem --> lote[/"saida/lote.json<br/>registros + relatório de exceções"/]
-    erro --> lote
-    doc -.->|"trace de cada etapa"| traces[/"saida/traces/*.jsonl"/]
-    base[("entrada/golden_records.csv<br/>base de referência")] -.-> ferramentas
-    extracao <-.-> cache[("cache/<br/>resposta por hash da requisição")]
-    validacao <-.-> cache
-    cache -.->|"sem resposta salva"| api(["OpenRouter<br/>gpt-5.6-luna"])
+    doc --> erro["falha em qualquer etapa<br/>registro com status ERRO"] --> lote
 
     classDef llm fill:#fde68a,stroke:#b45309,color:#1c1917
-    class extracao,validacao,api llm
+    class extracao,validacao llm
 ```
 
 Camadas, arquivos e o papel de cada função: [docs/arquitetura.md](docs/arquitetura.md).
