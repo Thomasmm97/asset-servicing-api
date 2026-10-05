@@ -3,7 +3,7 @@
 > O que o sistema entrega para cada documento e por quê. Decisões de origem: D-17 (formato), D-18 (status e erro), D-19 e D-20 (confiança), D-21 (roteamento).
 > Exemplos preenchidos à mão: `docs/exemplos/01_energetica_vale_tiete_dividendo.json` (aprovado) e `docs/exemplos/08_construtora_horizonte_bonificacao.json` (revisão humana).
 
-A saída fica em `saida/lote.json`: o relatório de exceções do lote e um objeto por documento (seção 8, D-31).
+A saída fica em `saida/lote.json`: o relatório de exceções do lote, em tópicos, e um objeto por documento; o mesmo relatório vai para `saida/relatorio_excecoes.md` (seção 8, D-31, D-32).
 
 ---
 
@@ -111,27 +111,21 @@ Alertas e o nível `MEDIA` não mudam o status.
 
 `erro` = `{codigo, mensagem}`, com os códigos `FALHA_MODELO`, `PDF_ILEGIVEL`, `FALHA_OCR` e `ERRO_INTERNO`. As mensagens estão no catálogo de `regras.md` ("Erros de processamento"). Com erro: `status: ERRO`, `regras_aprovadas: []`, `tipo_evento: null`, `campos: null`.
 
-## 8. Arquivo de saída e relatório de exceções (D-31)
+## 8. Arquivo de saída e relatório de exceções (D-31, D-32)
 
 Um único arquivo, `saida/lote.json`, com o relatório de exceções do lote e **um objeto por documento**:
 
 ```json
 {
-  "relatorio_excecoes": {
-    "totais": { "processados": 8, "aprovados": 4, "revisao_humana": 4, "erro": 0, "com_alerta": 0 },
-    "excecoes": [
-      { "documento": "08_construtora_horizonte_bonificacao.pdf", "trace_id": "…", "tipo_evento": "BONIFICACAO",
-        "status": "REVISAO_HUMANA", "erro": null,
-        "motivos": [ { "regra": "R-ID-01", "campos": ["razao_social", "cnpj", "isin", "ticker", "classe"],
-                       "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)." } ],
-        "alertas": [] }
-    ]
-  },
+  "relatorio_excecoes": [
+    "Processados: 8 · aprovados: 4 · em revisão humana: 4 · com erro: 0 · com alerta: 0.",
+    "08_construtora_horizonte_bonificacao.pdf [REVISAO_HUMANA] R-ID-01 em razao_social, cnpj, isin, ticker, classe: Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+  ],
   "documentos": [ { "documento": "01_energetica_vale_tiete_dividendo.pdf", "…": "registro completo (seções 1 a 7)" } ]
 }
 ```
 
-- `relatorio_excecoes`: os totais e só os documentos que pedem atenção (motivo, alerta ou erro); cada apontamento aparece uma vez, com todos os campos que aponta. É o relatório curto que o operador lê primeiro.
+- `relatorio_excecoes`: o relatório curto que o operador lê primeiro, em tópicos: os totais e um tópico por apontamento, no formato `documento [status] regra em campos: mensagem`, com todos os campos que o apontamento aponta. Só entram os documentos que pedem atenção (motivo, alerta ou erro). O alerta leva "alerta" antes da regra (`[APROVADO] alerta R-REQ-01 em data_aprovacao: …`); o erro de processamento traz o código no lugar da regra, sem campos (`[ERRO] FALHA_OCR: …`). Sem exceções, o segundo tópico é "Nenhuma exceção.". Os mesmos tópicos vão para `saida/relatorio_excecoes.md`, com título e uma nota sobre onde está o registro completo.
 - `documentos`: o registro completo de cada documento, no formato das seções 1 a 7 (exemplos em `docs/exemplos/`), ordenados pelo nome do arquivo.
 
 ## 9. Métricas e metas (eval)

@@ -18,7 +18,7 @@ macOS e Linux:
 python3.14 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-python -m asset_servicing           # lê entrada/documentos/ e escreve saida/lote.json
+python -m asset_servicing           # lê entrada/documentos/ e escreve saida/lote.json e saida/relatorio_excecoes.md
 python -m tests.evals.avaliar       # métricas contra tests/evals/gabarito.csv
 pytest                              # 61 testes, sem API: 53 unitários + cada documento uma vez, pelo cache
 pytest -m estocastico               # 50 execuções por documento na API (~21 min)
@@ -46,13 +46,14 @@ As respostas do modelo usadas na entrega estão no cache local versionado (`cach
 | 3. Validação com tool calling | O agente chama 3 ferramentas: identificação na base de referência, datas, valores e proporção. O código injeta os valores e completa as que o modelo não chamar |
 | 4. Confiança e rastreabilidade | Cada campo tem citação literal (página e trecho, conferida pelo código) e nível ALTA, MÉDIA ou BAIXA com justificativa |
 | 5. Roteamento de incerteza | Motivo (regra + mensagem) em cada campo; o documento vai para revisão se algum campo for |
-| 6. JSON por documento + relatório | `saida/lote.json`: um objeto por documento e o relatório de exceções do lote como campo (D-31; [contrato](docs/contrato.md), [exemplos](docs/exemplos/)) |
+| 6. JSON por documento + relatório | `saida/lote.json`: um objeto por documento e o relatório de exceções do lote em tópicos, também gravado em `saida/relatorio_excecoes.md` (D-31, D-32; [contrato](docs/contrato.md), [exemplos](docs/exemplos/)) |
 
 ## Saídas
 
 | Arquivo | Para quê |
 |---|---|
-| `saida/lote.json` | `relatorio_excecoes`: totais e só os documentos que pedem atenção, com regra, campos e mensagem. `documentos`: um objeto por documento, para o operador e os processos seguintes (valor, origem, confiança, base de referência, regras aprovadas, motivos de revisão), auditável sem reabrir o PDF |
+| `saida/relatorio_excecoes.md` | O relatório curto que o operador lê primeiro: totais e um tópico por apontamento (documento, status, regra, campos e mensagem), só dos documentos que pedem atenção |
+| `saida/lote.json` | `relatorio_excecoes`: os mesmos tópicos, um por linha. `documentos`: um objeto por documento, para o operador e os processos seguintes (valor, origem, confiança, base de referência, regras aprovadas, motivos de revisão), auditável sem reabrir o PDF |
 | `saida/traces/<trace_id>.jsonl` | O rastro técnico de cada execução (etapas, durações, chamadas ao modelo, retries, ferramentas e quem as chamou), para depurar e auditar uma decisão. Fica fora do JSON do operador; o `trace_id` liga os dois (D-30) |
 | `cache/<hash>.json` | Respostas do modelo indexadas pelo hash da requisição: reprodutibilidade (o modelo não aceita temperatura 0) e clone limpo sem chave. Qualquer mudança de prompt, schema ou documento gera uma chamada nova |
 
@@ -87,7 +88,7 @@ flowchart TD
         validacao --> regras["regras no código<br/>campos da classe<br/>e classificação"]
         regras --> montagem["montagem<br/>confiança e status"]
     end
-    montagem --> lote[/"saida/lote.json<br/>registros + relatório de exceções"/]
+    montagem --> lote[/"saida/lote.json<br/>saida/relatorio_excecoes.md"/]
     doc --> erro["falha em qualquer etapa<br/>registro com status ERRO"] --> lote
 
     classDef llm fill:#fde68a,stroke:#b45309,color:#1c1917
@@ -98,7 +99,7 @@ Camadas, arquivos e o papel de cada função: [docs/arquitetura.md](docs/arquite
 
 ## Decisões e trade-offs
 
-Registradas com opções e custo em [docs/decisoes.md](docs/decisoes.md) (D-01 a D-31). As principais:
+Registradas com opções e custo em [docs/decisoes.md](docs/decisoes.md) (D-01 a D-32). As principais:
 
 | Decisão | Por quê | Custo |
 |---|---|---|

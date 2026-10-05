@@ -15,7 +15,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - Classificação na taxonomia de `dominio.md`.
 - Validação pelas regras de `regras.md`, incluindo a base de referência, via tools.
 - Confiança por campo e roteamento para revisão humana, com motivo.
-- Saída: um objeto JSON por documento + relatório de exceções do lote, num único arquivo (D-31).
+- Saída: um objeto JSON por documento + relatório de exceções do lote em tópicos, num único arquivo (D-31); o relatório também num arquivo à parte (D-32).
 - Script de avaliação contra `tests/evals/gabarito.csv`.
 
 ---
@@ -284,8 +284,14 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 ### D-31 — Saída num único JSON do lote, com o relatório de exceções como campo
 - **Contexto:** o enunciado pede "um JSON por documento + um relatório de exceções curto", e o relatório é por lote.
 - **Opções:** (A) um arquivo por documento + um arquivo de relatório; (B) um único `saida/lote.json`, com o campo `relatorio_excecoes` e um objeto por documento em `documentos`; (C) as duas formas.
-- **Decisão:** B (decisão do usuário). O relatório traz os totais e só os documentos com exceção; o registro completo de cada documento fica em `documentos`.
+- **Decisão:** B (decisão do usuário). O relatório traz os totais e só os documentos com exceção; o registro completo de cada documento fica em `documentos`. O formato do relatório foi revisto na D-32.
 - **Por quê / custo:** cada documento continua sendo um objeto JSON completo, e o enunciado não proíbe o relatório dentro do mesmo JSON; um arquivo só é mais fácil de consumir e de versionar, com menos código de escrita. Custo: uma leitura literal de "um JSON por documento" esperaria um arquivo por documento; a resposta está aqui e no README.
+
+### D-32 — Relatório de exceções em tópicos, no JSON do lote e num arquivo à parte
+- **Contexto:** pela D-31, o relatório era um objeto estruturado dentro do `lote.json`. O enunciado pede "um JSON por documento + um relatório de exceções curto" e lista nos entregáveis "os JSONs + o relatório de exceções": o JSON é pedido só para os documentos, e o relatório curto é para o operador ler.
+- **Opções:** (A) manter o objeto estruturado (D-31); (B) o relatório em texto num arquivo à parte; (C) o texto dentro da chave `relatorio_excecoes`; (D) B e C, com o mesmo conteúdo. Para o texto no JSON: (i) uma string em Markdown; (ii) uma lista de tópicos, um por string.
+- **Decisão:** D com (ii) (decisão do usuário). A chave `relatorio_excecoes` traz os totais e um tópico por apontamento (`documento [status] regra em campos: mensagem`), só dos documentos com exceção; `saida/relatorio_excecoes.md` traz os mesmos tópicos, com título. Os dois vêm da mesma função (`relatorio_em_topicos`), então não divergem.
+- **Por quê / custo:** uma string JSON ocupa sempre uma linha, e uma tabela em Markdown dentro dela ficava ilegível (testado); a lista põe um tópico por linha no JSON formatado. Cada tópico é completo em si mesmo, então lê bem nos dois lugares. O operador lê o `.md`, que o GitHub e os editores mostram formatado, e o `lote.json` continua sendo a saída completa num arquivo só. Custo: as aspas das mensagens ficam escapadas no JSON, e um sistema que queira filtrar as exceções usa os `documentos` (`status` e `motivos` de cada campo), que trazem a mesma informação estruturada.
 
 ---
 
