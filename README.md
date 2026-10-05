@@ -70,6 +70,36 @@ entrada/documentos/*.pdf  (1º documento em série, demais em paralelo)
   → saida/
 ```
 
+### Fluxograma
+
+Em amarelo, o modelo e as etapas que o chamam; o resto do processamento é código determinístico.
+
+```mermaid
+flowchart TD
+    pdf[/"entrada/documentos/*.pdf"/] --> leitura
+    subgraph doc ["cada documento · 1º em série, demais em paralelo"]
+        leitura["leitura<br/>nativo: PyMuPDF · escaneado: Tesseract<br/>posição e confiança por palavra"] --> extracao(["extração e classificação<br/>1 chamada estruturada<br/>valores literais + citações"])
+        extracao --> evidencias{"a citação está no documento<br/>e contém o valor?"}
+        evidencias -- "não: retry com o problema (máx. 2)" --> extracao
+        evidencias -- "sim, ou descarte com motivo após 2 retries" --> normalizacao["normalização<br/>literal → formato do contrato"]
+        normalizacao --> validacao(["validação: agente<br/>até 3 rodadas de tool calling"])
+        validacao <-->|"o modelo escolhe; o código injeta os valores"| ferramentas["3 ferramentas = regras<br/>identificação · datas · valores e proporção<br/>as que faltarem, o código chama"]
+        validacao --> regras["regras no código<br/>campos da classe · classificação"]
+        regras --> montagem["montagem<br/>confiança por campo · chaves da classe<br/>status APROVADO ou REVISAO_HUMANA"]
+    end
+    doc -->|"falha em qualquer etapa"| erro["registro de erro<br/>status ERRO"]
+    montagem --> lote[/"saida/lote.json<br/>registros + relatório de exceções"/]
+    erro --> lote
+    doc -.->|"trace de cada etapa"| traces[/"saida/traces/*.jsonl"/]
+    base[("entrada/golden_records.csv<br/>base de referência")] -.-> ferramentas
+    extracao <-.-> cache[("cache/<br/>resposta por hash da requisição")]
+    validacao <-.-> cache
+    cache -.->|"sem resposta salva"| api(["OpenRouter<br/>gpt-5.6-luna"])
+
+    classDef llm fill:#fde68a,stroke:#b45309,color:#1c1917
+    class extracao,validacao,api llm
+```
+
 Camadas, arquivos e o papel de cada função: [docs/arquitetura.md](docs/arquitetura.md).
 
 ## Decisões e trade-offs
