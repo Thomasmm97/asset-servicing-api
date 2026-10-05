@@ -1,4 +1,4 @@
-# asset-servicing-api
+# asset-servicing-case
 
 Agente code-first que lê avisos de eventos corporativos (PDF nativo ou escaneado) e gera, para cada documento, um **JSON auditável**, mais um **relatório de exceções** do lote. Princípio do desenho: **o LLM extrai, o código decide.** O modelo lê, classifica e escolhe as validações; a conferência das evidências, as regras, a confiança e o roteamento são código determinístico e testado.
 
