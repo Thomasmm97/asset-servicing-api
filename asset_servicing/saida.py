@@ -1,4 +1,5 @@
-"""Escrita em disco: o JSON do lote, com o relatório de exceções e um objeto por documento (D-31), e o trace (D-30)."""
+"""Escrita em disco: o JSON do lote, com o relatório de exceções e um objeto por documento (D-31), o relatório em Markdown (D-32)
+e o trace (D-30)."""
 
 import json
 import time
@@ -60,10 +61,13 @@ def para_dict(registro: Registro) -> dict:
 
 
 def gravar_lote(registros: list[Registro], pasta: Path) -> Path:
-    """saida/lote.json: o relatório de exceções do lote e um objeto por documento (contrato.md, seção 8)."""
+    """saida/lote.json: o relatório de exceções em tópicos e um objeto por documento; os mesmos tópicos em
+    saida/relatorio_excecoes.md (contrato.md, seção 8)."""
     ordenados = sorted(registros, key=lambda r: r.documento)
-    dados = {"relatorio_excecoes": relatorio(ordenados), "documentos": [para_dict(r) for r in ordenados]}
+    topicos = relatorio_em_topicos(relatorio(ordenados))
+    dados = {"relatorio_excecoes": topicos, "documentos": [para_dict(r) for r in ordenados]}
     pasta.mkdir(parents=True, exist_ok=True)
+    (pasta / "relatorio_excecoes.md").write_text(relatorio_em_texto(topicos), encoding="utf-8")
     arquivo = pasta / "lote.json"
     arquivo.write_text(json.dumps(dados, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return arquivo
@@ -82,6 +86,29 @@ def relatorio(registros: list[Registro]) -> dict:
         },
         "excecoes": [d for d in resumos if d["motivos"] or d["alertas"] or d["erro"]],
     }
+
+
+def relatorio_em_topicos(relatorio: dict) -> list[str]:
+    """O relatório em tópicos: os totais e uma linha por apontamento, completa em si mesma (D-32)."""
+    t = relatorio["totais"]
+    topicos = [f"Processados: {t['processados']} · aprovados: {t['aprovados']} · em revisão humana: {t['revisao_humana']} · "
+               f"com erro: {t['erro']} · com alerta: {t['com_alerta']}."]
+    for d in relatorio["excecoes"]:
+        apontamentos = [(d["erro"]["codigo"], [], d["erro"]["mensagem"])] if d["erro"] else []
+        apontamentos += [(a["regra"], a["campos"], a["mensagem"]) for a in d["motivos"]]
+        apontamentos += [(f"alerta {a['regra']}", a["campos"], a["mensagem"]) for a in d["alertas"]]
+        for regra, campos, mensagem in apontamentos:
+            onde = f" em {', '.join(campos)}" if campos else ""
+            topicos.append(f"{d['documento']} [{d['status']}] {regra}{onde}: {mensagem}".replace("\n", " "))
+    return topicos if relatorio["excecoes"] else topicos + ["Nenhuma exceção."]
+
+
+def relatorio_em_texto(topicos: list[str]) -> str:
+    """O relatório em Markdown, para saida/relatorio_excecoes.md: título, totais e os tópicos (D-32)."""
+    linhas = ["# Relatório de exceções", "", topicos[0], "", *(f"- {t}" for t in topicos[1:]), "",
+              "O registro completo de cada documento está em `documentos`, no `saida/lote.json`; "
+              "o rastro técnico, em `saida/traces/<trace_id>.jsonl`."]
+    return "\n".join(linhas) + "\n"
 
 
 def _resumo(registro: Registro) -> dict:

@@ -15,7 +15,7 @@ def main():
     args = parser.parse_args()
     for r in processar_lote(args.pasta, args.saida, args.workers):
         print(f"{r.status.value:15s} {r.documento}")
-    print(f"Saída em {args.saida}/lote.json (relatório de exceções + um objeto por documento)")
+    print(f"Saída em {args.saida}/lote.json (relatório de exceções + um objeto por documento) e {args.saida}/relatorio_excecoes.md")
 
 
 if __name__ == "__main__":
