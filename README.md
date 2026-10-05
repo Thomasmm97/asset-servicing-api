@@ -9,7 +9,7 @@ brew install python@3.14 tesseract tesseract-lang
 python3.14 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-python -m asset_servicing           # lê documents/ e escreve em saida/
+python -m asset_servicing           # lê documents/ e escreve saida/lote.json
 python -m tests.evals.avaliar       # métricas contra tests/evals/gabarito.csv
 pytest                              # 53 testes unitários, sem API
 pytest -m estocastico               # 50 execuções por documento, chamando a API (EXECUCOES=5 para uma versão rápida)
@@ -26,14 +26,13 @@ As respostas do modelo usadas na entrega estão no cache local versionado (`cach
 | 3. Validação com tool calling | O agente chama 3 ferramentas: identificação na base de referência, datas, valores e proporção. O código injeta os valores e completa as que o modelo não chamar |
 | 4. Confiança e rastreabilidade | Cada campo tem citação literal (página e trecho, conferida pelo código) e nível ALTA, MÉDIA ou BAIXA com justificativa |
 | 5. Roteamento de incerteza | Motivo (regra + mensagem) em cada campo; o documento vai para revisão se algum campo for |
-| 6. JSON por documento + relatório | `saida/<documento>.json` e `saida/relatorio_excecoes.json` ([contrato](docs/contrato.md), [exemplos](docs/exemplos/)) |
+| 6. JSON por documento + relatório | `saida/lote.json`: um objeto por documento e o relatório de exceções do lote como campo (D-31; [contrato](docs/contrato.md), [exemplos](docs/exemplos/)) |
 
 ## Saídas
 
 | Arquivo | Para quê |
 |---|---|
-| `saida/<documento>.json` | O registro do documento para o operador e os processos seguintes: valor, origem, confiança, resultado da base de referência, regras aprovadas e motivos de revisão, auditável sem reabrir o PDF |
-| `saida/relatorio_excecoes.json` | O relatório do lote: totais e, por documento, status, tipo de evento, erro, motivos e alertas |
+| `saida/lote.json` | `relatorio_excecoes`: totais e só os documentos que pedem atenção, com regra, campos e mensagem. `documentos`: um objeto por documento, para o operador e os processos seguintes (valor, origem, confiança, base de referência, regras aprovadas, motivos de revisão), auditável sem reabrir o PDF |
 | `saida/traces/<trace_id>.jsonl` | O rastro técnico de cada execução (etapas, durações, chamadas ao modelo, retries, ferramentas e quem as chamou), para depurar e auditar uma decisão. Fica fora do JSON do operador; o `trace_id` liga os dois (D-30) |
 | `cache/<hash>.json` | Respostas do modelo indexadas pelo hash da requisição: reprodutibilidade (o modelo não aceita temperatura 0) e clone limpo sem chave. Qualquer mudança de prompt, schema ou documento gera uma chamada nova |
 
@@ -55,7 +54,7 @@ Camadas, arquivos e o papel de cada função: [docs/arquitetura.md](docs/arquite
 
 ## Decisões e trade-offs
 
-Registradas com opções e custo em [docs/decisoes.md](docs/decisoes.md) (D-01 a D-30). As principais:
+Registradas com opções e custo em [docs/decisoes.md](docs/decisoes.md) (D-01 a D-31). As principais:
 
 | Decisão | Por quê | Custo |
 |---|---|---|

@@ -15,7 +15,7 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - Classificação na taxonomia de `dominio.md`.
 - Validação pelas regras de `regras.md`, incluindo a base de referência, via tools.
 - Confiança por campo e roteamento para revisão humana, com motivo.
-- Saída: 1 JSON por documento + relatório de exceções.
+- Saída: um objeto JSON por documento + relatório de exceções do lote, num único arquivo (D-31).
 - Script de avaliação contra `tests/evals/gabarito.csv`.
 
 ---
@@ -270,6 +270,12 @@ O que esta entrega faz. Por prazo, Out, Deferred e premissas não foram formaliz
 - **Opções:** (A) log de texto; (B) trace JSONL por documento; (C) OpenTelemetry; (D) serviço externo (Langfuse, LangSmith, Logfire).
 - **Decisão:** B: `saida/traces/<documento>.jsonl`, uma linha por etapa (`trace_id`, etapa, início, duração, tentativa, cache, `cached_tokens`, ferramenta e quem a chamou, resumo de entrada e saída, erro), gravada por um gerenciador de contexto. O `trace_id` vai também no JSON do operador.
 - **Por quê / custo:** estruturado (dá para filtrar e somar tempos por etapa), sem dependência e sem dados saindo do ambiente. O OpenTelemetry seria o padrão de mercado, mas é configuração demais para 8 documentos; os serviços externos exigem conta e enviam os dados para fora. Custo: o formato é próprio; migrar para OpenTelemetry depois é trocar o gerenciador de contexto.
+
+### D-31 — Saída num único JSON do lote, com o relatório de exceções como campo
+- **Contexto:** o enunciado pede "um JSON por documento + um relatório de exceções curto", e o relatório é por lote.
+- **Opções:** (A) um arquivo por documento + um arquivo de relatório; (B) um único `saida/lote.json`, com o campo `relatorio_excecoes` e um objeto por documento em `documentos`; (C) as duas formas.
+- **Decisão:** B (decisão do usuário). O relatório traz os totais e só os documentos com exceção; o registro completo de cada documento fica em `documentos`.
+- **Por quê / custo:** cada documento continua sendo um objeto JSON completo, e o enunciado não proíbe o relatório dentro do mesmo JSON; um arquivo só é mais fácil de consumir e de versionar, com menos código de escrita. Custo: uma leitura literal de "um JSON por documento" esperaria um arquivo por documento; a resposta está aqui e no README.
 
 ---
 

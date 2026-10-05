@@ -19,7 +19,7 @@
 | 5 | Validar com tools: o modelo escolhe as ferramentas; o código injeta os valores e impõe a cobertura | `validar` | LLM + código | R-ID, R-IDF, R-DAT, R-VAL, R-PRO | ferramenta não chamada → o código chama; falha na chamada → `FALHA_MODELO` |
 | 6 | Campos da classe, classificação e confiança | `validar_campos_da_classe`, `verificar_classificacao`, `calcular_confianca` | código | R-REQ, R-CLS-01/02, R-CNF-01 | — |
 | 7 | Montar o registro com as chaves da classe e derivar o status | `montar_registro` | código | D-21 | — |
-| 8 | Gravar o JSON; no fim do lote, o relatório de exceções | `gravar_registro`, `gerar_relatorio` | código | — | — |
+| 8 | No fim do lote, gravar `saida/lote.json`: relatório de exceções + um objeto por documento | `gravar_lote` | código | — | — |
 
 **Fluxos alternativos:** PDF que não abre → JSON com `ERRO` (etapa 1); escaneado → OCR (etapa 1); valor sem respaldo → retry e, se persistir, descarte com motivo (etapa 3); `INDETERMINADO` → chaves comuns + campos extraídos, revisão pela R-CLS-02 (etapa 7).
 
@@ -242,8 +242,8 @@ A regra entre elas: **o domínio nunca importa a camada do modelo.** Por isso as
 
 **`saida.py`**
 - `para_dict(registro)`: o JSON como o operador vê (só as chaves preenchidas, em ordem legível).
-- `gravar_registro(registro, pasta)`: JSON por documento.
-- `gerar_relatorio(registros, pasta)`: relatório de exceções do lote em `relatorio_excecoes.json` (totais e todos os documentos), montado por `relatorio(registros)`.
+- `gravar_lote(registros, pasta)`: grava `saida/lote.json` com o relatório de exceções e um objeto por documento (D-31).
+- `relatorio(registros)`: totais e só os documentos com exceção, cada apontamento com os campos que aponta.
 - `iniciar_trace(trace_id)`, `registrar(evento, **dados)`, `etapa(nome, **dados)`: o trace da execução, por thread.
 
 **`pipeline.py`**

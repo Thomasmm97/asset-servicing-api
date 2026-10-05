@@ -12,7 +12,7 @@ from .llm import extrair, validar
 from .modelos import CodigoErro, ErroProcessamento, Leitura, Registro, Resultado
 from .montagem import montar_registro, registro_de_erro
 from .regras import nome_na_saida, validar_campos_da_classe, verificar_classificacao
-from .saida import etapa, gerar_relatorio, gravar_registro, iniciar_trace, registrar
+from .saida import etapa, gravar_lote, iniciar_trace, registrar
 
 REGRAS_EVIDENCIA = ["R-GRD-01", "R-GRD-02", "R-GRD-03"]
 
@@ -80,7 +80,5 @@ def processar_lote(pasta: Path, saida: Path, workers: int = config.WORKERS) -> l
     registros = [processar_documento(pdfs[0])]  # em série: grava a parte fixa do prompt no cache do provider
     with ThreadPoolExecutor(max_workers=workers) as executor:
         registros += list(executor.map(processar_documento, pdfs[1:]))
-    for registro in registros:
-        gravar_registro(registro, saida)
-    gerar_relatorio(registros, saida)
+    gravar_lote(registros, saida)
     return registros

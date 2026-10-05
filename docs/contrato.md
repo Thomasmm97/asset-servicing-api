@@ -3,7 +3,7 @@
 > O que o sistema entrega para cada documento e por quê. Decisões de origem: D-17 (formato), D-18 (status e erro), D-19 e D-20 (confiança), D-21 (roteamento).
 > Exemplos preenchidos à mão: `docs/exemplos/01_energetica_vale_tiete_dividendo.json` (aprovado) e `docs/exemplos/08_construtora_horizonte_bonificacao.json` (revisão humana).
 
-A saída fica em `saida/`: um JSON por documento (`saida/<documento>.json`) e o relatório de exceções do lote (`saida/relatorio_excecoes.json`).
+A saída fica em `saida/lote.json`: o relatório de exceções do lote e um objeto por documento (seção 8, D-31).
 
 ---
 
@@ -111,24 +111,28 @@ Alertas e o nível `MEDIA` não mudam o status.
 
 `erro` = `{codigo, mensagem}`, com os códigos `FALHA_MODELO`, `PDF_ILEGIVEL`, `FALHA_OCR` e `ERRO_INTERNO`. As mensagens estão no catálogo de `regras.md` ("Erros de processamento"). Com erro: `status: ERRO`, `regras_aprovadas: []`, `tipo_evento: null`, `campos: null`.
 
-## 8. Relatório de exceções
+## 8. Arquivo de saída e relatório de exceções (D-31)
 
-`saida/relatorio_excecoes.json`: um único JSON do lote, gerado pelo sistema, com todos os documentos:
+Um único arquivo, `saida/lote.json`, com o relatório de exceções do lote e **um objeto por documento**:
 
 ```json
 {
-  "totais": { "processados": 8, "aprovados": 4, "revisao_humana": 4, "erro": 0, "com_alerta": 0 },
-  "documentos": [
-    { "documento": "08_construtora_horizonte_bonificacao.pdf", "trace_id": "…", "tipo_evento": "BONIFICACAO",
-      "status": "REVISAO_HUMANA", "erro": null,
-      "motivos": [ { "regra": "R-ID-01", "campos": ["razao_social", "cnpj", "isin", "ticker", "classe"],
-                     "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)." } ],
-      "alertas": [] }
-  ]
+  "relatorio_excecoes": {
+    "totais": { "processados": 8, "aprovados": 4, "revisao_humana": 4, "erro": 0, "com_alerta": 0 },
+    "excecoes": [
+      { "documento": "08_construtora_horizonte_bonificacao.pdf", "trace_id": "…", "tipo_evento": "BONIFICACAO",
+        "status": "REVISAO_HUMANA", "erro": null,
+        "motivos": [ { "regra": "R-ID-01", "campos": ["razao_social", "cnpj", "isin", "ticker", "classe"],
+                       "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)." } ],
+        "alertas": [] }
+    ]
+  },
+  "documentos": [ { "documento": "01_energetica_vale_tiete_dividendo.pdf", "…": "registro completo (seções 1 a 7)" } ]
 }
 ```
 
-Cada apontamento aparece uma vez, com todos os campos que ele aponta. Os documentos aprovados aparecem com `motivos` vazio, o que permite ao operador filtrar só os que pedem atenção.
+- `relatorio_excecoes`: os totais e só os documentos que pedem atenção (motivo, alerta ou erro); cada apontamento aparece uma vez, com todos os campos que aponta. É o relatório curto que o operador lê primeiro.
+- `documentos`: o registro completo de cada documento, no formato das seções 1 a 7 (exemplos em `docs/exemplos/`), ordenados pelo nome do arquivo.
 
 ## 9. Métricas e metas (eval)
 

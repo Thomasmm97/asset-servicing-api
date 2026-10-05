@@ -1,4 +1,4 @@
-"""Escrita em disco: JSON do operador, relatório de exceções e trace por documento (D-30)."""
+"""Escrita em disco: o JSON do lote, com o relatório de exceções e um objeto por documento (D-31), e o trace (D-30)."""
 
 import json
 import time
@@ -59,32 +59,28 @@ def para_dict(registro: Registro) -> dict:
     return _ordenar(registro.model_dump(mode="json", exclude_unset=True))
 
 
-def gravar_registro(registro: Registro, pasta: Path) -> Path:
+def gravar_lote(registros: list[Registro], pasta: Path) -> Path:
+    """saida/lote.json: o relatório de exceções do lote e um objeto por documento (contrato.md, seção 8)."""
+    ordenados = sorted(registros, key=lambda r: r.documento)
+    dados = {"relatorio_excecoes": relatorio(ordenados), "documentos": [para_dict(r) for r in ordenados]}
     pasta.mkdir(parents=True, exist_ok=True)
-    arquivo = pasta / f"{Path(registro.documento).stem}.json"
-    arquivo.write_text(json.dumps(para_dict(registro), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return arquivo
-
-
-def gerar_relatorio(registros: list[Registro], pasta: Path) -> Path:
-    """Relatório de exceções do lote (contrato.md, seção 8): um JSON com os totais e todos os documentos."""
-    dados = relatorio(registros)
-    arquivo = pasta / "relatorio_excecoes.json"
+    arquivo = pasta / "lote.json"
     arquivo.write_text(json.dumps(dados, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return arquivo
 
 
 def relatorio(registros: list[Registro]) -> dict:
-    documentos = [_resumo(r) for r in sorted(registros, key=lambda r: r.documento)]
+    """Totais do lote e só os documentos com exceção (motivo, alerta ou erro); o registro completo fica em `documentos`."""
+    resumos = [_resumo(r) for r in registros]
     return {
         "totais": {
-            "processados": len(documentos),
-            "aprovados": sum(d["status"] == Status.APROVADO.value for d in documentos),
-            "revisao_humana": sum(d["status"] == Status.REVISAO_HUMANA.value for d in documentos),
-            "erro": sum(d["status"] == Status.ERRO.value for d in documentos),
-            "com_alerta": sum(bool(d["alertas"]) for d in documentos),
+            "processados": len(resumos),
+            "aprovados": sum(d["status"] == Status.APROVADO.value for d in resumos),
+            "revisao_humana": sum(d["status"] == Status.REVISAO_HUMANA.value for d in resumos),
+            "erro": sum(d["status"] == Status.ERRO.value for d in resumos),
+            "com_alerta": sum(bool(d["alertas"]) for d in resumos),
         },
-        "documentos": documentos,
+        "excecoes": [d for d in resumos if d["motivos"] or d["alertas"] or d["erro"]],
     }
 
 

@@ -1,6 +1,6 @@
 """Compara a saída com evals/gabarito.csv e imprime as métricas do contrato (docs/contrato.md, seção 9).
 
-Uso: python -m tests.evals.avaliar [saida/]
+Uso: python -m tests.evals.avaliar [saida/lote.json]
 """
 
 import csv
@@ -86,18 +86,18 @@ def _mostrar(valor) -> str:
     return "ausente" if valor is AUSENTE else str(valor)
 
 
-def main(pasta: Path = RAIZ / "saida"):
+def main(lote: Path = RAIZ / "saida" / "lote.json"):
     gabarito = carregar_gabarito()
     totais = {"aprovados na meta": 0}
-    for arquivo in sorted(pasta.glob("*.json")):
-        registro = json.loads(arquivo.read_text(encoding="utf-8"))
-        problemas = falhas(registro, gabarito[arquivo.stem])
+    for registro in json.loads(lote.read_text(encoding="utf-8"))["documentos"]:
+        nome = Path(registro["documento"]).stem
+        problemas = falhas(registro, gabarito[nome])
         totais["aprovados na meta"] += not problemas
-        print(f"{'OK   ' if not problemas else 'FALHA'} {arquivo.stem} [{registro['status']}]")
+        print(f"{'OK   ' if not problemas else 'FALHA'} {nome} [{registro['status']}]")
         for p in problemas:
             print(f"      - {p}")
     print(f"\n{totais['aprovados na meta']}/{len(gabarito)} documentos dentro de todas as metas")
 
 
 if __name__ == "__main__":
-    main(Path(sys.argv[1]) if len(sys.argv) > 1 else RAIZ / "saida")
+    main(Path(sys.argv[1]) if len(sys.argv) > 1 else RAIZ / "saida" / "lote.json")
