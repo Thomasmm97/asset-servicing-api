@@ -121,7 +121,7 @@ class Extracao(BaseModel):
     data_ex: CampoExtraido = Field(description="Data ex; em grupamento e desdobramento, início da negociação com a nova quantidade.")
     data_pagamento: CampoExtraido = Field(description="Data de pagamento; em bonificação, data do crédito das ações.")
     valor_bruto: CampoExtraido = Field(description="Valor bruto em dinheiro por ação.")
-    aliquota_irrf: CampoExtraido = Field(description="Alíquota de IR retida na fonte que leva do valor bruto ao valor líquido por ação. null se for regra geral (ex.: por beneficiário, acima de um limite mensal).")
+    aliquota_irrf: CampoExtraido = Field(description="Alíquota de IR retida na fonte que leva do valor bruto ao valor líquido por ação informado no aviso. null se o aviso não informa valor líquido por ação ou se a alíquota é regra geral (ex.: por beneficiário, acima de um limite mensal).")
     valor_liquido: CampoExtraido = Field(description="Valor líquido por ação, depois do IR retido.")
     proporcao: CampoExtraido = Field(description="Valor no formato antes:depois, em inteiros (1 ação nova para cada 20 → 20:21; 10 ações viram 1 → 10:1).")
     custo_atribuido: CampoExtraido = Field(description="Custo atribuído por ação bonificada.")

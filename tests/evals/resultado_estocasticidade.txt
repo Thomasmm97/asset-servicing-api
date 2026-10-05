@@ -1,8 +1,0 @@
-início: 2026-10-04 20:41
-============================= test session starts ==============================
-platform darwin -- Python 3.14.8, pytest-9.1.1, pluggy-1.6.0 -- /Users/thomas/Documents/asset-servicing-api/.venv/bin/python
-cachedir: .pytest_cache
-rootdir: /Users/thomas/Documents/asset-servicing-api
-configfile: pytest.ini
-plugins: anyio-4.15.1
-collecting ... collected 60 items / 52 deselected / 8 selected
