@@ -1,92 +1,15 @@
 {
-  "relatorio_excecoes": {
-    "totais": {
-      "processados": 8,
-      "aprovados": 4,
-      "revisao_humana": 4,
-      "erro": 0,
-      "com_alerta": 0
-    },
-    "excecoes": [
-      {
-        "documento": "03_siderurgica_paranaense_proventos.pdf",
-        "trace_id": "03_siderurgica_paranaense_proventos-20261004T225421982880",
-        "tipo_evento": "JCP",
-        "status": "REVISAO_HUMANA",
-        "erro": null,
-        "motivos": [
-          {
-            "regra": "R-CLS-01",
-            "campos": [
-              "tipo_evento"
-            ],
-            "mensagem": "Título do aviso (\"AVISO AOS ACIONISTAS — Distribuição de Dividendos\") diverge da natureza identificada (JCP)."
-          }
-        ],
-        "alertas": []
-      },
-      {
-        "documento": "04_rede_varejo_jcp_sem_data.pdf",
-        "trace_id": "04_rede_varejo_jcp_sem_data-20261004T225421983035",
-        "tipo_evento": "JCP",
-        "status": "REVISAO_HUMANA",
-        "erro": null,
-        "motivos": [
-          {
-            "regra": "R-REQ-02",
-            "campos": [
-              "data_pagamento"
-            ],
-            "mensagem": "Data de pagamento adiado pelo emissor (\"Data de pagamento A definir (vide aviso complementar)\"); aguardar aviso complementar."
-          }
-        ],
-        "alertas": []
-      },
-      {
-        "documento": "05_aurora_saneamento_dividendo_datas.pdf",
-        "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T225421986305",
-        "tipo_evento": "DIVIDENDO",
-        "status": "REVISAO_HUMANA",
-        "erro": null,
-        "motivos": [
-          {
-            "regra": "R-DAT-02",
-            "campos": [
-              "data_com",
-              "data_pagamento"
-            ],
-            "mensagem": "Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026)."
-          }
-        ],
-        "alertas": []
-      },
-      {
-        "documento": "08_construtora_horizonte_bonificacao.pdf",
-        "trace_id": "08_construtora_horizonte_bonificacao-20261004T225421992178",
-        "tipo_evento": "BONIFICACAO",
-        "status": "REVISAO_HUMANA",
-        "erro": null,
-        "motivos": [
-          {
-            "regra": "R-ID-01",
-            "campos": [
-              "razao_social",
-              "cnpj",
-              "isin",
-              "ticker",
-              "classe"
-            ],
-            "mensagem": "Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
-          }
-        ],
-        "alertas": []
-      }
-    ]
-  },
+  "relatorio_excecoes": [
+    "Processados: 8 · aprovados: 4 · em revisão humana: 4 · com erro: 0 · com alerta: 0.",
+    "03_siderurgica_paranaense_proventos.pdf [REVISAO_HUMANA] R-CLS-01 em tipo_evento: Título do aviso (\"AVISO AOS ACIONISTAS — Distribuição de Dividendos\") diverge da natureza identificada (JCP).",
+    "04_rede_varejo_jcp_sem_data.pdf [REVISAO_HUMANA] R-REQ-02 em data_pagamento: Data de pagamento adiado pelo emissor (\"Data de pagamento A definir (vide aviso complementar)\"); aguardar aviso complementar.",
+    "05_aurora_saneamento_dividendo_datas.pdf [REVISAO_HUMANA] R-DAT-02 em data_com, data_pagamento: Data de pagamento (10/07/2026) não é posterior à data com (15/07/2026).",
+    "08_construtora_horizonte_bonificacao.pdf [REVISAO_HUMANA] R-ID-01 em razao_social, cnpj, isin, ticker, classe: Emissor não encontrado na base de referência (ISIN BRCNHZACNOR5, CNPJ 09.888.999/0001-21)."
+  ],
   "documentos": [
     {
       "documento": "01_energetica_vale_tiete_dividendo.pdf",
-      "trace_id": "01_energetica_vale_tiete_dividendo-20261004T225421973150",
+      "trace_id": "01_energetica_vale_tiete_dividendo-20261005T122113020678",
       "tipo_pdf": "NATIVO",
       "status": "APROVADO",
       "erro": null,
@@ -377,7 +300,7 @@
     },
     {
       "documento": "02_banco_meridional_jcp.pdf",
-      "trace_id": "02_banco_meridional_jcp-20261004T225421982817",
+      "trace_id": "02_banco_meridional_jcp-20261005T122113027118",
       "tipo_pdf": "NATIVO",
       "status": "APROVADO",
       "erro": null,
@@ -709,7 +632,7 @@
     },
     {
       "documento": "03_siderurgica_paranaense_proventos.pdf",
-      "trace_id": "03_siderurgica_paranaense_proventos-20261004T225421982880",
+      "trace_id": "03_siderurgica_paranaense_proventos-20261005T122113027181",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
@@ -1046,7 +969,7 @@
     },
     {
       "documento": "04_rede_varejo_jcp_sem_data.pdf",
-      "trace_id": "04_rede_varejo_jcp_sem_data-20261004T225421983035",
+      "trace_id": "04_rede_varejo_jcp_sem_data-20261005T122113027324",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
@@ -1370,7 +1293,7 @@
     },
     {
       "documento": "05_aurora_saneamento_dividendo_datas.pdf",
-      "trace_id": "05_aurora_saneamento_dividendo_datas-20261004T225421986305",
+      "trace_id": "05_aurora_saneamento_dividendo_datas-20261005T122113030383",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
@@ -1667,7 +1590,7 @@
     },
     {
       "documento": "06_petroquimica_litoral_grupamento.pdf",
-      "trace_id": "06_petroquimica_litoral_grupamento-20261004T225421989508",
+      "trace_id": "06_petroquimica_litoral_grupamento-20261005T122113033128",
       "tipo_pdf": "NATIVO",
       "status": "APROVADO",
       "erro": null,
@@ -1933,7 +1856,7 @@
     },
     {
       "documento": "07_telecom_norte_jcp_SCAN.pdf",
-      "trace_id": "07_telecom_norte_jcp_SCAN-20261004T225421992095",
+      "trace_id": "07_telecom_norte_jcp_SCAN-20261005T122113036187",
       "tipo_pdf": "ESCANEADO",
       "status": "APROVADO",
       "erro": null,
@@ -2269,7 +2192,7 @@
     },
     {
       "documento": "08_construtora_horizonte_bonificacao.pdf",
-      "trace_id": "08_construtora_horizonte_bonificacao-20261004T225421992178",
+      "trace_id": "08_construtora_horizonte_bonificacao-20261005T122113036282",
       "tipo_pdf": "NATIVO",
       "status": "REVISAO_HUMANA",
       "erro": null,
