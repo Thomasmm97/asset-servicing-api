@@ -1,4 +1,5 @@
-"""Contrato da saída (D-31): saida/lote.json com o relatório de exceções e um objeto por documento."""
+"""Contrato da saída (D-31, D-32): saida/lote.json com o relatório de exceções em tópicos e um objeto por documento,
+e os mesmos tópicos em saida/relatorio_excecoes.md."""
 
 import json
 from pathlib import Path
@@ -7,7 +8,7 @@ import pytest
 
 from asset_servicing.modelos import CodigoErro
 from asset_servicing.montagem import registro_de_erro
-from asset_servicing.saida import gravar_lote
+from asset_servicing.saida import gravar_lote, relatorio
 
 LOTE = Path(__file__).resolve().parents[2] / "saida" / "lote.json"
 
@@ -32,11 +33,15 @@ def test_status_e_revisao_coerentes_com_os_motivos():
         assert campo["revisao_humana"] == bool(campo["motivos"])
 
 
-def test_lote_tem_relatorio_e_um_objeto_por_documento(tmp_path):
+def test_lote_tem_relatorio_em_topicos_e_um_objeto_por_documento(tmp_path):
     registros = [registro_de_erro("b.pdf", "b-1", None, CodigoErro.PDF_ILEGIVEL, "corrompido"),
                  registro_de_erro("a.pdf", "a-1", None, CodigoErro.FALHA_OCR, "sem texto")]
+    assert relatorio(registros)["totais"] == {"processados": 2, "aprovados": 0, "revisao_humana": 0, "erro": 2, "com_alerta": 0}
     dados = json.loads(gravar_lote(registros, tmp_path).read_text(encoding="utf-8"))
     assert list(dados) == ["relatorio_excecoes", "documentos"]
-    assert dados["relatorio_excecoes"]["totais"] == {"processados": 2, "aprovados": 0, "revisao_humana": 0, "erro": 2, "com_alerta": 0}
     assert [d["documento"] for d in dados["documentos"]] == ["a.pdf", "b.pdf"]
-    assert dados["relatorio_excecoes"]["excecoes"][0]["erro"]["codigo"] == "FALHA_OCR"
+    topicos = dados["relatorio_excecoes"]
+    assert topicos[0] == "Processados: 2 · aprovados: 0 · em revisão humana: 0 · com erro: 2 · com alerta: 0."
+    assert topicos[1].startswith("a.pdf [ERRO] FALHA_OCR: ") and topicos[2].startswith("b.pdf [ERRO] PDF_ILEGIVEL: ")
+    texto = (tmp_path / "relatorio_excecoes.md").read_text(encoding="utf-8")
+    assert all(f"- {t}\n" in texto for t in topicos[1:])
