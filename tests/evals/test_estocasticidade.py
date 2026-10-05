@@ -21,7 +21,7 @@ from tests.evals.avaliar import carregar_gabarito, falhas
 
 pytestmark = pytest.mark.estocastico
 N = int(os.environ.get("EXECUCOES", "50"))
-DOCUMENTOS = sorted((config.RAIZ / "documents").glob("*.pdf"))
+DOCUMENTOS = sorted(config.PASTA_DOCUMENTOS.glob("*.pdf"))
 
 
 @pytest.fixture(scope="module")

@@ -18,7 +18,8 @@ MAX_RETRIES = 2              # por tipo de retry: alucinação e falha na chamad
 MAX_RODADAS_AGENTE = 3
 PASTA_CACHE = RAIZ / "cache"
 PASTA_TRACES = RAIZ / "saida" / "traces"
-CAMINHO_BASE = RAIZ / "golden_records" / "golden records.csv"
+PASTA_DOCUMENTOS = RAIZ / "entrada" / "documentos"
+CAMINHO_BASE = RAIZ / "entrada" / "golden_records.csv"
 
 # Leitura (D-22, D-23)
 MIN_CARACTERES_NATIVO = 20   # abaixo disso, o PDF não tem camada de texto: vai para o OCR
